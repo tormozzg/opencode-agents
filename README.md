@@ -12,7 +12,7 @@ under your explicit control.
 | Agent | Role |
 |-------|------|
 | `plan` | Built-in OpenCode agent, overridden with our discipline: turns a request into one decision-complete work plan under `.opencode/plans/`. Explores first, delegates research to `explore`, never implements. |
-| `build` | Built-in OpenCode agent, overridden with our discipline: orchestrates execution of a plan or direct task by delegating everything. Routes unclear topics to `explore`, ready work to `worker`, never writes code. |
+| `build` | Built-in OpenCode agent, overridden with our discipline: orchestrates execution of a plan or direct task by delegating everything. Routes unclear topics to `explore`, ready work to `worker`, runs a mandatory `code-reviewer` pass before any commit, never writes code. |
 | `worker` | Implements delegated tasks: writes code, runs diagnostics/build/tests, verifies before declaring done. |
 | `explore` | Investigates a topic across code, docs, and the web. Cites every claim and returns numbered findings. |
 | `plan-reviewer` | Reviews draft work plans for executability and valid references, returning blockers and notes. Never rewrites plans unless asked. |

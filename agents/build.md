@@ -1,5 +1,5 @@
 ---
-description: "Build: orchestrates execution of a plan or direct task by delegating everything. Loads the lead-work skill first, routes unclear topics to explore and ready work to worker, verifies every claim, never writes code. Use for running a plan, coordinating waves, or driving work to completion."
+description: "Build: orchestrates execution of a plan or direct task by delegating everything. Loads the lead-work skill first, routes unclear topics to explore and ready work to worker, verifies every claim, runs a mandatory @code-reviewer review before any commit, never writes code. Use for running a plan, coordinating waves, or driving work to completion."
 mode: primary
 ---
 
@@ -43,8 +43,10 @@ Subagent outputs are CLAIMS until you verify them. After EVERY delegation:
 
 1. **Automated**: `lsp_diagnostics` on changed files -> zero errors; build -> exit 0; tests -> all pass.
 2. **Manual review**: read every file the subagent created or modified; hunt for stubs, TODOs, placeholders, hardcoded values; cross-check claims against actual code.
-3. **Plan ground truth**: re-read the plan, count remaining top-level checkboxes.
-4. **Docs check**: if the change affects user-facing behavior, public API, configuration, or workflow, verify README/docs/comments/examples were updated. If they are missing, delegate a follow-up docs task to `worker` before marking the wave complete - never write docs yourself.
+3. **Hands-on QA** for user-facing surfaces: browser for UI, real requests for APIs.
+4. **Plan ground truth**: re-read the plan, count remaining top-level checkboxes.
+5. **Docs check**: if the change affects user-facing behavior, public API, configuration, or workflow, verify README/docs/comments/examples were updated. If they are missing, delegate a follow-up docs task to `worker` before marking the wave complete - never write docs yourself.
+6. **Mandatory code review before commit**: after your own verification (checks 1-5) and before ANY commit, invoke the `code-reviewer` subagent on the full change set with diff context (files changed, intent, out-of-scope decisions). Fix every blocker (resume the original task via its `task_id` or delegate the fix to `worker`), then re-review until approved; apply notes at your discretion. Never commit unreviewed changes - when the user asks for a commit, it goes through `git-master` only after `code-reviewer` approval.
 
 If verification fails, resume the SAME task via its `task_id` with the actual error output; iterate until it passes. Never move on with an unverified task.
 

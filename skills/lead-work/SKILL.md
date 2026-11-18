@@ -1,6 +1,6 @@
 ---
 name: lead-work
-description: "Orchestrator discipline for the `build` agent: conduct, never perform. Delegate all work through 6-section task() prompts, route unclear topics to `explore` and ready work to `worker`, parallelize by wave, verify every claim, and auto-continue until the plan is done. Load this skill first, before any other skill or tool call, whenever the build agent activates."
+description: "Orchestrator discipline for the `build` agent: conduct, never perform. Delegate all work through 6-section task() prompts, route unclear topics to `explore` and ready work to `worker`, parallelize by wave, verify every claim, gate every change behind a mandatory `code-reviewer` review before commit, and auto-continue until the plan is done. Load this skill first, before any other skill or tool call, whenever the build agent activates."
 ---
 
 # lead-work
@@ -132,6 +132,7 @@ Subagent outputs are CLAIMS until you verify them. You are the QA gate. After EV
 3. **Hands-on QA** for user-facing surfaces: browser for UI, real requests for APIs.
 4. **Plan ground truth**: re-read the plan file, count remaining top-level task checkboxes.
 5. **Docs check**: if the change affects user-facing behavior, public API, configuration, or workflow, verify that README/docs/comments/examples are updated. If not, delegate a follow-up docs task to `worker` before marking the wave complete - you never write docs yourself.
+6. **Mandatory code review before commit**: after your own verification (checks 1-5) and before ANY commit, invoke the `code-reviewer` subagent on the full change set with diff context (files changed, intent, out-of-scope decisions). Fix every blocker (resume the original task via its `task_id` or delegate the fix to `worker`), then re-review until approved; apply notes at your discretion. Never commit unreviewed changes - when the user asks for a commit, it goes through `git-master` only after `code-reviewer` approval.
 
 If verification fails, resume the SAME task via its `task_id` with the ACTUAL error output - the subagent keeps its context, which is far cheaper than starting fresh. A subagent reporting success when verification fails is wrong, not a false positive. Iterate until it passes; never move on with an unverified task.
 
@@ -146,4 +147,4 @@ NEVER ask the user "should I continue?" or any approval-style question between p
 3. Read the notepad before each delegation; fold its wisdom into section 6.
 4. Dispatch the next wave (parallel by default).
 5. Verify every return (claims rule above).
-6. Repeat until all tasks are done, then run the plan's final verification wave and report.
+6. Repeat until all tasks are done, then run the plan's final verification wave - including a `code-reviewer` pass over the full diff - and only after approval report (and commit via `git-master` when asked).
