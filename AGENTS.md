@@ -9,7 +9,7 @@ there is also no `package.json`, no CI, no `.github/`.
 
 | Agent (`agents/*.md`) | Mode | Skill (`skills/*/SKILL.md`) |
 |---|---|---|
-| `plan` | all | `plan-work` |
+| `plan` | primary | `plan-work` |
 | `build` | primary | `lead-work` |
 | `explore` | subagent | `research-topic` |
 | `worker` | subagent | `execute-work` |
@@ -17,8 +17,9 @@ there is also no `package.json`, no CI, no `.github/`.
 | `code-reviewer` | subagent | `review-code` |
 | `git-master` | subagent | `git-master` |
 
-`build` is a primary agent — select it as the active agent, it cannot be spawned
-by others; all the rest are invoked as subagents (`@plan`, `@worker`, …).
+`plan` and `build` are primary agents - select one as the active agent; they
+cannot be spawned by others; all the rest are invoked as subagents
+(`@worker`, `@explore`, …).
 
 ## Three-place invariant
 

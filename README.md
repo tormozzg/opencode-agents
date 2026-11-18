@@ -99,10 +99,11 @@ config are lost when the merge runs (the backup keeps the original).
 
 ## How to invoke each agent
 
-Every agent except `build` is a subagent, so you invoke it by naming it
-in your prompt:
+Two agents in this pack are **primary**: `plan` and `build`. You select one
+as the active agent before typing your message; neither can be spawned by
+other agents. The remaining five are subagents - you invoke them by naming
+them in your prompt:
 
-- `@plan` — "Break this feature into a plan."
 - `@explore` — "How does the auth flow work in this repo?"
 - `@worker` — "Implement step 3 of the plan."
 - `@plan-reviewer` — "Review the plan at ~/.opencode/plan/my-feature.md for blockers."
@@ -112,10 +113,12 @@ in your prompt:
 You can also select any of these as the active agent before typing your
 message.
 
-`build` is a **primary agent**, not a subagent: select it as the active
-agent first, then give it the work directly, e.g. "Execute the plan at
-~/.opencode/plan/my-feature.md." It orchestrates by delegating to the
-`explore` and `worker` subagents; other agents cannot spawn it.
+`plan` and `build` are primary agents, not subagents: select one as the
+active agent first, then give it the work directly, e.g. "Plan a rate limit
+for /login." (plan) or "Execute the plan at ~/.opencode/plan/my-feature.md."
+(build). `plan` turns the request into a decision-complete plan and hands
+off to implementation; `build` orchestrates by delegating to the `explore`
+and `worker` subagents. Neither can be spawned by other agents.
 
 ## Example workflow
 

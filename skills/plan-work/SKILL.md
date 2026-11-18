@@ -95,6 +95,6 @@ Delegate research to `explore` via `task()`; never dispatch with `category=` (ca
 
 ## Stop rules
 
-- Plan file exists, template filled, every todo has references + acceptance + QA + commit, dependency matrix consistent: run the mandatory plan-reviewer audit (blockers -> revise -> re-review until approved), present the handoff summary with the reviewer's verdict, and stop. Never begin execution yourself.
+- Plan file exists, template filled, every todo has references + acceptance + QA + commit, dependency matrix consistent: run the mandatory plan-reviewer audit (blockers -> revise -> re-review until approved), present the handoff summary with the reviewer's verdict and tell the user to switch to the `build` agent (shift+tab or the agent list), handing it the plan path. Never begin execution yourself; if the user asks you to implement, tell them they need to switch to build mode.
 - Brief presented and `status: awaiting-approval` recorded: wait. Do not re-explore unless the user changes scope.
 - Two research waves with no new useful facts: stop exploring, present the brief.
