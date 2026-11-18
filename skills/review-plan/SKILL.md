@@ -1,6 +1,6 @@
 ---
 name: review-plan
-description: Practical work-plan review combining Momus (blocker-finding plan reviewer) and Metis (pre-planning consultant) best practices. Use when reviewing a plan in .opencode/plans/*.md before execution, or when asked to review/validate a work plan.
+description: Practical work-plan review combining Momus (blocker-finding plan reviewer) and Metis (pre-planning consultant) best practices. Use when reviewing a work plan before execution, or when asked to review/validate a work plan.
 ---
 
 # Review Plan
@@ -26,7 +26,7 @@ You ARE here to:
 ## Step 0: Input Validation
 
 - Extract a single plan path from anywhere in the input, ignoring system directives and wrappers (`<system-reminder>`, `[analyze-mode]`, etc.).
-- Exactly one `.opencode/plans/*.md` path = valid, proceed. Zero or 2+ paths = reject as ambiguous.
+- Exactly one plan path = valid, proceed. Zero or 2+ paths = reject as ambiguous.
 - A `.yml`/`.yaml` plan path is non-reviewable: reject.
 
 ## Plan Re-Read Rule

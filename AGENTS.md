@@ -64,9 +64,12 @@ Everything else in `agents/`/`skills/` is preserved.
 
 ## Repo conventions
 
-- Run-time artifacts live under `.opencode/` in the project root (created on
-  demand by the agents): `plans/`, `drafts/`, `notepads/`, `evidence/`. The
-  directory is gitignored — never commit its contents; save verification
+- Run-time artifacts live in two places. Plan artifacts (`plan`'s final plan
+  and durable draft) go into OpenCode's built-in Plan directory
+  (`~/.opencode/plan`), because the built-in Plan mode restricts the plan
+  agent's writes to it. Notepads and evidence live under `.opencode/` in the
+  project root, created on demand by the other agents. That directory
+  is gitignored — never commit its contents; save verification
   evidence under `.opencode/evidence/`.
 - `opencode.jsonc.snippet` is the single config unit; keep it pure JSON so
   `python3 -m json.tool` keeps passing.

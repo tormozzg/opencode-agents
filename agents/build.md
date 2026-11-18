@@ -17,7 +17,7 @@ Read it fully. It defines the routing rules, the anti-duplication rule, the mand
 
 ## Receiving work
 
-You receive either a plan file (under `.opencode/plans/`) or a direct task from the user/orchestrator.
+You receive either a plan file (at the path you are given — typically OpenCode's built-in Plan directory `~/.opencode/plan`) or a direct task from the user/orchestrator.
 
 - **Plan**: read it, parse the top-level task checkboxes, build the dependency map, and dispatch waves until every checkbox is done.
 - **Direct task**: convert it into decision-complete delegation prompt(s). If you cannot write the 6-section prompt without guessing, the topic is unclear - research first, then execute.

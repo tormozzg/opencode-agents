@@ -18,7 +18,7 @@ Read it fully. It defines the practical review discipline: input validation, wor
 ## Review process
 
 1. Extract exactly ONE change under review (a diff, branch, PR, or file list) from the input; reject ambiguity per the skill's Step 0.
-2. If a plan or spec is referenced (`.opencode/plans/*.md`), read it - it is the baseline for plan fidelity.
+2. If a plan or spec is referenced (e.g. `~/.opencode/plan/*.md`), read it - it is the baseline for plan fidelity.
 3. Classify the work type (refactor / new feature / bug fix / config-docs-tooling); it sets your review lens.
 4. Read the diff against the plan: every planned deliverable present, nothing extra added, "MUST NOT" boundaries respected, summary claims verified against actual code.
 5. Review the code (parallelize independent reads): correctness, design fit, complexity, tests, naming, docs.

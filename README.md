@@ -11,7 +11,7 @@ under your explicit control.
 
 | Agent | Role |
 |-------|------|
-| `plan` | Built-in OpenCode agent, overridden with our discipline: turns a request into one decision-complete work plan under `.opencode/plans/`. Explores first, delegates research to `explore`, never implements. |
+| `plan` | Built-in OpenCode agent, overridden with our discipline: turns a request into one decision-complete work plan. Explores first, delegates research to `explore` only, never dispatches `worker`, never implements, and runs a mandatory `plan-reviewer` audit before handoff. |
 | `build` | Built-in OpenCode agent, overridden with our discipline: orchestrates execution of a plan or direct task by delegating everything. Routes unclear topics to `explore`, ready work to `worker`, runs a mandatory `code-reviewer` pass before any commit, never writes code. |
 | `worker` | Implements delegated tasks: writes code, runs diagnostics/build/tests, verifies before declaring done. |
 | `explore` | Investigates a topic across code, docs, and the web. Cites every claim and returns numbered findings. |
@@ -105,7 +105,7 @@ in your prompt:
 - `@plan` — "Break this feature into a plan."
 - `@explore` — "How does the auth flow work in this repo?"
 - `@worker` — "Implement step 3 of the plan."
-- `@plan-reviewer` — "Review .opencode/plans/my-feature.md for blockers."
+- `@plan-reviewer` — "Review the plan at ~/.opencode/plan/my-feature.md for blockers."
 - `@code-reviewer` — "Review the diff for this branch."
 - `@git-master` — "Commit the current changes atomically."
 
@@ -114,15 +114,15 @@ message.
 
 `build` is a **primary agent**, not a subagent: select it as the active
 agent first, then give it the work directly, e.g. "Execute the plan at
-.opencode/plans/my-feature.md." It orchestrates by delegating to the
+~/.opencode/plan/my-feature.md." It orchestrates by delegating to the
 `explore` and `worker` subagents; other agents cannot spawn it.
 
 ## Example workflow
 
 A typical chain for a medium-sized change:
 
-1. `plan` writes a decision-complete plan to `.opencode/plans/`.
-2. `plan-reviewer` audits that plan and returns blockers or approval.
+1. `plan` writes a decision-complete plan and runs the mandatory `plan-reviewer` audit before handoff.
+2. `plan-reviewer` audits the plan and returns blockers or approval; `plan` resolves every blocker before handoff, and re-runs the audit after every plan revision - approval binds to the reviewed version.
 3. `build` picks up the approved plan and coordinates the waves.
 4. `explore` answers the open questions the plan flagged.
 5. `worker` implements the delegated steps and verifies each one.
@@ -149,7 +149,7 @@ model than the rest:
   "model": "openai/gpt-4o",
   "agent": {
     "plan": {
-      "description": "Plan: turns a request into ONE decision-complete work plan under .opencode/plans/. ...",
+      "description": "Plan: the pack's planner - turns a request into ONE decision-complete work plan. ...",
       "skill": "plan-work",
       "model": "anthropic/claude-3-5-sonnet"
     }
@@ -171,15 +171,16 @@ until then.
 ## Project artifacts
 
 When the pack's agents run in your project, they write their working artifacts
-under `.opencode/` in the project root (not in the global config directory):
+in two places — partly in the project root's `.opencode/` (not in the global
+config directory), and partly in OpenCode's global Plan directory:
 
-- `.opencode/plans/` — decision-complete work plans written by `plan`
-- `.opencode/drafts/` — durable planning drafts, the plan agent's resume point
+- Plan artifacts (the final plan and the durable draft) are written by `plan` into OpenCode's built-in Plan directory (`~/.opencode/plan`) — the built-in Plan mode restricts the plan agent's writes to that directory.
 - `.opencode/notepads/` — per-plan learnings, issues, and decisions recorded during execution
 - `.opencode/evidence/` — verification evidence saved by `build` and `explore` (command output, screenshots, responses, cited findings)
 
 The agents and skills themselves still install globally to `~/.config/opencode/`;
-only these run-time artifacts live in the project.
+run-time artifacts live in the project (`.opencode/`) and in OpenCode's global
+Plan directory.
 
 ## Uninstall
 

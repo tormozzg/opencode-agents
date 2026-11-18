@@ -2,7 +2,7 @@
   "$schema": "https://opencode.ai/config.json",
   "agent": {
     "plan": {
-      "description": "Plan: turns a request into ONE decision-complete work plan under .opencode/plans/. Explores before asking, delegates research to explore, never implements. Use for planning, designing, or breaking down work.",
+      "description": "Plan: the pack's planner - turns a request into ONE decision-complete work plan. Explores before asking, delegates research to explore only - never dispatches worker, never implements, never starts execution. Runs a mandatory plan-reviewer audit of the written plan before handoff. Use for planning, designing, or breaking down work.",
       "skill": "plan-work"
     },
     "build": {
@@ -18,7 +18,7 @@
       "skill": "research-topic"
     },
     "plan-reviewer": {
-      "description": "Plan reviewer: reviews draft work plans under .opencode/plans/ for executability and valid references. Loads the review-plan skill first, performs Momus + Metis review, returns blockers and notes. Never rewrites plans unless asked.",
+      "description": "Plan reviewer: reviews draft work plans for executability and valid references. Loads the review-plan skill first, performs Momus + Metis review, returns blockers and notes. Never rewrites plans unless asked.",
       "skill": "review-plan"
     },
     "code-reviewer": {
