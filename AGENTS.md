@@ -41,7 +41,9 @@ python3 -m json.tool opencode.jsonc.snippet     # snippet is pure JSON
 
 Installer flags: `--yes`, `--model <agent>=<model>` (repeatable; agent must be
 one of the 7 pack agents, model must be whitespace-free, else exit 2 before
-anything is installed), `--config-dir <path>` (also `--flag=value` form; `~`
+anything is installed), `--default-model <model>` (repeatable, last value
+wins; model must be whitespace-free, else exit 2 before anything is
+installed), `--config-dir <path>` (also `--flag=value` form; `~`
 expands to `$HOME`). Default target: `~/.config/opencode`.
 
 Installer behavior (verified against `install.sh`):
@@ -51,8 +53,9 @@ Installer behavior (verified against `install.sh`):
   existing `opencode.json`; `.jsonc` preferred/created). Existing config gets a
   `<file>.backup-<timestamp>` first.
 - Merge is per-key: user-set per-agent `"model"` keys survive re-install
-  (snippet keys win on conflict); the top-level `"model"` is never touched —
-  the installer sets no default model, only per-agent ones via `--model`.
+  (snippet keys win on conflict); the top-level `"model"` is never touched
+  UNLESS `--default-model <model>` is given, in which case it is set to that
+  value (overwriting any existing top-level `"model"`).
 - The merge uses python3 stdlib `json`: JSONC comments in an existing config
   are LOST on merge (the backup keeps the original). Unparseable existing
   config aborts the merge, not corrupts it.

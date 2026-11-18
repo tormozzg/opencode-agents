@@ -60,6 +60,20 @@ name must be one of the pack's 7 agents (`plan`, `worker`, `explore`,
 string must be non-empty with no whitespace; anything else is rejected with an
 error before anything is installed. Omitting `--model` changes nothing.
 
+You can also set the global default model — the top-level `"model"` key in
+the merged config — with `--default-model <model>` (repeat the flag to
+change it; the last value wins):
+
+```bash
+./install.sh --yes --default-model openai/gpt-4o
+```
+
+When the flag is given, the merged config's top-level `"model"` is set to
+that value (overwriting any existing one); when it is omitted, the
+top-level `"model"` is never touched. The value must be non-empty with no
+whitespace; anything else is rejected with an error before anything is
+installed.
+
 By default everything is installed into the active user's
 `~/.config/opencode`. To target a different OpenCode config directory instead
 — for example a sandbox user's config — pass `--config-dir <path>`:
@@ -139,7 +153,8 @@ In short: `plan` → `plan-reviewer` → `build` → `explore` →
 
 Every agent in this pack inherits the global default model (the top-level
 `"model"` key in your OpenCode config) unless you override it. The quickest
-way to set one is the installer's `--model` flag (see
+way to set the global default is the installer's `--default-model` flag, and
+the quickest way to pin a per-agent model is its `--model` flag (see
 [Install](#install)); to pin one agent to a specific model by hand, edit
 `~/.config/opencode/opencode.jsonc` after
 installing and add a `"model"` property to that agent's entry under the

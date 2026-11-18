@@ -15,6 +15,9 @@
 #   - Requires --yes, or interactive confirmation, before touching the config.
 #   - Supports --model <agent>=<model> to pin a per-agent model in the merged
 #     config (repeatable; agent must be one of the pack's 7 agents).
+#   - Supports --default-model <model> to set the top-level default "model"
+#     key in the merged config (repeatable, last one wins; when the flag is
+#     not given the existing top-level "model" is left untouched).
 #   - Supports --config-dir <path> to target an alternative OpenCode config
 #     directory (e.g. a sandbox user's config); a leading ~ expands to $HOME.
 #   - Fails with an explicit error if HOME is unset or empty (unless
@@ -35,6 +38,8 @@ SNIPPET="${SCRIPT_DIR}/opencode.jsonc.snippet"
 
 ASSUME_YES=0
 MODEL_ARGS=()
+DEFAULT_MODEL=""
+DEFAULT_MODEL_SET=0
 CONFIG_DIR_ARG=""
 CONFIG_DIR_SET=0
 while [ $# -gt 0 ]; do
@@ -53,6 +58,19 @@ while [ $# -gt 0 ]; do
     --model=*)
       MODEL_ARGS+=("${1#--model=}")
       ;;
+    --default-model)
+      if [ $# -lt 2 ]; then
+        echo "ERROR: --default-model requires a model argument" >&2
+        exit 2
+      fi
+      DEFAULT_MODEL="$2"
+      DEFAULT_MODEL_SET=1
+      shift
+      ;;
+    --default-model=*)
+      DEFAULT_MODEL="${1#--default-model=}"
+      DEFAULT_MODEL_SET=1
+      ;;
     --config-dir)
       if [ $# -lt 2 ]; then
         echo "ERROR: --config-dir requires a path argument" >&2
@@ -67,7 +85,7 @@ while [ $# -gt 0 ]; do
       CONFIG_DIR_SET=1
       ;;
     *)
-      echo "Usage: $0 [--yes] [--model <agent>=<model>]... [--config-dir <path>]" >&2
+      echo "Usage: $0 [--yes] [--model <agent>=<model>]... [--default-model <model>] [--config-dir <path>]" >&2
       exit 2
       ;;
   esac
@@ -99,6 +117,21 @@ for pair in "${MODEL_ARGS[@]}"; do
   esac
   MODEL_OVERRIDES+="${agent}=${model}"$'\n'
 done
+
+# --- Validate --default-model ------------------------------------------------
+# Repeatable with last-one-wins: the parse loop overwrites DEFAULT_MODEL.
+if [ "${DEFAULT_MODEL_SET}" -eq 1 ]; then
+  if [ -z "${DEFAULT_MODEL}" ]; then
+    echo "ERROR: --default-model requires a non-empty model" >&2
+    exit 2
+  fi
+  case "${DEFAULT_MODEL}" in
+    *[[:space:]]*)
+      echo "ERROR: invalid default model '${DEFAULT_MODEL}': must not contain whitespace" >&2
+      exit 2
+      ;;
+  esac
+fi
 
 # --- Validate --config-dir ---------------------------------------------------
 if [ "${CONFIG_DIR_SET}" -eq 1 ] && [ -z "${CONFIG_DIR_ARG}" ]; then
@@ -211,7 +244,7 @@ fi
 
 # --- Merge snippet into config (Python 3 stdlib json) -----------------------
 # JSONC comments in the existing file are lost on merge (see header note).
-PACK_MODEL_OVERRIDES="${MODEL_OVERRIDES}" python3 - "${SNIPPET}" "${CONFIG_FILE}" <<'PYEOF'
+PACK_MODEL_OVERRIDES="${MODEL_OVERRIDES}" PACK_DEFAULT_MODEL="${DEFAULT_MODEL}" python3 - "${SNIPPET}" "${CONFIG_FILE}" <<'PYEOF'
 import json
 import os
 import sys
@@ -280,6 +313,13 @@ if raw_overrides.strip():
         agent_block[agent_name] = entry
     merged["agent"] = agent_block
 
+# Apply the top-level default model passed via PACK_DEFAULT_MODEL
+# (the value of the --default-model flag; empty when the flag was not given,
+# in which case the existing top-level "model" key is left untouched).
+default_model = os.environ.get("PACK_DEFAULT_MODEL", "")
+if default_model:
+    merged["model"] = default_model
+
 # Validate the merged result is valid JSON before writing.
 payload = json.dumps(merged, indent=2, ensure_ascii=False) + "\n"
 json.loads(payload)
@@ -315,6 +355,9 @@ if [ -n "${MODEL_OVERRIDES}" ]; then
     [ -n "${pair}" ] || continue
     echo "  Model  : ${pair%%=*} -> ${pair#*=}"
   done <<< "${MODEL_OVERRIDES}"
+fi
+if [ "${DEFAULT_MODEL_SET}" -eq 1 ]; then
+  echo "  Model  : (default) -> ${DEFAULT_MODEL}"
 fi
 if [ "${#BACKUP_FILES[@]}" -gt 0 ]; then
   for backup in "${BACKUP_FILES[@]}"; do
