@@ -1,0 +1,3 @@
+# Agent tooling directories — keep local, never published
+.omo/
+.opencode/

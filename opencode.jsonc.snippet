@@ -1,0 +1,44 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "plan": {
+      "description": "Plan: turns a request into ONE decision-complete work plan under .opencode/plans/. Explores before asking, delegates research to explore, never implements. Use for planning, designing, or breaking down work.",
+      "skill": "plan-work"
+    },
+    "build": {
+      "description": "Build: orchestrates execution of a plan or direct task by delegating everything. Loads the lead-work skill first, routes unclear topics to explore and ready work to worker, verifies every claim, never writes code. Use for running a plan, coordinating waves, or driving work to completion.",
+      "skill": "lead-work"
+    },
+    "worker": {
+      "description": "Worker: implements delegated tasks silently and verifies before declaring done. Loads the execute-work discipline first, then writes code, runs diagnostics/build/tests, and reports with evidence. Use for any delegated implementation work.",
+      "skill": "execute-work"
+    },
+    "explore": {
+      "description": "Explore: investigates a topic across code, docs, and the web with an evidence-demander stance. Cites every claim, returns numbered concise findings. Use for research, fact-finding, or grounding decisions.",
+      "skill": "research-topic"
+    },
+    "plan-reviewer": {
+      "description": "Plan reviewer: reviews draft work plans under .opencode/plans/ for executability and valid references. Loads the review-plan skill first, performs Momus + Metis review, returns blockers and notes. Never rewrites plans unless asked.",
+      "skill": "review-plan"
+    },
+    "code-reviewer": {
+      "description": "Code reviewer: reviews diffs and completed changes for correctness, quality, and plan fidelity. Loads the review-code skill first, classifies the work type, checks blockers vs notes, returns comments or approval. Never fixes code itself.",
+      "skill": "review-code"
+    },
+    "git-master": {
+      "description": "Git Master: handles ANY git operation - atomic commits, rebase/squash/fixup, and history search (blame, bisect, log -S, reflog). Loads the git-master skill first, commits atomically in the repo's detected style, and protects shared history. Use for 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find the commit that'.",
+      "skill": "git-master"
+    }
+  },
+  "skills": {
+    "paths": [
+      "~/.config/opencode/skills/plan-work/SKILL.md",
+      "~/.config/opencode/skills/lead-work/SKILL.md",
+      "~/.config/opencode/skills/research-topic/SKILL.md",
+      "~/.config/opencode/skills/execute-work/SKILL.md",
+      "~/.config/opencode/skills/review-plan/SKILL.md",
+      "~/.config/opencode/skills/review-code/SKILL.md",
+      "~/.config/opencode/skills/git-master/SKILL.md"
+    ]
+  }
+}
