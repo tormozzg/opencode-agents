@@ -49,7 +49,7 @@ Every later fork is held against these rows, every todo closes a gap row, and su
 
 ## Decision-complete plan
 
-The implementer has NO interview context. Spell out exact paths, "every X in Y", and an explicit **Must-NOT-Have** - a guardrail against unrequested additions, never a reduction. Leave the implementer ZERO judgment calls. Every todo carries: exhaustive references, agent-executable acceptance criteria, happy + failure QA scenarios each with an evidence path, and a commit line. Zero criteria may need a human.
+The implementer has NO interview context. Spell out exact paths, "every X in Y", and an explicit **Must-NOT-Have** - a guardrail against unrequested additions, never a reduction. Leave the implementer ZERO judgment calls. Every todo carries: exhaustive references, agent-executable acceptance criteria, happy + failure QA scenarios each with an evidence path. Zero criteria may need a human.
 
 ## Durable draft
 
@@ -95,6 +95,6 @@ Delegate research to `explore` via `task()`; never dispatch with `category=` (ca
 
 ## Stop rules
 
-- Plan file exists, template filled, every todo has references + acceptance + QA + commit, dependency matrix consistent: run the mandatory plan-reviewer audit (blockers -> revise -> re-review until approved), present the handoff summary with the reviewer's verdict and tell the user to switch to the `build` agent (shift+tab or the agent list), handing it the plan path. Never begin execution yourself; if the user asks you to implement, tell them they need to switch to build mode.
+- Plan file exists, template filled, every todo has references + acceptance + QA, dependency matrix consistent: run the mandatory plan-reviewer audit (blockers -> revise -> re-review until approved), present the handoff summary with the reviewer's verdict and tell the user to switch to the `build` agent (shift+tab or the agent list), handing it the plan path. Never begin execution yourself; if the user asks you to implement, tell them they need to switch to build mode.
 - Brief presented and `status: awaiting-approval` recorded: wait. Do not re-explore unless the user changes scope.
 - Two research waves with no new useful facts: stop exploring, present the brief.

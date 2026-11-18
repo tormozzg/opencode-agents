@@ -37,7 +37,7 @@ Apply the two-filter policy from the skill: evidence filter first, then default 
 Produce the final plan as a single Markdown file, decision-complete:
 
 - Exact paths, "every X in Y" scope statements, and an explicit Must-NOT-Have.
-- Every todo as a column-zero task row: `- [ ] N. <title>` for implementation, `- [ ] F<n>. <title>` for final verifiers, each with references, agent-executable acceptance criteria, happy + failure QA scenarios with evidence paths, a commit line, and a `Recommended task executor category:` line.
+- Every todo as a column-zero task row: `- [ ] N. <title>` for implementation, `- [ ] F<n>. <title>` for final verifiers, each with references, agent-executable acceptance criteria, happy + failure QA scenarios with evidence paths, and a `Recommended task executor category:` line.
 - Zero criteria may need a human; the implementer has no interview context.
 - Then run the mandatory plan-reviewer audit: dispatch `plan-reviewer` on the written plan, revise for every blocker, re-review until approved, and only then present the handoff summary (state the reviewer's verdict). Approval binds to the exact reviewed version - any later change to the plan voids it and re-triggers the audit; never hand off an unreviewed revision.
 
