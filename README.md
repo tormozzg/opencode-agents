@@ -1,8 +1,8 @@
-# Simplified OMO Agent Pack
+# OpenCode Subagents Pack
 
 A small, self-contained pack for OpenCode that adds seven focused agents and their
 seven matching skills. The pack only registers agents and skills; it does not modify
-the OMO plugin and it never auto-runs plans. Every plan and every code change stays
+any other plugins, and it never auto-runs plans. Every plan and every code change stays
 under your explicit control.
 
 ## What's inside

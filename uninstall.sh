@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# uninstall.sh - Safe rollback for the simplified OMO agent pack.
+# uninstall.sh - Safe rollback for the OpenCode subagents pack.
 #
 # Undoes what install.sh did (from <config-dir>, the OpenCode config
 # directory; by default ~/.config/opencode, override with --config-dir <path>):

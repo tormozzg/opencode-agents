@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# install.sh - Safe global installer for the simplified OMO agent pack.
+# install.sh - Safe global installer for the OpenCode subagents pack.
 #
 # Installs (into <config-dir>, the OpenCode config directory; by default
 # ~/.config/opencode, override with --config-dir <path>):
@@ -211,7 +211,7 @@ fi
 
 # --- Merge snippet into config (Python 3 stdlib json) -----------------------
 # JSONC comments in the existing file are lost on merge (see header note).
-OMO_MODEL_OVERRIDES="${MODEL_OVERRIDES}" python3 - "${SNIPPET}" "${CONFIG_FILE}" <<'PYEOF'
+PACK_MODEL_OVERRIDES="${MODEL_OVERRIDES}" python3 - "${SNIPPET}" "${CONFIG_FILE}" <<'PYEOF'
 import json
 import os
 import sys
@@ -262,9 +262,9 @@ if "skills" in snippet:
     skills_block["paths"] = merged_paths
     merged["skills"] = skills_block
 
-# Apply per-agent model overrides passed via OMO_MODEL_OVERRIDES
+# Apply per-agent model overrides passed via PACK_MODEL_OVERRIDES
 # (newline-separated <agent>=<model> entries from --model flags).
-raw_overrides = os.environ.get("OMO_MODEL_OVERRIDES", "")
+raw_overrides = os.environ.get("PACK_MODEL_OVERRIDES", "")
 if raw_overrides.strip():
     agent_block = dict(merged.get("agent") or {})
     for line in raw_overrides.splitlines():
