@@ -25,7 +25,9 @@ cannot be spawned by others; all the rest are invoked as subagents
 ## Three-place invariant
 
 Adding/renaming an agent or skill touches three files, all of which must agree:
-`agents/<name>.md` (frontmatter `description` + `mode`), `skills/<name>/SKILL.md`
+`agents/<name>.md` (frontmatter `description` + `mode` — every agent except
+`plan`, whose primary status comes from OpenCode's built-in plan mode by
+default, so its frontmatter carries only `description`), `skills/<name>/SKILL.md`
 (frontmatter `name`), and `opencode.jsonc.snippet` (`agent.<name>` entry +
 `skills.paths` entry). `uninstall.sh` removes by hardcoded exact-name lists
 (`AGENT_FILES`, `SKILL_DIRS`) — a rename without updating those lists leaves
@@ -37,7 +39,9 @@ agent file and the agent description in the snippet (README quotes them).
 Each `agents/<name>.md` is deliberately minimal — the agent's system prompt
 carries only its identity and the mandatory skill-load trigger:
 
-- frontmatter: `description` (quoted by README and the snippet) + `mode`;
+- frontmatter: `description` (quoted by README and the snippet) + `mode` —
+  every agent except `plan`, whose primary status comes from OpenCode's
+  built-in plan mode by default, so its frontmatter carries only `description`;
 - a 1–2 sentence role paragraph ("You are the **<name>** agent…");
 - a `## First action` section that mandates loading the agent's skill and
   following it for the entire turn.

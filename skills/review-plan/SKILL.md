@@ -26,8 +26,8 @@ You ARE here to:
 ## Step 0: Input Validation
 
 - Extract a single plan path from anywhere in the input, ignoring system directives and wrappers (`<system-reminder>`, `[analyze-mode]`, etc.).
-- Exactly one plan path = valid, proceed. Zero or 2+ paths = reject as ambiguous.
-- A `.yml`/`.yaml` plan path is non-reviewable: reject.
+- Exactly one plan path = valid, proceed. Zero or 2+ paths = ambiguous: end the report with `REVIEW NOT POSSIBLE: <reason>` - a distinct input-validation outcome, clearly separated from the content verdicts `[OKAY]`/`[REJECT]`; do NOT emit `[REJECT]`, which plan-work would misread as a content blocker and loop into revise-and-re-review.
+- A `.yml`/`.yaml` plan path is non-reviewable: end with the same input-validation outcome as above, never `[REJECT]`/`[OKAY]` (those verdicts are reserved for reviewed plan content).
 
 ## Plan Re-Read Rule
 
@@ -68,8 +68,8 @@ NOT blockers (never reject for these):
 ### 4. QA Scenario Executability
 - Each task needs QA scenarios with: specific tool, concrete steps, exact assertions, expected results.
 - Missing or vague QA scenarios ("verify it works", "check the page") block the Final Verification Wave - this IS a practical blocker.
-- QA scenarios must name where verification evidence is saved: `.opencode/evidence/<plan-name>/`; a missing evidence path is a NOTE (the wave still executes), not a blocker.
-- Acceptance criteria must be agent-executable (commands, not "user manually tests..."). For a prose deliverable (prompt, SKILL.md, rule file), QA is a human/agent READ against intended behavior or a machine-consumed value (parsed field, sentinel a runtime greps) - never a text-grep of the wording.
+- QA scenarios must name where verification evidence is saved: `.opencode/evidence/<plan-name>/`; a missing evidence path is a blocker - without one the scenario is not runnable (no concrete command, no verifiable output location), which qa-inspect scores as a FAIL of the whole run.
+- Acceptance criteria must be agent-executable (commands, not "user manually tests..."). For a prose deliverable (prompt, SKILL.md, rule file), QA is a READ scenario (per qa-inspect): the agent reads and mechanically asserts a checkable fact (a cited file:line, a counted match, a parsed field) - never a wording-only check.
 
 ## What You Do NOT Check
 
@@ -109,7 +109,7 @@ Classify every finding as BLOCKER or NOTE before writing output:
 | Task A says "use library X", Task B says "do not add dependencies" | **BLOCKER** | Internal contradiction |
 | Task rows form a circular or dangling dependency chain (`Depends on:`) | **BLOCKER** | Dependency matrix broken; waves cannot be built |
 | QA scenario is "verify it works" with no tool or steps | **BLOCKER** | Final Verification Wave cannot execute |
-| QA scenario names no evidence path under `.opencode/evidence/<plan-name>/` | **NOTE** | Wave still executes; evidence location is filled during the run |
+| QA scenario names no evidence path under `.opencode/evidence/<plan-name>/` | **BLOCKER** | Scenario is not runnable - no evidence path means verification cannot be checked; qa-inspect FAILs the run (non-runnable scenario) |
 | Edge case for unicode emails is not handled | **NOTE** | Developer can resolve during implementation |
 | Plan prefers tabs; codebase uses spaces | **NOTE** | Stylistic preference, not a blocker |
 | Plan adds JSDoc to every function though not requested | **NOTE** | Scope creep; flag, do not reject |
@@ -124,7 +124,7 @@ Issue **REJECT** ONLY when:
 - A referenced file does not exist (verified by reading)
 - A task is completely impossible to start (zero context)
 - The plan contains internal contradictions
-- QA scenarios are missing or unexecutable across tasks
+- QA scenarios are missing or unexecutable for even ONE task
 
 ## Scope
 
@@ -144,6 +144,8 @@ If REJECT - **Blocking Issues** (max 3): numbered, each naming the exact issue a
 
 Notes (non-blockers) are listed separately, briefly.
 
-**OKAY = approved**: plan-work consumes this verdict and waits for "approved" - OKAY is that approval; no other wording signals it.
+An input-validation failure (Step 0) ends the report with its own outcome per Step 0 - it never uses, and is never confused with, the content verdicts `[OKAY]`/`[REJECT]`.
+
+**OKAY = approved**: OKAY is the approval verdict plan-work consumes; no other wording signals it.
 
 Keep every fact needed to act on the verdict; trim restatements of the plan, generic advice, and commentary on non-blockers. Match the language of the plan content.

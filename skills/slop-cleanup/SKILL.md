@@ -1,6 +1,6 @@
 ---
 name: slop-cleanup
-description: "Categorized cleanup discipline for inherited AI slop: a category checklist (broad excepts, dead helpers, junk and tautological tests, weak-value tests, copy-paste duplicates, needless pass-through abstractions, oversized modules, placeholder stubs) plus the safe protocol — lock behavior with tests first, write the cleanup plan before editing, one category per pass, delete rather than comment out, re-verify after each pass, and back out risky cleanup. Load before touching inherited AI-generated patterns."
+description: "Categorized cleanup discipline for AI-generated slop — inherited from the codebase or produced during the current task: a category checklist (broad excepts, dead helpers, junk and tautological tests, weak-value tests, copy-paste duplicates, needless pass-through abstractions, oversized modules, placeholder stubs) plus the safe protocol — lock behavior with tests first, write the cleanup plan before editing, one category per pass, delete rather than comment out, re-verify after each pass, and back out risky cleanup. Load before touching inherited AI-generated patterns or cleaning up patterns that slipped into freshly written code."
 ---
 
 # Slop Cleanup
@@ -34,7 +34,7 @@ Hunt one pattern at a time. Signature → first move:
 
 - **Check the dispatch intent and out-of-scope decisions before deleting anything.** What looks like a needless abstraction may be a seam the lead planned to fill; what looks dead may have a caller you have not grepped. Verify callers with search, not assumption.
 - **Odd-but-working code with named callers is not in scope** — slop means generated-and-unjustified, not merely unfamiliar. If in doubt, list it in the report instead of removing it.
-- The review-code AI Slop Checklist flags these same patterns in a diff under review; this skill is the *cleanup* counterpart for patterns already committed. Use the same names so findings map one to one.
+- The review-code AI Slop Checklist flags these same patterns in a diff under review; this skill is the *cleanup* counterpart for the patterns it flags — review flags, cleanup fixes — wherever they came from: inherited AI-generated code already in the codebase, or AI-generated patterns produced during the current task. A worker's own fresh code normally should not need the full discipline (it was written under this pack's gates); the widened scope exists so patterns that slipped into its diff can be cleaned by the same protocol. Use the same names so findings map one to one.
 
 ## The protocol
 

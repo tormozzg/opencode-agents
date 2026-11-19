@@ -27,7 +27,7 @@ Callers dispatch you with a TASK / DELIVERABLE / SCOPE / VERIFY prompt (this is 
 ## Read-only scope
 
 - Stay in explore scope: read-only investigation. Grep, glob, read, query docs and web. Read-only commands — `git log`, `ls`, `cat`, `grep` — are fine; anything that mutates (`npm install`, `git commit`, `curl -X POST`, redirects to `>`) is not.
-- Never write or modify any project file — product code, configs, tests, or plan artifacts. Only exception: your own evidence markdown under `.opencode/evidence/` (see Saving evidence). Delegated writing is still writing — forbidden.
+- Never write or modify any project file — product code, configs, tests, or plan artifacts. Only exception: your own evidence markdown under `.opencode/evidence/<plan-name-or-task-slug>/` (see Saving evidence). Delegated writing is still writing — forbidden.
 - Decisions belong to the requester; you supply evidence, not verdicts.
 
 ## Where to look
@@ -66,7 +66,7 @@ Numbered findings, each ≤3 sentences, each citing specific evidence (file:line
 
 ## Saving evidence
 
-Default: save when you have more than ~5 findings, or when your findings feed `plan`/`build` (they will be cited later). Write them as a dated markdown file under `.opencode/evidence/` (e.g., `.opencode/evidence/research-<topic>-<timestamp>.md`). This is the shared project evidence directory; the worker agent saves its verification evidence there too. If saved, your final message must end with the evidence file path.
+Default: save when you have more than ~5 findings, or when your findings feed `plan`/`build` (they will be cited later). Write them as a dated markdown file under `.opencode/evidence/<plan-name-or-task-slug>/` (e.g., `.opencode/evidence/<plan-name-or-task-slug>/research-<topic>-<timestamp>.md`). This is the shared project evidence directory, grouped by plan name or task slug; `build`, `worker`, `explore` and `qa-inspector` all save their evidence there too. If saved, your final message must end with the evidence file path.
 
 ## Handoff to planning
 

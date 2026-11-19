@@ -16,7 +16,7 @@ This skill is the worker agent's operating loop. It composes with the `code-idio
 **Do not write or edit a single line of code before completing this gate.**
 
 1. **Identify the language** from the file extension, manifest, or the task description.
-2. **Load the language-specific reference** before writing anything: (1) if `code-idiom` is available in your environment, load it; (2) otherwise consult the language's official docs for the constructs you are about to use and the codebase's own conventions. No exceptions for "small" or "one-off" code — disposable scripts get the full discipline.
+2. **Load the language-specific reference** before writing anything: (1) if `code-idiom` is available in your environment, load it as the idiom reference; (2) for constructs it does not cover, consult the language's official docs; (3) follow the codebase's own conventions. No exceptions for "small" or "one-off" code — disposable scripts get the full discipline.
 3. **Read the surrounding code first**: the module you are changing, its callers (grep them), and the tests covering the area. Do they encode the intent, cover this path, and pass? One failing before your change is a FINDING — never edit it green to unblock yourself.
 4. **Trace the real flow end to end** before deciding where the change goes. The smallest diff in the wrong place is a second bug. A ticket names a symptom; fix the shared seam once — one guard at the source beats one guard per caller, and patching only the named path leaves sibling callers broken.
 5. **Blocker exit for underspecified tasks.** If after tracing the real flow you still cannot state the scenario contract (input/behavior/observable result), STOP — do not invent requirements and do not loop on Phase 0. Return a blocker report: what is ambiguous, what you traced, and the specific questions that unblock you. Fixing a defect you discovered is not blocked work — only requirements ambiguity is.
@@ -93,7 +93,7 @@ awk '!/^[[:space:]]*$/ && !/^[[:space:]]*(\/\/|#|--)/' <file> | wc -l
 |---|---|---|
 | ≤ 200 | Healthy | continue |
 | 200–250 | Warning band | State it; propose a split if the next edit adds lines. |
-| > 250 | DEFECT | Refactor before adding lines (rare SIZE_OK / pure-data-table exceptions). |
+| > 250 | DEFECT | Refactor before adding lines (rare exceptions: pure data tables and generated code, where line count does not reflect complexity). |
 
 ### Step 2 — the 11-point architectural self-review
 

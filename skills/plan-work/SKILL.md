@@ -51,7 +51,7 @@ Every later fork is held against these rows, every todo closes a gap row, and su
 
 The implementer has NO interview context. The plan file opens with a **self-identifying header**: plan path, version `v<n>`, review status `reviewed: yes/no` - the executor must be able to confirm it holds the approved version.
 
-Plan size: the plan must stay **holdable in one look**. Mechanical or one-of-a-kind repetitive tasks coalesce into a single row; work that grows beyond that groups into named phases, each with its own rows. The plan is what the team lead orchestrates waves from, not an essay.
+Plan size: the plan must stay **holdable in one look**. Mechanical or one-of-a-kind repetitive tasks coalesce into a single row; work that grows beyond that groups into named phases, each with its own rows. A coalesced (merged) row carries one shared `Verify:` covering all its sub-items, with per-sub-item acceptance criteria in nested lines - so the "every todo carries" mandate stays honest. The plan is what the team lead orchestrates waves from, not an essay.
 
 Spell out exact paths, "every X in Y", and an explicit **Must-NOT-Have** - a guardrail against unrequested additions, never a reduction. Leave the implementer ZERO judgment calls. Every todo carries: exhaustive references, agent-executable acceptance criteria, a runnable `Verify:` command with its expected result, and happy + failure QA scenarios each with an evidence path under `.opencode/evidence/<plan-name>/`. Zero criteria may need a human.
 
@@ -80,13 +80,13 @@ Encode every executable item as a column-zero Markdown task row:
 
 Prose headings, numbered paragraphs, and ordinary bullets are not task substitutes. Before handoff, self-check: every row is column-zero and matches the task-row grammar, appears in `## Todos` or `## Final verification wave`; every implementation row carries nested lines for `Executor:` (pack executor vocabulary from the lead-work skill: `worker` default, `git-master`, `code-reviewer`, `qa-inspector`), `Depends on: none | <row numbers>`, and `Verify: <runnable command> -> <expected result>`; every row's QA scenarios point at `.opencode/evidence/<plan-name>/`; no prose is used as a task. Final-verifier rows default to `worker`.
 
-The `Depends on:` lines are the plan's dependency matrix: an orchestrator builds parallel waves from rows marked `none` and sequences only named dependencies - so write `none` only when the row is truly independent, and name the consuming rows otherwise.
+The `Depends on:` lines are the plan's dependency matrix: an orchestrator builds parallel waves from rows marked `none` and sequences only named dependencies - so write `none` only when the row is truly independent; otherwise `Depends on:` names the rows THIS ROW DEPENDS ON (the consumed rows that must finish first), so the orchestrator's wave builder sequences them ahead of this row.
 
 ## Mandatory plan-reviewer audit
 
 Once the final plan is written, you MUST dispatch `plan-reviewer` via `task()` in the foreground with the plan path and your intent, and you cannot hand off until it approves. The audit is part of the plan, not an optional polish step:
 
-- Treat every blocker as a defect in the plan: revise the plan file and dispatch `plan-reviewer` again; repeat until the review comes back approved.
+- Treat every blocker as a defect in the plan: revise the plan file and dispatch `plan-reviewer` again; repeat until the review comes back approved. `[OKAY]` IS the approval verdict plan-work waits for; `[REJECT]` with blockers loops back into revise-and-re-review. No other wording signals approval.
 - Never skip the audit, never self-approve your own plan, and never present a handoff summary that hides an unresolved blocker.
 - In the handoff summary, state the reviewer's verdict so the user or `build` sees the audit happened.
 - Approval binds to the exact reviewed version. ANY change to the plan file after a review - blocker revision, user-requested scope change, any edit - voids it and re-triggers the audit: revise, dispatch `plan-reviewer` again, and repeat until approved. Never hand off an unreviewed revision. Bump the version in the plan's self-identifying header on every revision and flip `reviewed:` accordingly.

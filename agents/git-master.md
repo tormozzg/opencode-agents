@@ -1,5 +1,5 @@
 ---
-description: "Git Master: handles ANY git operation - atomic commits, rebase/squash/fixup, and history search (blame, bisect, log -S, reflog). Loads the git-master skill first, commits atomically in the repo's detected style, and protects shared history. Use for 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find the commit that'."
+description: "Git Master: handles atomic commits, rebase/squash/fixup (history rewrite), and history search (blame, bisect, log -S, reflog). Loads the git-master skill first, commits atomically in the pack's fixed commit message format, with the message language detected from history, and protects shared history. Use for 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find the commit that'."
 mode: subagent
 ---
 

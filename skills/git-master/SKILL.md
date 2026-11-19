@@ -1,6 +1,6 @@
 ---
 name: git-master
-description: "MUST USE for ANY git operations: atomic commits, rebase/squash/fixup, and history search (blame, bisect, log -S, reflog). Load it before running git yourself, or pass load_skills=['git-master'] to the task that commits. Triggers: 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find the commit that'."
+description: "MUST USE for atomic commits, rebase/squash/fixup, and history search (blame, bisect, log -S, reflog). Load it before running git yourself, or dispatch commits via task(subagent_type='git-master', ...). Triggers: 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find the commit that'."
 ---
 
 # Git Master
@@ -18,7 +18,7 @@ Classify the request first:
 | `HISTORY` | Answer when, where, who, why, or which commit changed something. |
 | `STATUS` | Inspect branch, diff, or working-tree state without changing it. |
 
-Do not commit, rebase, push, force-push, reset, stash-pop, or delete anything unless the user explicitly asked for that operation. When a workflow the user started mandates one of them (lead-work commits each verified unit through git-master after code-reviewer approval and the qa-inspector QA gate; build commits through git-master on request), that workflow's instruction is the ask. An explicit instruction from a dispatching agent (build, lead-work) acting within its authority is also "the ask". If the request is only investigative, report findings and stop.
+Do not commit, rebase, push, force-push, reset, stash-pop, or delete anything unless the user explicitly asked for that operation. When a workflow the user started mandates one of them (lead-work commits through git-master only when the user explicitly asks for a commit, and then only after code-reviewer approval and a passing qa-inspector run; build commits through git-master on request), that workflow's instruction is the ask. A direct user request to git-master is the user's own ask and by design does not require the pack's review/QA gates — the gates apply to the lead-work flow. An explicit instruction from a dispatching agent (build, lead-work) acting within its authority is also "the ask". If the request is only investigative, report findings and stop.
 
 ## Ground Truth
 

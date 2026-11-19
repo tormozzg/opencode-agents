@@ -6,7 +6,7 @@
       "skill": "plan-work"
     },
     "build": {
-      "description": "Build: orchestrates execution of a plan or direct task by delegating everything. Loads the lead-work skill first, routes unclear topics to explore and ready work to worker, verifies every claim, runs a mandatory @code-reviewer review before any commit, never writes code. Use for running a plan, coordinating waves, or driving work to completion.",
+      "description": "Build: orchestrates execution of a plan or direct task by delegating everything. Loads the lead-work skill first, routes unclear topics to explore and ready work to worker, verifies every claim, runs a mandatory @code-reviewer review and @qa-inspector QA run before any commit, never writes code. Use for running a plan, coordinating waves, or driving work to completion.",
       "skill": "lead-work"
     },
     "worker": {
@@ -26,11 +26,11 @@
       "skill": "review-code"
     },
     "qa-inspector": {
-      "description": "QA inspector: executes the plan's QA scenarios after code-reviewer approval, runs each scenario's commands for real, saves evidence under .opencode/evidence/<plan-name>/, and returns per-scenario PASS/FAIL with an ALL PASS / N FAILED summary. Read-only to product code. Never fixes code itself. Use for 'run QA', 'QA gate', or 'прогонить QA-сценарии' requests before a commit.",
+      "description": "QA inspector: executes the plan's QA scenarios after code-reviewer approval, runs each scenario's commands for real, saves evidence under .opencode/evidence/<plan-name-or-task-slug>/, and returns per-scenario PASS/FAIL with an ALL PASS / N FAILED summary. Read-only to product code. Never fixes code itself. Use for 'run QA', 'QA gate', or 'прогонить QA-сценарии' requests before a commit.",
       "skill": "qa-inspect"
     },
     "git-master": {
-      "description": "Git Master: handles ANY git operation - atomic commits, rebase/squash/fixup, and history search (blame, bisect, log -S, reflog). Loads the git-master skill first, commits atomically in the repo's detected style, and protects shared history. Use for 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find the commit that'.",
+      "description": "Git Master: handles atomic commits, rebase/squash/fixup (history rewrite), and history search (blame, bisect, log -S, reflog). Loads the git-master skill first, commits atomically in the pack's fixed commit message format, with the message language detected from history, and protects shared history. Use for 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find the commit that'.",
       "skill": "git-master"
     }
   },

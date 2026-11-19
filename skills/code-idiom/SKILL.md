@@ -62,5 +62,5 @@ Where execute-work states a rule inline, its rule and this one are the same rule
 
 This skill is deliberately language-independent — it governs the *discipline*, not the dialect.
 
-- Syntax, standard-library idioms, framework patterns, and per-language error/typing conventions come from the language's official docs and the codebase's own conventions, exactly as execute-work Phase 0 step 2 requires.
-- Never substitute this file for the language reference.
+- Syntax, standard-library idioms, framework patterns, and per-language error/typing conventions follow the same fallback chain execute-work Phase 0 step 2 defines: (1) this file is the idiom reference when it is available; (2) for constructs it does not cover, consult the language's official docs; (3) follow the codebase's own conventions.
+- This file is an idiom reference, not a full substitute for the language's official docs.
