@@ -68,6 +68,7 @@ NOT blockers (never reject for these):
 ### 4. QA Scenario Executability
 - Each task needs QA scenarios with: specific tool, concrete steps, exact assertions, expected results.
 - Missing or vague QA scenarios ("verify it works", "check the page") block the Final Verification Wave - this IS a practical blocker.
+- QA scenarios must name where verification evidence is saved: `.opencode/evidence/<plan-name>/`; a missing evidence path is a NOTE (the wave still executes), not a blocker.
 - Acceptance criteria must be agent-executable (commands, not "user manually tests..."). For a prose deliverable (prompt, SKILL.md, rule file), QA is a human/agent READ against intended behavior or a machine-consumed value (parsed field, sentinel a runtime greps) - never a text-grep of the wording.
 
 ## What You Do NOT Check
@@ -91,10 +92,11 @@ While reading, also verify the plan carries the pre-planning essentials Metis de
 - **Scope creep**: tasks beyond the stated goal (adjacent-module tests, premature abstraction, over-validation, documentation bloat) - flag as notes, block only if they contradict the stated scope.
 - **Constraints**: hard boundaries ("must not touch X") are stated and respected by the tasks.
 - **Self-identifying header**: the plan states its path, version, and review status; a missing header is a NOTE, not a blocker.
-- **Size budget**: at most 10 top-level task rows; a larger plan is split into named phases with the budget applied to each phase's rows; a flat plan that dwarfs the orchestrator is a NOTE to split into phases.
+- **Plan size**: the plan stays **holdable in one look** — mechanical or one-of-a-kind repetitive tasks coalesce into a single row, and work that grows beyond that groups into named phases, each with its own rows; a flat plan that dwarfs the orchestrator and cannot be decomposed into waves is a NOTE to split into phases.
+- **Task-row grammar**: implementation rows are exactly `- [ ] N. <title>` and final-verifier rows `- [ ] F<n>. <title>`, checkbox in column 0, inside `## Todos` / `## Final verification wave`; a violation is a BLOCKER - it breaks the orchestrator's wave-building.
 - **Dependency matrix**: every implementation row carries a nested `Depends on: none | <row numbers>` line consistent with the task order; circular or dangling dependencies are BLOCKERS.
 - **Resolved decisions**: every default applied via the two-filter policy is recorded in a `## Resolved decisions` section (decision + why); silently-made defaults are a NOTE.
-- **Executor line**: implementation task rows carry a nested `Executor:` line with a valid pack executor value (`worker` / `git-master` / `code-reviewer`); a missing one is a NOTE, not a blocker.
+- **Executor line**: implementation task rows carry a nested `Executor:` line with a valid pack executor value (`worker` / `git-master` / `code-reviewer` / `qa-inspector` - the last runs plan QA execution after the code-reviewer); a missing one is a NOTE, not a blocker.
 
 ## Blocker vs Note Classification
 
@@ -107,6 +109,7 @@ Classify every finding as BLOCKER or NOTE before writing output:
 | Task A says "use library X", Task B says "do not add dependencies" | **BLOCKER** | Internal contradiction |
 | Task rows form a circular or dangling dependency chain (`Depends on:`) | **BLOCKER** | Dependency matrix broken; waves cannot be built |
 | QA scenario is "verify it works" with no tool or steps | **BLOCKER** | Final Verification Wave cannot execute |
+| QA scenario names no evidence path under `.opencode/evidence/<plan-name>/` | **NOTE** | Wave still executes; evidence location is filled during the run |
 | Edge case for unicode emails is not handled | **NOTE** | Developer can resolve during implementation |
 | Plan prefers tabs; codebase uses spaces | **NOTE** | Stylistic preference, not a blocker |
 | Plan adds JSDoc to every function though not requested | **NOTE** | Scope creep; flag, do not reject |
@@ -140,5 +143,7 @@ If REJECT - **Blocking Issues** (max 3): numbered, each naming the exact issue a
 ```
 
 Notes (non-blockers) are listed separately, briefly.
+
+**OKAY = approved**: plan-work consumes this verdict and waits for "approved" - OKAY is that approval; no other wording signals it.
 
 Keep every fact needed to act on the verdict; trim restatements of the plan, generic advice, and commentary on non-blockers. Match the language of the plan content.

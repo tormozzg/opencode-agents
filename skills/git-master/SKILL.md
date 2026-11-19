@@ -18,7 +18,7 @@ Classify the request first:
 | `HISTORY` | Answer when, where, who, why, or which commit changed something. |
 | `STATUS` | Inspect branch, diff, or working-tree state without changing it. |
 
-Do not commit, rebase, push, force-push, reset, stash-pop, or delete anything unless the user explicitly asked for that operation. When a workflow the user started mandates one of them (ulw-loop commits each verified unit, ulw-execute lands its branches), that workflow's instruction is the ask. If the request is only investigative, report findings and stop.
+Do not commit, rebase, push, force-push, reset, stash-pop, or delete anything unless the user explicitly asked for that operation. When a workflow the user started mandates one of them (lead-work commits each verified unit through git-master after code-reviewer approval and the qa-inspector QA gate; build commits through git-master on request), that workflow's instruction is the ask. An explicit instruction from a dispatching agent (build, lead-work) acting within its authority is also "the ask". If the request is only investigative, report findings and stop.
 
 ## Ground Truth
 
@@ -44,11 +44,12 @@ Commit only the user's requested changes. Preserve unrelated dirty work.
 
 1. Apply the commit message template (see below). The format is fixed; detect only the message language from recent history and match the repo's dominant language.
 2. Inspect the full diff, not only filenames. Separate unrelated user edits from the requested commit.
-3. Build atomic groups by behavior, module, and revertability. Keep implementation and its direct tests together.
-4. Prefer multiple commits for unrelated concerns. A single commit is acceptable only when the changed files form one indivisible behavior or the user explicitly asks for one commit.
-5. Stage by path or hunk so each commit contains only its atomic group.
-6. Before each commit, verify `git diff --staged --stat` and enough staged diff to prove the group is right.
-7. Commit with the template. After each commit, verify `git log -1 --oneline`.
+3. Scan the staged diff for secrets, credentials, and tokens before every commit. If any are found, stop, report them to the user or orchestrator, and do not commit.
+4. Build atomic groups by behavior, module, and revertability. Keep implementation and its direct tests together.
+5. Prefer multiple commits for unrelated concerns. A single commit is acceptable only when the changed files form one indivisible behavior or the user explicitly asks for one commit.
+6. Stage by path or hunk so each commit contains only its atomic group.
+7. Before each commit, verify `git diff --staged --stat` and enough staged diff to prove the group is right.
+8. Commit with the template. After each commit, verify `git log -1 --oneline`.
 
 ### Commit message template
 
@@ -111,6 +112,7 @@ Before any write to Git history:
 - Upstream/pushed status is known or explicitly unknown.
 - The operation matches the user's request.
 - Recovery path is known (`rebase --abort`, reflog hash, or untouched worktree).
+- Pre-commit/pre-push hooks are not bypassed (`--no-verify`) without the user's explicit request.
 
 Before finishing:
 
