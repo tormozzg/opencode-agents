@@ -42,13 +42,28 @@ Missing upstream or missing `main`/`master` is normal. Fall back to the best ava
 
 Commit only the user's requested changes. Preserve unrelated dirty work.
 
-1. Detect message style from recent history. Use the dominant local pattern, language, and casing. Do not default to Conventional Commits unless the repo uses them.
+1. Apply the commit message template (see below). The format is fixed; detect only the message language from recent history and match the repo's dominant language.
 2. Inspect the full diff, not only filenames. Separate unrelated user edits from the requested commit.
 3. Build atomic groups by behavior, module, and revertability. Keep implementation and its direct tests together.
 4. Prefer multiple commits for unrelated concerns. A single commit is acceptable only when the changed files form one indivisible behavior or the user explicitly asks for one commit.
 5. Stage by path or hunk so each commit contains only its atomic group.
 6. Before each commit, verify `git diff --staged --stat` and enough staged diff to prove the group is right.
-7. Commit with the detected style. After each commit, verify `git log -1 --oneline`.
+7. Commit with the template. After each commit, verify `git log -1 --oneline`.
+
+### Commit message template
+
+Every commit message follows this fixed format:
+
+```
+<type>: <short description>
+
+<short body>
+```
+
+- `<type>` is exactly one of: `feat`, `fix`, `chore`, `docs`, `refact`, `cicd`, `test`. Use these exact spellings — no `refactor` or `ci`. If none fits the change, pick the closest one.
+- `<short description>` is at most 100 characters.
+- One blank line, then `<short body>`: a more detailed but still brief description, without deep details.
+- The template fixes the format only. Write the message text in the repo's or user's dominant language.
 
 Grouping rules:
 

@@ -144,7 +144,7 @@ A typical chain for a medium-sized change:
 4. `explore` answers the open questions the plan flagged.
 5. `worker` implements the delegated steps and verifies each one.
 6. `code-reviewer` checks the resulting diff for correctness and plan fidelity.
-7. `git-master` commits the work atomically in the repo's detected style.
+7. `git-master` commits the work atomically using the pack's fixed commit message template (`<type>: <subject>`, a blank line, and a short body).
 
 In short: `plan` → `plan-reviewer` → `build` → `explore` →
 `worker` → `code-reviewer` → `git-master`.
