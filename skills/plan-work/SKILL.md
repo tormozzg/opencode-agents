@@ -92,6 +92,11 @@ Prose headings, numbered paragraphs, and ordinary bullets are not task substitut
 
 The `Depends on:` lines are the plan's dependency matrix: an orchestrator builds parallel waves from rows marked `none` and sequences only named dependencies - so write `none` only when the row is truly independent; otherwise `Depends on:` names the rows THIS ROW DEPENDS ON (the consumed rows that must finish first), so the orchestrator's wave builder sequences them ahead of this row.
 
+`Verify:` expectations follow two grounding rules (lesson from add-architect-agent: an uninstall-preservation expectation derived from a docstring):
+
+- A `Verify:` command whose expected result depends on a tool's runtime behavior (installer, uninstaller, script output) must be grounded in OBSERVED behavior - either the explore waves actually ran the tool in an isolated directory, or the row marks the expectation "to be confirmed on first execution". Never derive an expected output from a docstring or prose description.
+- Before writing any "X is preserved" / "X is removed" expectation, enumerate BOTH sides of the invariant from the tool's exact name lists (or observed behavior): precisely what gets deleted and precisely what survives. An expectation checked on only one side is how false positives slip into plans.
+
 ## Mandatory plan-reviewer audit
 
 Once the final plan is written, you MUST dispatch `plan-reviewer` via `task()` in the foreground with the plan path and your intent, and you cannot hand off until it approves. The audit is part of the plan, not an optional polish step:
