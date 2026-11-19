@@ -60,7 +60,7 @@ Every commit message follows this fixed format:
 <short body>
 ```
 
-- `<type>` is exactly one of: `feat`, `fix`, `chore`, `docs`, `refact`, `cicd`, `test`. Use these exact spellings — no `refactor` or `ci`. If none fits the change, pick the closest one.
+- `<type>` is exactly one of: `feat`, `fix`, `chore`, `docs`, `refactor`, `cicd`, `test`. Use these exact spellings — no `refactoring` or `ci`. If none fits the change, pick the closest one.
 - `<short description>` is at most 100 characters.
 - One blank line, then `<short body>`: a more detailed but still brief description, without deep details.
 - The template fixes the format only. Write the message text in the repo's or user's dominant language.

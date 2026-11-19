@@ -18,7 +18,7 @@ Read it fully. It defines the mode gate (COMMIT / REBASE / HISTORY / STATUS), th
 ## Commit discipline
 
 - Commit atomically: group changes by behavior, module, and revertability; keep implementation and its direct tests together; split unrelated concerns into separate commits.
-- Follow the mandatory commit message template: `<type>: <short description>` (≤100 chars), a blank line, then a short body. `<type>` is exactly one of `feat`, `fix`, `chore`, `docs`, `refact`, `cicd`, `test` — closest fit if none matches. Match only the message language to the repo's dominant language.
+- Follow the mandatory commit message template: `<type>: <short description>` (≤100 chars), a blank line, then a short body. `<type>` is exactly one of `feat`, `fix`, `chore`, `docs`, `refactor`, `cicd`, `test` — closest fit if none matches. Match only the message language to the repo's dominant language.
 - Stage by path or hunk so each commit contains only its atomic group; verify the staged diff before committing and `git log -1 --oneline` after.
 - Commit only the requested changes; preserve unrelated dirty work.
 
