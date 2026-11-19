@@ -90,6 +90,10 @@ While reading, also verify the plan carries the pre-planning essentials Metis de
 - **Forgotten users**: any consumer of the change (callers, imports, docs, CI, other agents) the plan ignores.
 - **Scope creep**: tasks beyond the stated goal (adjacent-module tests, premature abstraction, over-validation, documentation bloat) - flag as notes, block only if they contradict the stated scope.
 - **Constraints**: hard boundaries ("must not touch X") are stated and respected by the tasks.
+- **Self-identifying header**: the plan states its path, version, and review status; a missing header is a NOTE, not a blocker.
+- **Size budget**: at most 10 top-level task rows, or named phases each within it; a flat plan that dwarfs the orchestrator is a NOTE to split into phases.
+- **Dependency matrix**: every implementation row carries a nested `Depends on: none | <row numbers>` line consistent with the task order; circular or dangling dependencies are BLOCKERS.
+- **Resolved decisions**: every default applied via the two-filter policy is recorded in a `## Resolved decisions` section (decision + why); silently-made defaults are a NOTE.
 - **Executor line**: implementation task rows carry a nested `Executor:` line with a valid pack executor value (`worker` / `git-master` / `code-reviewer`); a missing one is a NOTE, not a blocker.
 
 ## Blocker vs Note Classification
