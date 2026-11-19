@@ -1,7 +1,7 @@
 # OpenCode Subagents Pack
 
-A small, self-contained pack for OpenCode that adds eight focused agents and their
-matching skills (eleven in total - eight agent skills plus three extra worker skills). The pack only registers agents and skills; it does not modify
+A small, self-contained pack for OpenCode that adds nine focused agents and their
+matching skills (twelve in total - nine agent skills plus three extra worker skills). The pack only registers agents and skills; it does not modify
 any other plugins, and it never auto-runs plans. Every plan and every code change stays
 under your explicit control.
 
@@ -13,6 +13,7 @@ under your explicit control.
 |-------|------|
 | `plan` | "Plan: the pack's planner - turns a request into ONE brief, decision-complete work plan: bounded size, dependency-annotated task rows, resolved defaults recorded in the plan, acceptance criteria the executor can run. Explores before asking, delegates research to explore only - never dispatches worker, never implements, never starts execution. Runs a mandatory plan-reviewer audit of the written plan before handoff. Use for planning, designing, or breaking down work." |
 | `build` | "Build: orchestrates execution of a plan or direct task by delegating everything. Loads the lead-work skill first, routes unclear topics to explore and ready work to worker, verifies every claim, runs a mandatory @code-reviewer review and @qa-inspector QA run before any commit, never writes code. Use for running a plan, coordinating waves, or driving work to completion." |
+| `discuss` | "Discuss: a discussion partner that debates code and improvement proposals - grounds the dialogue in facts via @explore and @code-reviewer, critiques constructively, and hands converged outcomes to plan or build. Never edits files, never builds plans. Use for talking through designs, weighing alternatives, or pressure-testing an idea before planning." |
 | `worker` | "Worker: implements delegated tasks silently and verifies before declaring done. Loads the execute-work discipline first, then writes code, runs diagnostics/build/tests, and reports with evidence. Use for any delegated implementation work." |
 | `explore` | "Explore: investigates a topic across code, docs, and the web with an evidence-demander stance. Cites every claim, returns numbered concise findings. Use for research, fact-finding, or grounding decisions." |
 | `plan-reviewer` | "Plan reviewer: reviews draft work plans for executability and valid references. Loads the review-plan skill first, performs Momus + Metis review, returns blockers and notes. Never rewrites plans unless asked." |
@@ -27,6 +28,7 @@ own - `worker` loads them contextually during implementation):
 
 - `plan-work` (plan)
 - `lead-work` (build)
+- `discuss-work` (discuss)
 - `research-topic` (explore)
 - `execute-work` (worker)
 - `review-plan` (plan-reviewer)
@@ -70,8 +72,8 @@ You can also pin a per-agent model at install time with `--model <agent>=<model>
 This writes a `"model"` property into each named agent's entry in the merged
 config, equivalent to editing the file by hand (see
 [Assigning a model to an agent](#assigning-a-model-to-an-agent)). The agent
-name must be one of the pack's 8 agents (`plan`, `worker`, `explore`,
-`build`, `plan-reviewer`, `code-reviewer`, `qa-inspector`, `git-master`), and the model
+name must be one of the pack's 9 agents (`plan`, `worker`, `explore`,
+`build`, `discuss`, `plan-reviewer`, `code-reviewer`, `qa-inspector`, `git-master`), and the model
 string must be non-empty with no whitespace; anything else is rejected with an
 error before anything is installed. Omitting `--model` changes nothing.
 
@@ -106,8 +108,8 @@ before anything is installed.
 
 What the installer does:
 
-- Copies the 8 agent files to `<config-dir>/agents/`.
-- Copies the 11 skill directories to `<config-dir>/skills/`.
+- Copies the 9 agent files to `<config-dir>/agents/`.
+- Copies the 12 skill directories to `<config-dir>/skills/`.
 - Merges `opencode.jsonc.snippet` into `<config-dir>/opencode.jsonc` or
   `<config-dir>/opencode.json`, whichever already exists (`.jsonc` is
   preferred when both exist; `.jsonc` is created when neither does).
@@ -128,9 +130,9 @@ config are lost when the merge runs (the backup keeps the original).
 
 ## How to invoke each agent
 
-Two agents in this pack are **primary**: `plan` and `build`. You select one
-as the active agent before typing your message; neither can be spawned by
-other agents. `plan` is primary by OpenCode's built-in default: its agent
+Three agents in this pack are **primary**: `plan`, `build` and `discuss`. You
+select one as the active agent before typing your message; none can be spawned
+by other agents. `plan` is primary by OpenCode's built-in default: its agent
 file carries no `mode` field — OpenCode's built-in plan mode grants its
 primary status. The remaining six are subagents - you invoke them by naming
 them in your prompt:
@@ -145,18 +147,21 @@ them in your prompt:
 You can also select any of these as the active agent before typing your
 message.
 
-`plan` and `build` are primary agents, not subagents: select one as the
-active agent first, then give it the work directly, e.g. "Plan a rate limit
+`plan`, `build` and `discuss` are primary agents, not subagents: select one as
+the active agent first, then give it the work directly, e.g. "Plan a rate limit
 for /login." (plan) or "Execute the plan at ~/.opencode/plan/my-feature.md."
-(build). `plan` turns the request into a decision-complete plan and hands
-off to implementation; `build` orchestrates by delegating to the `explore`
-and `worker` subagents. Neither can be spawned by other agents. `plan`'s
+(build). When the topic is not yet a task — say, weighing two approaches for a
+migration — pick `discuss` and debate it: "Which of these designs should we
+take to planning?" `plan` turns the request into a decision-complete plan and
+hands off to implementation; `build` orchestrates by delegating to the `explore`
+and `worker` subagents. None can be spawned by other agents. `plan`'s
 primary status comes from OpenCode's built-in plan mode by default, so its
 agent file has no `mode` field.
 
 ## Example workflow
 
-A typical chain for a medium-sized change:
+A typical chain for a medium-sized change (optionally preceded by a `discuss`
+session that debates the approach and converges on a design before planning):
 
 1. `plan` writes a decision-complete plan and runs the mandatory `plan-reviewer` audit before handoff.
 2. `plan-reviewer` audits the plan and returns blockers or approval; `plan` resolves every blocker before handoff, and re-runs the audit after every plan revision - approval binds to the reviewed version.
@@ -243,7 +248,7 @@ The uninstaller is the exact inverse of the installer:
   `<config-dir>/opencode.jsonc` and the most recent
   `opencode.json.backup-*` over `<config-dir>/opencode.json`
   (whenever such backups exist).
-- Removes only the pack's own 8 agent files and 11 skill directories, by exact
+- Removes only the pack's own 9 agent files and 12 skill directories, by exact
   name. Nothing else in those folders is touched, and the source pack files in
   this directory are never removed.
 

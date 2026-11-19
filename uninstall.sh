@@ -8,7 +8,7 @@
 #     <config-dir>/opencode.jsonc and the most recent
 #     <config-dir>/opencode.json.backup-* over
 #     <config-dir>/opencode.json (whenever such backups exist).
-#   - Removes exactly the 8 agent files and 11 skill directories installed
+#   - Removes exactly the 9 agent files and 12 skill directories installed
 #     by this pack (identified by exact name list below).
 #
 # Safety:
@@ -99,6 +99,7 @@ AGENT_FILES=(
   code-reviewer.md
   git-master.md
   qa-inspector.md
+  discuss.md
 )
 
 SKILL_DIRS=(
@@ -113,6 +114,7 @@ SKILL_DIRS=(
   code-idiom
   refactor-code
   slop-cleanup
+  discuss-work
 )
 
 # --- Confirmation gate ------------------------------------------------------
@@ -165,7 +167,7 @@ restore_latest() {
 restore_latest "${CONFIG_JSONC}" "${CONFIG_DIR}/opencode.jsonc.backup-*"
 restore_latest "${CONFIG_JSON}" "${CONFIG_DIR}/opencode.json.backup-*"
 
-# --- Remove the 8 agent files (by exact name; tolerate missing) -------------
+# --- Remove the 9 agent files (by exact name; tolerate missing) -------------
 for name in "${AGENT_FILES[@]}"; do
   if [ -f "${AGENTS_DST}/${name}" ]; then
     rm -f "${AGENTS_DST}/${name}"
@@ -173,7 +175,7 @@ for name in "${AGENT_FILES[@]}"; do
   fi
 done
 
-# --- Remove the 11 skill directories (by exact name; tolerate missing) ------
+# --- Remove the 12 skill directories (by exact name; tolerate missing) ------
 for name in "${SKILL_DIRS[@]}"; do
   if [ -d "${SKILLS_DST}/${name}" ]; then
     rm -rf "${SKILLS_DST:?}/${name}"
@@ -184,7 +186,7 @@ done
 # --- Summary ----------------------------------------------------------------
 echo ""
 echo "Uninstall complete."
-echo "  Agents : ${REMOVED_AGENTS}/8 file(s) removed from ${AGENTS_DST}"
-echo "  Skills : ${REMOVED_SKILLS}/11 director(ies) removed from ${SKILLS_DST}"
+echo "  Agents : ${REMOVED_AGENTS}/9 file(s) removed from ${AGENTS_DST}"
+echo "  Skills : ${REMOVED_SKILLS}/12 director(ies) removed from ${SKILLS_DST}"
 echo "User-created files in ${AGENTS_DST} and ${SKILLS_DST} were preserved."
 echo "Restart opencode for the restored config to take effect."

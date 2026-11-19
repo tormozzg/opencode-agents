@@ -4,8 +4,8 @@
 #
 # Installs (into <config-dir>, the OpenCode config directory; by default
 # ~/.config/opencode, override with --config-dir <path>):
-#   - 8 agent files from ./agents/*.md        -> <config-dir>/agents/
-#   - 11 skill directories from ./skills/*    -> <config-dir>/skills/
+#   - 9 agent files from ./agents/*.md        -> <config-dir>/agents/
+#   - 12 skill directories from ./skills/*    -> <config-dir>/skills/
 #   - Merges ./opencode.jsonc.snippet into    -> <config-dir>/opencode.jsonc
 #     or <config-dir>/opencode.json (whichever already exists; .jsonc is
 #     preferred when both exist, and .jsonc is created when neither does).
@@ -14,7 +14,7 @@
 # Safety:
 #   - Requires --yes, or interactive confirmation, before touching the config.
 #   - Supports --model <agent>=<model> to pin a per-agent model in the merged
-#     config (repeatable; agent must be one of the pack's 8 agents).
+#     config (repeatable; agent must be one of the pack's 9 agents).
 #   - Supports --default-model <model> to set the top-level default "model"
 #     key in the merged config (repeatable, last one wins; when the flag is
 #     not given the existing top-level "model" is left untouched).
@@ -93,7 +93,7 @@ while [ $# -gt 0 ]; do
 done
 
 # --- Validate --model overrides ---------------------------------------------
-PACK_AGENTS="plan worker explore build plan-reviewer code-reviewer git-master qa-inspector"
+PACK_AGENTS="plan worker explore build plan-reviewer code-reviewer git-master qa-inspector discuss"
 MODEL_OVERRIDES=""
 for pair in "${MODEL_ARGS[@]}"; do
   agent="${pair%%=*}"

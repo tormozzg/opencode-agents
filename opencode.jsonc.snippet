@@ -9,6 +9,10 @@
       "description": "Build: orchestrates execution of a plan or direct task by delegating everything. Loads the lead-work skill first, routes unclear topics to explore and ready work to worker, verifies every claim, runs a mandatory @code-reviewer review and @qa-inspector QA run before any commit, never writes code. Use for running a plan, coordinating waves, or driving work to completion.",
       "skill": "lead-work"
     },
+    "discuss": {
+      "description": "Discuss: a discussion partner that debates code and improvement proposals - grounds the dialogue in facts via @explore and @code-reviewer, critiques constructively, and hands converged outcomes to plan or build. Never edits files, never builds plans. Use for talking through designs, weighing alternatives, or pressure-testing an idea before planning.",
+      "skill": "discuss-work"
+    },
     "worker": {
       "description": "Worker: implements delegated tasks silently and verifies before declaring done. Loads the execute-work discipline first, then writes code, runs diagnostics/build/tests, and reports with evidence. Use for any delegated implementation work.",
       "skill": "execute-work"
@@ -38,6 +42,7 @@
     "paths": [
       "~/.config/opencode/skills/plan-work/SKILL.md",
       "~/.config/opencode/skills/lead-work/SKILL.md",
+      "~/.config/opencode/skills/discuss-work/SKILL.md",
       "~/.config/opencode/skills/research-topic/SKILL.md",
       "~/.config/opencode/skills/execute-work/SKILL.md",
       "~/.config/opencode/skills/review-plan/SKILL.md",
