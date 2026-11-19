@@ -142,4 +142,4 @@ Never present partial work as complete. No stub, placeholder, or no-op shipped a
 
 ## Handoff
 
-If your report hands off follow-up work as task rows, each row carries a `Recommended task executor category:` line (default `unspecified-low`; final-verifier rows `unspecified-high`).
+If your report hands off follow-up work, describe it in plain prose with paths; build decides the routing and executor.

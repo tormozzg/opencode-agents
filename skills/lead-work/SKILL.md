@@ -40,10 +40,12 @@ You receive either a plan file (at the path you are given — typically OpenCode
 
 ## Routing
 
-Every unit of work goes to exactly one of two subagents via `task()`:
+Every unit of work goes to exactly one subagent via `task()`, chosen by role:
 
-- **Unclear topic** — the what, where, or why is not yet pinned down (unknown surface, missing facts, open design question) -> `subagent_type="explore"`. Research is read-only: never instruct an explore agent to edit files, and never dispatch research with `category=` (categories spawn implementers).
-- **Ready work** — a decision-complete task with exact paths, acceptance criteria, and a verification command -> `subagent_type="worker"` (or `category=` + `load_skills=` when a domain-configured implementer fits).
+- **Unclear topic** — the what, where, or why is not yet pinned down (unknown surface, missing facts, open design question) -> `subagent_type="explore"`. Research is read-only: never instruct an explore agent to edit files.
+- **Ready work** — a decision-complete task with exact paths, acceptance criteria, and a verification command -> `subagent_type="worker"`; git/history-only work -> `subagent_type="git-master"`.
+
+**Executor vocabulary** - the pack's only executors: `worker` (default: implementation and verification commands), `git-master` (git/history-only operations), `code-reviewer` (review-only). Plan task rows carry an `Executor:` line with one of these values; final-verifier rows default to `worker`. `explore` and `plan-reviewer` are never executors.
 
 Research runs `run_in_background=true`; execution runs `run_in_background=false` so you can verify on return. Collect background results with `background_output(task_id="bg_...")`.
 
@@ -58,7 +60,7 @@ Research runs `run_in_background=true`; execution runs `run_in_background=false`
 
 If you cannot write the 6-section prompt without guessing, the topic is unclear: send it to `explore` first, then convert the findings into a worker task.
 
-The 6 sections in full. Every implementation task derived from a plan task row keeps the row's `Recommended task executor category:` line in section 1 (TASK) so the right implementer category is picked; final-verifier rows default to `unspecified-high`.
+The 6 sections in full. Every implementation task derived from a plan task row keeps the row's `Executor:` line in section 1 (TASK) so the right pack executor is picked; final-verifier rows default to `worker`.
 
 ```markdown
 ## 1. TASK

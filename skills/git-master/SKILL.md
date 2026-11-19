@@ -70,7 +70,6 @@ Grouping rules:
 - Split different features, modules, generated artifacts, config, docs, and test-only changes unless they are inseparable.
 - Keep generated files with the source change that produced them when omitting them would leave the repo inconsistent.
 - Never hide failing or unrelated changes inside a broad commit.
-- When a commit includes plan or task files, keep each task row's `Recommended task executor category:` line intact - it is machine-consumed routing metadata, not prose to trim.
 
 Final report: list commit hashes, messages, and any remaining uncommitted files.
 

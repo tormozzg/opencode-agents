@@ -90,7 +90,7 @@ While reading, also verify the plan carries the pre-planning essentials Metis de
 - **Forgotten users**: any consumer of the change (callers, imports, docs, CI, other agents) the plan ignores.
 - **Scope creep**: tasks beyond the stated goal (adjacent-module tests, premature abstraction, over-validation, documentation bloat) - flag as notes, block only if they contradict the stated scope.
 - **Constraints**: hard boundaries ("must not touch X") are stated and respected by the tasks.
-- **Task executor categories**: implementation task rows carry a nested `Recommended task executor category:` line; a missing one is a NOTE, not a blocker.
+- **Executor line**: implementation task rows carry a nested `Executor:` line with a valid pack executor value (`worker` / `git-master` / `code-reviewer`); a missing one is a NOTE, not a blocker.
 
 ## Blocker vs Note Classification
 

@@ -40,7 +40,6 @@ You ARE here to:
    - Every planned deliverable present? Anything extra added that was not asked for?
    - Explicit "MUST NOT" boundaries respected?
    - Claims in the summary ("follows pattern in X", "covered by test Y") verified against the actual code?
-   - If the diff touches plan/task files, each implementation task row keeps its nested `Recommended task executor category:` line; a stripped one is a NOTE (it is machine-consumed routing metadata, not prose).
 3. **Review the code** (parallelize independent reads):
    - **Correctness**: logic errors, unhandled edge cases, error handling at boundaries, async/race issues, resource leaks.
    - **Design**: fits the existing structure, no parallel copies of existing helpers, no abstractions for hypothetical needs, no defensive checks in trusted code.

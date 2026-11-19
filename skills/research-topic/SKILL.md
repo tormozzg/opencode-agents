@@ -53,4 +53,4 @@ When your findings will drive build tasks or need to be audited later, save them
 
 ## Handoff to planning
 
-When your findings feed plan task rows, each implementation row should carry a `Recommended task executor category:` line (e.g. `unspecified-low` for routine edits, `unspecified-high` for final verification) so the orchestrator routes the work to the right implementer.
+When your findings feed plan task rows, report them as plain findings with file paths; the plan agent turns them into task rows and picks the executor.
