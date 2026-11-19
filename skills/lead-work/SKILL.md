@@ -52,6 +52,7 @@ Research runs `run_in_background=true`; execution runs `run_in_background=false`
 - Every `task()` prompt MUST include all 6 sections (TASK, EXPECTED OUTCOME, REQUIRED TOOLS, MUST DO, MUST NOT DO, CONTEXT) — under 30 lines is too short for a stateless subagent.
 - Parallelize by wave: fire all independent tasks in ONE message; go sequential only for a named input dependency (Task B consumes Task A's output) or a file conflict. Sequential tasks must state the specific blocking dependency.
 - Anti-duplication: once research is delegated, never re-search the same topic yourself — no grepping, reading, or "just quickly checking" the same files the agent is checking. When delegated results are not ready, end your response and wait for the completion notification, then collect via `background_output(task_id="bg_...")`. Never `background_cancel(all=true)` — cancel disposable tasks individually by ID.
+- Mechanical actions: a single fixed command with no project file creation/editing and no implementation decisions (running the installer, syntax checks, linters, status checks) — execute them directly. Anything that creates or edits project files, or needs judgment, is delegated — even if small. A mechanical action that fails and needs fixing upgrades to a worker task and is delegated.
 
 ## 6-Section Delegation Prompt template
 
