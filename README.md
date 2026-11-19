@@ -217,6 +217,7 @@ config directory), and partly in OpenCode's global Plan directory:
 - Plan artifacts (the final plan and the durable draft) are written by `plan` into OpenCode's built-in Plan directory (`~/.opencode/plan`) — the built-in Plan mode restricts the plan agent's writes to that directory.
 - `.opencode/notepads/` — per-plan learnings, issues, and decisions recorded during execution
 - `.opencode/evidence/<plan-name-or-task-slug>/` — verification evidence saved by `build`, `worker`, `explore` and `qa-inspector` (command output, screenshots, responses, cited findings), grouped by plan name or task slug
+- `.opencode/tmp/` — temporary/scratch verification files (throwaway repro scripts, one-off test scripts, temp fixtures) created by `worker` and `qa-inspector`; anything temporary created outside `.opencode/` is removed before the work is declared done
 
 The agents and skills themselves still install globally to `~/.config/opencode/`;
 run-time artifacts live in the project (`.opencode/`) and in OpenCode's global

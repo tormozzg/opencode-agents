@@ -38,6 +38,8 @@ Every scenario is one of two labeled types - **COMMAND** or **READ** - and in bo
 - Write one dated evidence file per scenario under `.opencode/evidence/<plan-name-or-task-slug>/` (plan name, or the task slug when no plan exists): `<date>-<scenario-slug>.md` containing the exact command(s) run or the READ assertion performed, the actual output verbatim, expected-vs-actual, and the verdict - for a READ scenario, the quoted phrase and the file:line where it was found or shown absent.
 - Every verdict line cites its evidence path. A run without evidence did not happen.
 - Save extra artifacts (full logs, test output) alongside when they are longer than the file should quote.
+- Scratch scripts and artifacts created while executing scenarios go under `.opencode/evidence/<plan-name-or-task-slug>/` or `.opencode/tmp/` - never left loose in the repo working tree; delete anything scratch-like accidentally created outside `.opencode/`.
+- Evidence files themselves are the audit trail - never cleaned up.
 
 ## Verdict format
 

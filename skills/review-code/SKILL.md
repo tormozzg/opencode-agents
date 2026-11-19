@@ -68,6 +68,7 @@ Flag these patterns wherever they appear in the diff (code, tests, comments, doc
 - [ ] **Redundant post-action verification**: re-checking what the framework guarantees; verification theater.
 - [ ] **Prose pins in tests**: asserting wording, headings, or doc text instead of machine-consumed values.
 - [ ] **Placeholder/stub shipped as done**: empty handlers, `not implemented` paths presented as complete.
+- [ ] **Leftover scratch files**: temporary test scripts, repro scripts, or fixture files left outside the repo's standard test location instead of the gitignored `.opencode/` directory.
 
 ## Verdict Format
 

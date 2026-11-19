@@ -132,6 +132,15 @@ Tests and builds prove the internals; the user experiences the real surface. Bef
 
 ---
 
+## TEMPORARY FILES
+
+- Create temporary/scratch verification files (throwaway repro scripts, one-off test scripts, temp fixtures) ONLY under `.opencode/` (e.g. `.opencode/tmp/`) — it is gitignored, so the repo stays clean even if cleanup is skipped.
+- Files placed in the repository are ONLY permanent tests with real regression value, in the repo's standard test location, committed together with the change.
+- Before declaring done: remove every temporary file created outside `.opencode/`; leave nothing scratch-like in the working tree.
+- Evidence files under `.opencode/evidence/` are NOT temporary — they are the audit trail and are kept.
+
+---
+
 ## DECLARE DONE ONLY WITH EVIDENCE
 
 Declare done only when all of the following hold, each backed by a tool result from this session:
@@ -142,6 +151,7 @@ Declare done only when all of the following hold, each backed by a tool result f
 4. **Post-write review loop completed** — all 11 points answered, failures fixed.
 5. **Real-surface QA done** for user-visible changes, with evidence saved under `.opencode/evidence/<plan-name>/`.
 6. **Scope check** — you delivered exactly what was asked, nothing quietly narrowed or widened; every claim in your summary is backed by a tool result.
+7. **No temporary files left behind** — every scratch/temp file created outside `.opencode/` removed, per the TEMPORARY FILES section.
 
 Never present partial work as complete. No stub, placeholder, or no-op shipped as the feature. If one part is blocked, finish the rest and state exactly what remains blocked. Then report: what changed, how it was verified, and any follow-ups.
 
