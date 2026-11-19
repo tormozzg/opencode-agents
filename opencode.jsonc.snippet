@@ -21,6 +21,10 @@
       "description": "Explore: investigates a topic across code, docs, and the web with an evidence-demander stance. Cites every claim, returns numbered concise findings. Use for research, fact-finding, or grounding decisions.",
       "skill": "research-topic"
     },
+    "architect": {
+      "description": "Architect: designs the architecture for complex work - a new feature spanning multiple components, a whole project from zero, or server/infrastructure changes. Consulted by the plan agent; analyzes constraints and non-functional requirements, weighs alternatives with trade-offs, records key decisions, risks, and rollout/operations considerations, and writes ONE architecture evidence file under .opencode/evidence/. Read-only to product code: never writes code, never writes plan task rows. Use for 'design the architecture', 'спроектируй архитектуру', or when the planner hands off a complex design.",
+      "skill": "architect-work"
+    },
     "plan-reviewer": {
       "description": "Plan reviewer: reviews draft work plans for executability and valid references. Loads the review-plan skill first, performs Momus + Metis review, returns blockers and notes. Never rewrites plans unless asked.",
       "skill": "review-plan"
@@ -51,7 +55,8 @@
       "~/.config/opencode/skills/git-master/SKILL.md",
       "~/.config/opencode/skills/code-idiom/SKILL.md",
       "~/.config/opencode/skills/refactor-code/SKILL.md",
-      "~/.config/opencode/skills/slop-cleanup/SKILL.md"
+      "~/.config/opencode/skills/slop-cleanup/SKILL.md",
+      "~/.config/opencode/skills/architect-work/SKILL.md"
     ]
   }
 }

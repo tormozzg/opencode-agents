@@ -1,7 +1,7 @@
 # OpenCode Subagents Pack
 
-A small, self-contained pack for OpenCode that adds nine focused agents and their
-matching skills (twelve in total - nine agent skills plus three extra worker skills). The pack only registers agents and skills; it does not modify
+A small, self-contained pack for OpenCode that adds ten focused agents and their
+matching skills (thirteen in total - ten agent skills plus three extra worker skills). The pack only registers agents and skills; it does not modify
 any other plugins, and it never auto-runs plans. Every plan and every code change stays
 under your explicit control.
 
@@ -20,6 +20,7 @@ under your explicit control.
 | `code-reviewer` | "Code reviewer: reviews diffs and completed changes for correctness, quality, and plan fidelity. Loads the review-code skill first, classifies the work type, checks blockers vs notes, returns comments or approval. Never fixes code itself." |
 | `qa-inspector` | "QA inspector: executes the plan's QA scenarios after code-reviewer approval, runs each scenario's commands for real, saves evidence under .opencode/evidence/<plan-name-or-task-slug>/, and returns per-scenario PASS/FAIL with an ALL PASS / N FAILED summary. Read-only to product code. Never fixes code itself. Use for 'run QA', 'QA gate', or 'прогонить QA-сценарии' requests before a commit." |
 | `git-master` | "Git Master: handles atomic commits, rebase/squash/fixup (history rewrite), and history search (blame, bisect, log -S, reflog). Loads the git-master skill first, commits atomically in the pack's fixed commit message format, with the message language detected from history, and protects shared history. Use for 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find the commit that'." |
+| `architect` | "Architect: designs the architecture for complex work - a new feature spanning multiple components, a whole project from zero, or server/infrastructure changes. Consulted by the plan agent; analyzes constraints and non-functional requirements, weighs alternatives with trade-offs, records key decisions, risks, and rollout/operations considerations, and writes ONE architecture evidence file under .opencode/evidence/. Read-only to product code: never writes code, never writes plan task rows. Use for 'design the architecture', 'спроектируй архитектуру', or when the planner hands off a complex design." |
 
 ### Skills
 
@@ -35,6 +36,7 @@ own - `worker` loads them contextually during implementation):
 - `review-code` (code-reviewer)
 - `qa-inspect` (qa-inspector)
 - `git-master` (git-master)
+- `architect-work` (architect)
 - `code-idiom` (worker, contextually)
 - `refactor-code` (worker, contextually)
 - `slop-cleanup` (worker, contextually)
@@ -72,8 +74,8 @@ You can also pin a per-agent model at install time with `--model <agent>=<model>
 This writes a `"model"` property into each named agent's entry in the merged
 config, equivalent to editing the file by hand (see
 [Assigning a model to an agent](#assigning-a-model-to-an-agent)). The agent
-name must be one of the pack's 9 agents (`plan`, `worker`, `explore`,
-`build`, `discuss`, `plan-reviewer`, `code-reviewer`, `qa-inspector`, `git-master`), and the model
+name must be one of the pack's 10 agents (`plan`, `worker`, `explore`,
+`build`, `discuss`, `plan-reviewer`, `code-reviewer`, `qa-inspector`, `git-master`, `architect`), and the model
 string must be non-empty with no whitespace; anything else is rejected with an
 error before anything is installed. Omitting `--model` changes nothing.
 
@@ -108,8 +110,8 @@ before anything is installed.
 
 What the installer does:
 
-- Copies the 9 agent files to `<config-dir>/agents/`.
-- Copies the 12 skill directories to `<config-dir>/skills/`.
+- Copies the 10 agent files to `<config-dir>/agents/`.
+- Copies the 13 skill directories to `<config-dir>/skills/`.
 - Merges `opencode.jsonc.snippet` into `<config-dir>/opencode.jsonc` or
   `<config-dir>/opencode.json`, whichever already exists (`.jsonc` is
   preferred when both exist; `.jsonc` is created when neither does).
@@ -134,7 +136,7 @@ Three agents in this pack are **primary**: `plan`, `build` and `discuss`. You
 select one as the active agent before typing your message; none can be spawned
 by other agents. `plan` is primary by OpenCode's built-in default: its agent
 file carries no `mode` field — OpenCode's built-in plan mode grants its
-primary status. The remaining six are subagents - you invoke them by naming
+primary status. The remaining seven are subagents - you invoke them by naming
 them in your prompt:
 
 - `@explore` — "How does the auth flow work in this repo?"
@@ -143,6 +145,7 @@ them in your prompt:
 - `@code-reviewer` — "Review the diff for this branch."
 - `@qa-inspector` — "Run the QA scenarios from the plan before we commit."
 - `@git-master` — "Commit the current changes atomically."
+- `@architect` — "Design the architecture for the new notification subsystem."
 
 You can also select any of these as the active agent before typing your
 message.
@@ -163,7 +166,7 @@ agent file has no `mode` field.
 A typical chain for a medium-sized change (optionally preceded by a `discuss`
 session that debates the approach and converges on a design before planning):
 
-1. `plan` writes a decision-complete plan and runs the mandatory `plan-reviewer` audit before handoff.
+1. `plan` writes a decision-complete plan and runs the mandatory `plan-reviewer` audit before handoff. For complex work (a new subsystem or feature with many moving parts, a project from zero, or server/infrastructure changes) `plan` first consults `architect`, and the plan references the architecture doc `architect` wrote under `.opencode/evidence/`.
 2. `plan-reviewer` audits the plan and returns blockers or approval; `plan` resolves every blocker before handoff, and re-runs the audit after every plan revision - approval binds to the reviewed version.
 3. `build` picks up the approved plan and coordinates the waves.
 4. `explore` answers the open questions the plan flagged.
@@ -172,7 +175,7 @@ session that debates the approach and converges on a design before planning):
 7. `qa-inspector` runs the plan's QA scenarios for real, saves one evidence file per run, and reports PASS/FAIL; on FAIL, `worker` fixes and the cycle repeats before commit; a FAIL caused by a plan defect goes back to `plan` instead — `plan` revises and re-audits, and the cycle resumes from the revised plan.
 8. `git-master` commits the work atomically using the pack's fixed commit message template — see git-master's skill (`skills/git-master/SKILL.md`) for its definition.
 
-In short: `plan` → `plan-reviewer` → `build` → `explore` →
+In short: `plan` → (`architect` for complex work) → `plan-reviewer` → `build` → `explore` →
 `worker` → `code-reviewer` → `qa-inspector` → `git-master`.
 A QA FAIL caused by a plan defect loops back from `build` to `plan` for revision and re-audit before execution resumes.
 
@@ -222,7 +225,7 @@ config directory), and partly in OpenCode's global Plan directory:
 
 - Plan artifacts (the final plan and the durable draft) are written by `plan` into OpenCode's built-in Plan directory (`~/.opencode/plan`) — the built-in Plan mode restricts the plan agent's writes to that directory.
 - `.opencode/notepads/` — per-plan learnings, issues, and decisions recorded during execution
-- `.opencode/evidence/<plan-name-or-task-slug>/` — verification evidence saved by `explore`, `qa-inspector`, and `discuss` (discussion ledgers and citable findings) (one file per run: citable findings and gate verdicts); `worker` quotes its proof inline in the final report
+- `.opencode/evidence/<plan-name-or-task-slug>/` — design and verification evidence saved by `explore`, `architect`, `qa-inspector`, and `discuss` (discussion ledgers and citable findings) (one file per run: citable findings, architecture docs, and gate verdicts); `worker` quotes its proof inline in the final report
 - `.opencode/tmp/` — temporary/scratch verification files (throwaway repro scripts, one-off test scripts, temp fixtures) created by `worker` and `qa-inspector`; anything temporary created outside `.opencode/` is removed before the work is declared done
 
 The agents and skills themselves still install globally to `~/.config/opencode/`;
@@ -249,7 +252,7 @@ The uninstaller is the exact inverse of the installer:
   `<config-dir>/opencode.jsonc` and the most recent
   `opencode.json.backup-*` over `<config-dir>/opencode.json`
   (whenever such backups exist).
-- Removes only the pack's own 9 agent files and 12 skill directories, by exact
+- Removes only the pack's own 10 agent files and 13 skill directories, by exact
   name. Nothing else in those folders is touched, and the source pack files in
   this directory are never removed.
 
