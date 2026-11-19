@@ -91,7 +91,7 @@ While reading, also verify the plan carries the pre-planning essentials Metis de
 - **Scope creep**: tasks beyond the stated goal (adjacent-module tests, premature abstraction, over-validation, documentation bloat) - flag as notes, block only if they contradict the stated scope.
 - **Constraints**: hard boundaries ("must not touch X") are stated and respected by the tasks.
 - **Self-identifying header**: the plan states its path, version, and review status; a missing header is a NOTE, not a blocker.
-- **Size budget**: at most 10 top-level task rows, or named phases each within it; a flat plan that dwarfs the orchestrator is a NOTE to split into phases.
+- **Size budget**: at most 10 top-level task rows; a larger plan is split into named phases with the budget applied to each phase's rows; a flat plan that dwarfs the orchestrator is a NOTE to split into phases.
 - **Dependency matrix**: every implementation row carries a nested `Depends on: none | <row numbers>` line consistent with the task order; circular or dangling dependencies are BLOCKERS.
 - **Resolved decisions**: every default applied via the two-filter policy is recorded in a `## Resolved decisions` section (decision + why); silently-made defaults are a NOTE.
 - **Executor line**: implementation task rows carry a nested `Executor:` line with a valid pack executor value (`worker` / `git-master` / `code-reviewer`); a missing one is a NOTE, not a blocker.
@@ -105,6 +105,7 @@ Classify every finding as BLOCKER or NOTE before writing output:
 | Plan cites `src/auth.ts:42` but the file does not exist | **BLOCKER** | Reference invalid; tasks built on it cannot start |
 | Task says "refactor the auth module" with no file, pattern, or description | **BLOCKER** | Zero starting point |
 | Task A says "use library X", Task B says "do not add dependencies" | **BLOCKER** | Internal contradiction |
+| Task rows form a circular or dangling dependency chain (`Depends on:`) | **BLOCKER** | Dependency matrix broken; waves cannot be built |
 | QA scenario is "verify it works" with no tool or steps | **BLOCKER** | Final Verification Wave cannot execute |
 | Edge case for unicode emails is not handled | **NOTE** | Developer can resolve during implementation |
 | Plan prefers tabs; codebase uses spaces | **NOTE** | Stylistic preference, not a blocker |
