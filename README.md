@@ -13,7 +13,7 @@ under your explicit control.
 |-------|------|
 | `plan` | "Plan: the pack's planner - turns a request into ONE brief, decision-complete work plan: bounded size, dependency-annotated task rows, resolved defaults recorded in the plan, acceptance criteria the executor can run. Explores before asking, delegates research to explore only - never dispatches worker, never implements, never starts execution. Runs a mandatory plan-reviewer audit of the written plan before handoff. Use for planning, designing, or breaking down work." |
 | `build` | "Build: orchestrates execution of a plan or direct task by delegating everything. Loads the lead-work skill first, routes unclear topics to explore and ready work to worker, verifies every claim, runs a mandatory @code-reviewer review and @qa-inspector QA run before any commit, never writes code. Use for running a plan, coordinating waves, or driving work to completion." |
-| `discuss` | "Discuss: a discussion partner that debates code and improvement proposals - grounds the dialogue in facts via @explore and @code-reviewer, critiques constructively, and hands converged outcomes to plan or build. Never edits files, never builds plans. Use for talking through designs, weighing alternatives, or pressure-testing an idea before planning." |
+| `discuss` | "Discuss: a discussion partner that debates code and improvement proposals - grounds the dialogue in facts via @explore and @code-reviewer, critiques constructively, and hands converged outcomes to plan or build. Never edits project files, never builds plans. Use for talking through designs, weighing alternatives, or pressure-testing an idea before planning." |
 | `worker` | "Worker: implements delegated tasks silently and verifies before declaring done. Loads the execute-work discipline first, then writes code, runs diagnostics/build/tests, and reports with evidence. Use for any delegated implementation work." |
 | `explore` | "Explore: investigates a topic across code, docs, and the web with an evidence-demander stance. Cites every claim, returns numbered concise findings. Use for research, fact-finding, or grounding decisions." |
 | `plan-reviewer` | "Plan reviewer: reviews draft work plans for executability and valid references. Loads the review-plan skill first, performs Momus + Metis review, returns blockers and notes. Never rewrites plans unless asked." |
@@ -169,11 +169,12 @@ session that debates the approach and converges on a design before planning):
 4. `explore` answers the open questions the plan flagged.
 5. `worker` implements the delegated steps and verifies each one.
 6. `code-reviewer` checks the resulting diff for correctness and plan fidelity.
-7. `qa-inspector` runs the plan's QA scenarios for real, saves one evidence file per run, and reports PASS/FAIL; on FAIL, `worker` fixes and the cycle repeats before commit.
+7. `qa-inspector` runs the plan's QA scenarios for real, saves one evidence file per run, and reports PASS/FAIL; on FAIL, `worker` fixes and the cycle repeats before commit; a FAIL caused by a plan defect goes back to `plan` instead — `plan` revises and re-audits, and the cycle resumes from the revised plan.
 8. `git-master` commits the work atomically using the pack's fixed commit message template — see git-master's skill (`skills/git-master/SKILL.md`) for its definition.
 
 In short: `plan` → `plan-reviewer` → `build` → `explore` →
 `worker` → `code-reviewer` → `qa-inspector` → `git-master`.
+A QA FAIL caused by a plan defect loops back from `build` to `plan` for revision and re-audit before execution resumes.
 
 ## Assigning a model to an agent
 
@@ -221,7 +222,7 @@ config directory), and partly in OpenCode's global Plan directory:
 
 - Plan artifacts (the final plan and the durable draft) are written by `plan` into OpenCode's built-in Plan directory (`~/.opencode/plan`) — the built-in Plan mode restricts the plan agent's writes to that directory.
 - `.opencode/notepads/` — per-plan learnings, issues, and decisions recorded during execution
-- `.opencode/evidence/<plan-name-or-task-slug>/` — verification evidence saved by `explore` and `qa-inspector` (one file per run: citable findings and gate verdicts); `worker` quotes its proof inline in the final report
+- `.opencode/evidence/<plan-name-or-task-slug>/` — verification evidence saved by `explore`, `qa-inspector`, and `discuss` (discussion ledgers and citable findings) (one file per run: citable findings and gate verdicts); `worker` quotes its proof inline in the final report
 - `.opencode/tmp/` — temporary/scratch verification files (throwaway repro scripts, one-off test scripts, temp fixtures) created by `worker` and `qa-inspector`; anything temporary created outside `.opencode/` is removed before the work is declared done
 
 The agents and skills themselves still install globally to `~/.config/opencode/`;

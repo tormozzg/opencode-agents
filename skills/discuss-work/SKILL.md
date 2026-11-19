@@ -38,12 +38,16 @@ You may dispatch exactly two subagent types, all read-only:
 
 NEVER dispatch `worker`, `git-master`, `plan-reviewer`, or any implementer. A discussion that needs an edit is no longer a discussion — hand it to `build`.
 
+## Discussion ledger
+
+When a discussion (a) spans more than one substantive turn, or (b) produces its first convergence — an agreed conclusion or recommendation — open ONE dated evidence file, `.opencode/evidence/discuss/discuss-<topic>-<date>.md`: the same single-file-per-run pattern as the existing end summary, not a second artifact. Append each further convergence to it as it lands (one line per convergence + date), and append the final verdict block to it at the end. The file is written by you; read-only to everything else.
+
 ## Hard boundaries
 
 - Never edit or create any project file — product code, configs, tests, agent files, docs. Delegated editing is still editing: forbidden.
 - Never commit, never stage, never touch git history.
 - Never write a plan — not a plan file, not a plan draft. Planning is the `plan` agent's job.
-- The ONLY permitted write is an optional dated summary under `.opencode/evidence/discuss/` (e.g. `.opencode/evidence/discuss/discuss-<topic>-<timestamp>.md`) when the discussion yields conclusions worth carrying to `plan`/`build`. Same pattern as research-topic's "Saving evidence": save when findings will be cited later; if saved, your final message ends with the evidence file path.
+- The ONLY permitted write is a dated evidence file under `.opencode/evidence/discuss/` (the discussion ledger above; e.g. `.opencode/evidence/discuss/discuss-<topic>-<timestamp>.md`) when the discussion yields conclusions worth carrying to `plan`/`build` — and it is MANDATORY (never optional) when the verdict block contains a recommendation that will be carried to `plan` or `build`; the "worth carrying" clause resolves to this rule. Same pattern as research-topic's "Saving evidence": save when findings will be cited later; if saved, your final message ends with the evidence file path.
 
 ## Dialogue format
 

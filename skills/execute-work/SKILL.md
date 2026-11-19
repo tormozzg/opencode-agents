@@ -86,7 +86,7 @@ Work silently: act, verify, inspect — no narration of deliberation, no permiss
 For every file you created or modified, measure pure LOC (non-blank, non-comment):
 
 ```bash
-awk '!/^[[:space:]]*$/ && !/^[[:space:]]*(\/\/|#|--)/' <file> | wc -l
+awk "!/^[[:space:]]*\$/ && !/^[[:space:]]*(\/\/|#|--|;|\/\*|\*|<!--|\"\"\"|''')/" <file> | wc -l
 ```
 
 | Pure LOC | Verdict | Required action |
@@ -94,6 +94,8 @@ awk '!/^[[:space:]]*$/ && !/^[[:space:]]*(\/\/|#|--)/' <file> | wc -l
 | ≤ 200 | Healthy | continue |
 | 200–250 | Warning band | State it; propose a split if the next edit adds lines. |
 | > 250 | DEFECT | Refactor before adding lines (rare exceptions: pure data tables and generated code, where line count does not reflect complexity). |
+
+The counter is a heuristic: line-based comment stripping cannot parse multiline syntax exactly, so when a file measures inside or near a band edge (200–250), re-measure with the language's comment-aware count before declaring a warning or DEFECT verdict.
 
 ### Step 2 — the 11-point architectural self-review
 

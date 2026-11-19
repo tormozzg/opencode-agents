@@ -142,6 +142,8 @@ Issue **REJECT** ONLY when:
 If REJECT - **Blocking Issues** (max 3): numbered, each naming the exact issue and the change needed.
 ```
 
+**Blocking Issues cap**: the max-3 limit is a presentation cap, not a filter - blockers beyond the first three are each summarized in one line (or listed under Notes) and never silently dropped.
+
 Notes (non-blockers) are listed separately, briefly.
 
 An input-validation failure (Step 0) ends the report with its own outcome per Step 0 - it never uses, and is never confused with, the content verdicts `[OKAY]`/`[REJECT]`.
