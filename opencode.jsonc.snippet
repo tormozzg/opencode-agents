@@ -25,6 +25,10 @@
       "description": "Code reviewer: reviews diffs and completed changes for correctness, quality, and plan fidelity. Loads the review-code skill first, classifies the work type, checks blockers vs notes, returns comments or approval. Never fixes code itself.",
       "skill": "review-code"
     },
+    "qa-inspector": {
+      "description": "QA inspector: executes the plan's QA scenarios after code-reviewer approval, runs each scenario's commands for real, saves evidence under .opencode/evidence/<plan-name>/, and returns per-scenario PASS/FAIL with an ALL PASS / N FAILED summary. Read-only to product code. Never fixes code itself. Use for 'run QA', 'QA gate', or 'прогонить QA-сценарии' requests before a commit.",
+      "skill": "qa-inspect"
+    },
     "git-master": {
       "description": "Git Master: handles ANY git operation - atomic commits, rebase/squash/fixup, and history search (blame, bisect, log -S, reflog). Loads the git-master skill first, commits atomically in the repo's detected style, and protects shared history. Use for 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find the commit that'.",
       "skill": "git-master"
@@ -38,7 +42,11 @@
       "~/.config/opencode/skills/execute-work/SKILL.md",
       "~/.config/opencode/skills/review-plan/SKILL.md",
       "~/.config/opencode/skills/review-code/SKILL.md",
-      "~/.config/opencode/skills/git-master/SKILL.md"
+      "~/.config/opencode/skills/qa-inspect/SKILL.md",
+      "~/.config/opencode/skills/git-master/SKILL.md",
+      "~/.config/opencode/skills/code-idiom/SKILL.md",
+      "~/.config/opencode/skills/refactor-code/SKILL.md",
+      "~/.config/opencode/skills/slop-cleanup/SKILL.md"
     ]
   }
 }

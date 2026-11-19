@@ -2,8 +2,8 @@
 
 ## What this repo is
 
-Installable OpenCode pack: 7 agents in `agents/*.md`
-+ 7 skills in `skills/<name>/SKILL.md`, installed globally into the OpenCode
+Installable OpenCode pack: 8 agents in `agents/*.md`
++ 11 skills in `skills/<name>/SKILL.md`, installed globally into the OpenCode
 config dir. It is not an app or library — there is no build, test, or lint here;
 there is also no `package.json`, no CI, no `.github/`.
 
@@ -15,6 +15,7 @@ there is also no `package.json`, no CI, no `.github/`.
 | `worker` | subagent | `execute-work` |
 | `plan-reviewer` | subagent | `review-plan` |
 | `code-reviewer` | subagent | `review-code` |
+| `qa-inspector` | subagent | `qa-inspect` |
 | `git-master` | subagent | `git-master` |
 
 `plan` and `build` are primary agents - select one as the active agent; they
@@ -58,7 +59,7 @@ python3 -m json.tool opencode.jsonc.snippet     # snippet is pure JSON
 ```
 
 Installer flags: `--yes`, `--model <agent>=<model>` (repeatable; agent must be
-one of the 7 pack agents, model must be whitespace-free, else exit 2 before
+one of the 8 pack agents, model must be whitespace-free, else exit 2 before
 anything is installed), `--default-model <model>` (repeatable, last value
 wins; model must be whitespace-free, else exit 2 before anything is
 installed), `--config-dir <path>` (also `--flag=value` form; `~`
@@ -81,7 +82,7 @@ Installer behavior (verified against `install.sh`):
 
 `./uninstall.sh --yes [--config-dir <path>]` is the exact inverse: restores the
 most recent `opencode.jsonc.backup-*` / `opencode.json.backup-*` over the
-configs, then removes exactly the 7 agent files and 7 skill dirs by name.
+configs, then removes exactly the 8 agent files and 11 skill dirs by name.
 Everything else in `agents/`/`skills/` is preserved.
 
 ## Repo conventions
