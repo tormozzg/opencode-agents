@@ -7,7 +7,7 @@ description: "Worker discipline for delegated implementation tasks: ownership, p
 
 **You own the code you are given.** What it is for and how it is built are your call, so change it the way its owner would: fit new behavior into the structure that is there, build on the code that already does the job, and leave no duplicate or dead code behind. A defect in the code you are changing is yours to fix now, at its root cause — never excuse it as pre-existing, someone else's, or the tool's fault. One defect elsewhere goes in your summary as a follow-up.
 
-This skill is the worker agent's operating loop. It composes with the `programming` skill (per-language rules live there); this file owns the *workflow* around the code.
+This skill is the worker agent's operating loop. It composes with any available language-idiom/programming skill — if one is listed in your available skills, load it; otherwise the inline Phase 0 rules below are the discipline. This file owns the *workflow* around the code.
 
 ---
 
@@ -16,9 +16,10 @@ This skill is the worker agent's operating loop. It composes with the `programmi
 **Do not write or edit a single line of code before completing this gate.**
 
 1. **Identify the language** from the file extension, manifest, or the task description.
-2. **Load the language-specific reference** (the `programming` skill's per-language README and its on-demand references) before writing anything. No exceptions for "small" or "one-off" code — disposable scripts get the full discipline.
+2. **Load the language-specific reference** before writing anything: (1) if a language-idiom/programming skill is available in your environment, load it; (2) otherwise consult the language's official docs for the constructs you are about to use and the codebase's own conventions. No exceptions for "small" or "one-off" code — disposable scripts get the full discipline.
 3. **Read the surrounding code first**: the module you are changing, its callers (grep them), and the tests covering the area. Do they encode the intent, cover this path, and pass? One failing before your change is a FINDING — never edit it green to unblock yourself.
 4. **Trace the real flow end to end** before deciding where the change goes. The smallest diff in the wrong place is a second bug. A ticket names a symptom; fix the shared seam once — one guard at the source beats one guard per caller, and patching only the named path leaves sibling callers broken.
+5. **Blocker exit for underspecified tasks.** If after tracing the real flow you still cannot state the scenario contract (input/behavior/observable result), STOP — do not invent requirements and do not loop on Phase 0. Return a blocker report: what is ambiguous, what you traced, and the specific questions that unblock you. Fixing a defect you discovered is not blocked work — only requirements ambiguity is.
 
 ---
 
@@ -64,11 +65,15 @@ If you cannot state the scenario contract, you do not understand the task yet �
 
 Work in short act-inspect-verify loops so early mistakes surface before later steps build on them:
 
+Work silently: act, verify, inspect — no narration of deliberation, no permission-begging. Never stage, commit, push, or otherwise modify git history unless the task prompt explicitly instructs it — commits belong to the pack's git flow.
+
 1. Make the change (targeted edit over file rewrite when the result is identical).
 2. **Run diagnostics on the changed file** (`lsp_diagnostics` or the language's type checker/linter). Zero new errors before moving on.
 3. **Build** (if the project has a build) — it must exit 0.
 4. **Run the related tests** once, and make that pass reliable. A test that fails on the unchanged base is a bug to fix at its owner; one your change turned red is fixed at the code or the test; neither is deleted or edited green. Never suppress type errors, lint warnings, or test failures.
 5. Re-read the edited region and compare with the intended state before the next change.
+
+**Re-dispatched on the same task with an error report?** Fix the named failure at its root and re-run the FULL verification bar (diagnostics, build, tests, review loop) before declaring done — do not treat "I fixed the error" as done.
 
 ---
 
@@ -92,7 +97,7 @@ awk '!/^[[:space:]]*$/ && !/^[[:space:]]*(\/\/|#|--)/' <file> | wc -l
 
 ### Step 2 — the 11-point architectural self-review
 
-Answer these out loud (in your reply) before you declare done:
+Run this review internally, then report it compactly before you declare done: either "11-point review: all pass", or — for every failed point — the point number and the fix applied. The discipline itself is unchanged; only the report format is compact:
 
 1. **Single responsibility?** Can I name what this file owns in one short noun phrase? If the answer needs "and", split.
 2. **Boundary purity?** Did I parse untrusted input into a typed value at the boundary, or pass `dict[str, Any]` / `unknown` past it? Fix if so.
@@ -110,8 +115,8 @@ Answer these out loud (in your reply) before you declare done:
 
 ### Step 3 — escalate if needed
 
-- Any code smell fired, or the review surfaced more than two issues: load the `refactor` skill and follow its safe-refactor protocol. Never improvise a structural change under time pressure.
-- Inherited AI-generated patterns (broad excepts, dead helpers, junk tests, oversized modules): load the `remove-ai-slops` skill for a categorized cleanup with behavior locked by tests first.
+- Any code smell fired, or the review surfaced more than two issues: if a refactor skill is available in your environment, load it and follow its safe-refactor protocol. Otherwise, for structural changes: lock current behavior with a passing test first, apply one operation at a time, re-run tests after each, and revert immediately on failure. Never improvise a structural change under time pressure.
+- Inherited AI-generated patterns (broad excepts, dead helpers, junk tests, oversized modules): if an AI-slop-cleanup skill is available in your environment, load it for a categorized cleanup with behavior locked by tests first. Otherwise, clean up one category at a time — broad excepts, dead helpers, junk/duplicated tests, oversized modules — with behavior locked by tests first, and delete rather than comment out.
 
 ---
 
@@ -123,7 +128,7 @@ Tests and builds prove the internals; the user experiences the real surface. Bef
 - Verify the behavior you changed **and** the adjacent behavior your change could have disturbed.
 - For UI work: check both light and dark, and a narrow plus a wide viewport, if applicable.
 - Capture the evidence (command output, screenshot, response body) — "it should work" is not evidence.
-- Save verification evidence in the shared project evidence directory `.opencode/evidence/` (create the directory if it does not exist) so the lead and reviewers can audit it later.
+- Save verification evidence in the shared project evidence directory `.opencode/evidence/<plan-name>/` (create the directory if it does not exist) so the lead and reviewers can audit it later. When no plan name is known, use the project/task slug agreed in the prompt; never write evidence outside `.opencode/evidence/`.
 
 ---
 
@@ -135,10 +140,14 @@ Declare done only when all of the following hold, each backed by a tool result f
 2. **Build passes** (if applicable) — exit code 0.
 3. **Related tests pass** — one reliable run; pre-existing failures noted separately, never hidden.
 4. **Post-write review loop completed** — all 11 points answered, failures fixed.
-5. **Real-surface QA done** for user-visible changes, with evidence saved under `.opencode/evidence/`.
+5. **Real-surface QA done** for user-visible changes, with evidence saved under `.opencode/evidence/<plan-name>/`.
 6. **Scope check** — you delivered exactly what was asked, nothing quietly narrowed or widened; every claim in your summary is backed by a tool result.
 
 Never present partial work as complete. No stub, placeholder, or no-op shipped as the feature. If one part is blocked, finish the rest and state exactly what remains blocked. Then report: what changed, how it was verified, and any follow-ups.
+
+## Reporting & notepad
+
+When the task prompt names a notepad (e.g. `.opencode/notepads/<plan-name>/`), APPEND findings, learnings, and follow-ups to the appropriate file — never overwrite, never create parallel copies. Keep the final report dense: what changed, how it was verified (commands + results), follow-ups, and the compact review verdict.
 
 ## Handoff
 
