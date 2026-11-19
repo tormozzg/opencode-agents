@@ -169,7 +169,7 @@ session that debates the approach and converges on a design before planning):
 4. `explore` answers the open questions the plan flagged.
 5. `worker` implements the delegated steps and verifies each one.
 6. `code-reviewer` checks the resulting diff for correctness and plan fidelity.
-7. `qa-inspector` runs the plan's QA scenarios for real, saves per-scenario evidence, and reports PASS/FAIL; on FAIL, `worker` fixes and the cycle repeats before commit.
+7. `qa-inspector` runs the plan's QA scenarios for real, saves one evidence file per run, and reports PASS/FAIL; on FAIL, `worker` fixes and the cycle repeats before commit.
 8. `git-master` commits the work atomically using the pack's fixed commit message template — see git-master's skill (`skills/git-master/SKILL.md`) for its definition.
 
 In short: `plan` → `plan-reviewer` → `build` → `explore` →
@@ -221,7 +221,7 @@ config directory), and partly in OpenCode's global Plan directory:
 
 - Plan artifacts (the final plan and the durable draft) are written by `plan` into OpenCode's built-in Plan directory (`~/.opencode/plan`) — the built-in Plan mode restricts the plan agent's writes to that directory.
 - `.opencode/notepads/` — per-plan learnings, issues, and decisions recorded during execution
-- `.opencode/evidence/<plan-name-or-task-slug>/` — verification evidence saved by `build`, `worker`, `explore` and `qa-inspector` (command output, screenshots, responses, cited findings), grouped by plan name or task slug
+- `.opencode/evidence/<plan-name-or-task-slug>/` — verification evidence saved by `explore` and `qa-inspector` (one file per run: citable findings and gate verdicts); `worker` quotes its proof inline in the final report
 - `.opencode/tmp/` — temporary/scratch verification files (throwaway repro scripts, one-off test scripts, temp fixtures) created by `worker` and `qa-inspector`; anything temporary created outside `.opencode/` is removed before the work is declared done
 
 The agents and skills themselves still install globally to `~/.config/opencode/`;

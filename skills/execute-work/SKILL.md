@@ -128,7 +128,7 @@ Tests and builds prove the internals; the user experiences the real surface. Bef
 - Verify the behavior you changed **and** the adjacent behavior your change could have disturbed.
 - For UI work: check both light and dark, and a narrow plus a wide viewport, if applicable.
 - Capture the evidence (command output, screenshot, response body) — "it should work" is not evidence.
-- Save verification evidence in the shared project evidence directory `.opencode/evidence/<plan-name>/` (create the directory if it does not exist) so the lead and reviewers can audit it later. When no plan name is known, use the project/task slug agreed in the prompt; never write evidence outside `.opencode/evidence/`.
+- Report the proof inline in the final report — quote the command output, screenshot description or path as reported, response body; write NO evidence files: evidence files belong to `explore` (citable findings) and `qa-inspector` (gate verdicts), not to the worker.
 
 ---
 
@@ -149,7 +149,7 @@ Declare done only when all of the following hold, each backed by a tool result f
 2. **Build passes** (if applicable) — exit code 0.
 3. **Related tests pass** — one reliable run; pre-existing failures noted separately, never hidden.
 4. **Post-write review loop completed** — all 11 points answered, failures fixed.
-5. **Real-surface QA done** for user-visible changes, with evidence saved under `.opencode/evidence/<plan-name>/`.
+5. **Real-surface QA done** for user-visible changes, with the proof quoted in the final report.
 6. **Scope check** — you delivered exactly what was asked, nothing quietly narrowed or widened; every claim in your summary is backed by a tool result.
 7. **No temporary files left behind** — every scratch/temp file created outside `.opencode/` removed, per the TEMPORARY FILES section.
 

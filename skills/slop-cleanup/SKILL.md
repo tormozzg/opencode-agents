@@ -44,7 +44,7 @@ Hunt one pattern at a time. Signature → first move:
    - A single pass that mixes dead-code deletion, test rewrites, and module splits cannot be verified as behavior-preserving.
    - Small steps, tests after each, revert on red — the refactor-code step loop.
 4. **Delete, never comment out.** Commented-out code is the same dead weight plus noise, and version control already remembers. The same applies to `#[allow(dead_code)]`-style suppressions that hide the dead helper instead of removing it.
-5. **Re-verify after every pass.** Run the related tests (and build) after each pass; save the trail under `.opencode/evidence/<plan-name>/` per execute-work's evidence discipline.
+5. **Re-verify after every pass.** Run the related tests (and build) after each pass; quote the pre/post test trail in the final report — no evidence files (those belong to `explore` and `qa-inspector`).
 6. **Back out risky cleanup.**
    - A pass whose equivalence you cannot verify, or whose tests changed outcomes, is reverted — not pushed forward with a shrug.
    - Report what you backed out and why; the lead decides if it becomes a planned task.
@@ -55,4 +55,4 @@ Prefer deletion over repair. A helper with no caller, a test that cannot fail, a
 
 ## Report
 
-End with: categories found per file, moves applied, passes reverted, and the evidence path under `.opencode/evidence/<plan-name>/`. Every claim about what was deleted is backed by the pre/post test runs in the evidence trail.
+End with: categories found per file, moves applied, passes reverted, and the pre/post test trail quoted inline — every claim about what was deleted is backed by the quoted test runs; write no evidence files (those belong to `explore` and `qa-inspector`).

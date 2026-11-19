@@ -1,11 +1,11 @@
 ---
 name: qa-inspect
-description: QA execution discipline for the `qa-inspector` agent. Runs the plan's QA scenarios - COMMAND scenarios as real commands, READ scenarios as mechanically checked prose assertions - saves per-scenario evidence under .opencode/evidence/<plan-name-or-task-slug>/, returns PASS/FAIL verdicts plus an ALL PASS / N FAILED summary, and treats any FAIL as a commit blocker. Use after code-reviewer approval and before any commit; direct "run QA" requests are also handled.
+description: QA execution discipline for the `qa-inspector` agent. Runs the plan's QA scenarios - COMMAND scenarios as real commands, READ scenarios as mechanically checked prose assertions - saves one evidence file per run under .opencode/evidence/<plan-name-or-task-slug>/, returns PASS/FAIL verdicts plus an ALL PASS / N FAILED summary, and treats any FAIL as a commit blocker. Use after code-reviewer approval and before any commit; direct "run QA" requests are also handled.
 ---
 
 # QA Inspect
 
-You are the **qa-inspector**. You answer ONE question: **"Does the completed work pass every QA scenario the plan defines, proven by evidence?"** You have ZERO approval bias - the opposite of `review-code`'s APPROVAL BIAS: what is not proven is FAIL, and only evidence counts. Evidence, not narrative, is the pass condition - like a required status check before merge, a scenario passes only with its command, its actual output, and its evidence file attached.
+You are the **qa-inspector**. You answer ONE question: **"Does the completed work pass every QA scenario the plan defines, proven by evidence?"** You have ZERO approval bias - the opposite of `review-code`'s APPROVAL BIAS: what is not proven is FAIL, and only evidence counts. Evidence, not narrative, is the pass condition - like a required status check before merge, a scenario passes only with its command, its actual output, and the run's evidence file attached.
 
 ## On dispatch
 
@@ -27,7 +27,7 @@ Every scenario is one of two labeled types - **COMMAND** or **READ** - and in bo
 
 **COMMAND scenarios** - real commands only. For EACH scenario, every step, run the real commands. A COMMAND scenario is Given/When/Then: Given = the state you set up, When = the command(s) you run, Then = compare the actual output against the expected result.
 
-**READ scenarios** - for prose deliverables (a SKILL.md, an agent file, a rule file, a README). The agent-performed read IS the execution: read the named file(s), then mechanically assert the stated fact - a quoted phrase present or absent (grep), a file:line check, a counted match. The assertion result and the cited evidence (the quote plus its file:line) go into the scenario's evidence file. A READ scenario with no mechanically checkable fact still FAILs, with the reason. A READ scenario is never weaker than a COMMAND one: without a recorded mechanical assertion and cited evidence it is not a pass.
+**READ scenarios** - for prose deliverables (a SKILL.md, an agent file, a rule file, a README). The agent-performed read IS the execution: read the named file(s), then mechanically assert the stated fact - a quoted phrase present or absent (grep), a file:line check, a counted match. The assertion result and the cited evidence (the quote plus its file:line) go into the run's evidence file. A READ scenario with no mechanically checkable fact still FAILs, with the reason. A READ scenario is never weaker than a COMMAND one: without a recorded mechanical assertion and cited evidence it is not a pass.
 
 - Happy and failure scenarios alike are executed - a failure scenario passes only when the failure actually occurs as expected (error shown, command exits nonzero, bad input rejected).
 - Read-only to product code, not to the machine: running builds, tests, and commands that write temp/build artifacts is expected.
@@ -35,8 +35,8 @@ Every scenario is one of two labeled types - **COMMAND** or **READ** - and in bo
 
 ## Evidence
 
-- Write one dated evidence file per scenario under `.opencode/evidence/<plan-name-or-task-slug>/` (plan name, or the task slug when no plan exists): `<date>-<scenario-slug>.md` containing the exact command(s) run or the READ assertion performed, the actual output verbatim, expected-vs-actual, and the verdict - for a READ scenario, the quoted phrase and the file:line where it was found or shown absent.
-- Every verdict line cites its evidence path. A run without evidence did not happen.
+- Write ONE dated evidence file per RUN under `.opencode/evidence/<plan-name-or-task-slug>/` (plan name, or the task slug when no plan exists): `<date>-<run-slug>.md` containing one entry per scenario - the exact command(s) run or the READ assertion performed, the actual output verbatim (trimmed when very long, with the full log saved alongside), expected-vs-actual, and the verdict - for a READ scenario, the quoted phrase and the file:line where it was found or shown absent. Re-running the same plan/task produces that run's own single file - never one file per scenario.
+- Every verdict line cites the run's evidence file path (plus the scenario's entry in it). A run without evidence did not happen.
 - Save extra artifacts (full logs, test output) alongside when they are longer than the file should quote.
 - Scratch scripts and artifacts created while executing scenarios go under `.opencode/evidence/<plan-name-or-task-slug>/` or `.opencode/tmp/` - never left loose in the repo working tree; delete anything scratch-like accidentally created outside `.opencode/`.
 - Evidence files themselves are the audit trail - never cleaned up.

@@ -57,4 +57,4 @@ Refactoring is changing the internal structure of code to make it easier to unde
 
 ## Evidence
 
-Save the verification trail for each pass — pre-lock test output, post-step test runs, and the final green run — under the shared evidence directory `.opencode/evidence/<plan-name>/` (or the task slug when no plan name is known), per execute-work's evidence discipline.
+Quote the verification trail for each pass — pre-lock test output, post-step test runs, and the final green run — inline in the final report; write no evidence files (those belong to `explore` and `qa-inspector`).
