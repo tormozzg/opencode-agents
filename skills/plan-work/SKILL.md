@@ -51,7 +51,7 @@ Every later fork is held against these rows, every todo closes a gap row, and su
 
 The implementer has NO interview context. The plan file opens with a **self-identifying header**: plan path, version `v<n>`, review status `reviewed: yes/no` - the executor must be able to confirm it holds the approved version.
 
-Size budget: at most **10 top-level task rows**; more -> named phases, each with its own rows. The plan is what the team lead orchestrates waves from, not an essay - a plan the lead cannot hold in one look fails its purpose.
+Plan size: the plan must stay **holdable in one look**. Mechanical or one-of-a-kind repetitive tasks coalesce into a single row; work that grows beyond that groups into named phases, each with its own rows. The plan is what the team lead orchestrates waves from, not an essay.
 
 Spell out exact paths, "every X in Y", and an explicit **Must-NOT-Have** - a guardrail against unrequested additions, never a reduction. Leave the implementer ZERO judgment calls. Every todo carries: exhaustive references, agent-executable acceptance criteria, a runnable `Verify:` command with its expected result, and happy + failure QA scenarios each with an evidence path under `.opencode/evidence/<plan-name>/`. Zero criteria may need a human.
 
@@ -78,7 +78,7 @@ Encode every executable item as a column-zero Markdown task row:
 - Implementation rows MUST match `- [ ] N. <title>` (N = positive decimal integer).
 - Final-verifier rows MUST match `- [ ] F<n>. <title>`.
 
-Prose headings, numbered paragraphs, and ordinary bullets are not task substitutes. Before handoff, self-check: every row is column-zero and matches the task-row grammar, appears in `## Todos` or `## Final verification wave`; every implementation row carries nested lines for `Executor:` (pack executor vocabulary from the lead-work skill: `worker` default, `git-master`, `code-reviewer`), `Depends on: none | <row numbers>`, and `Verify: <runnable command> -> <expected result>`; every row's QA scenarios point at `.opencode/evidence/<plan-name>/`; no prose is used as a task. Final-verifier rows default to `worker`.
+Prose headings, numbered paragraphs, and ordinary bullets are not task substitutes. Before handoff, self-check: every row is column-zero and matches the task-row grammar, appears in `## Todos` or `## Final verification wave`; every implementation row carries nested lines for `Executor:` (pack executor vocabulary from the lead-work skill: `worker` default, `git-master`, `code-reviewer`, `qa-inspector`), `Depends on: none | <row numbers>`, and `Verify: <runnable command> -> <expected result>`; every row's QA scenarios point at `.opencode/evidence/<plan-name>/`; no prose is used as a task. Final-verifier rows default to `worker`.
 
 The `Depends on:` lines are the plan's dependency matrix: an orchestrator builds parallel waves from rows marked `none` and sequences only named dependencies - so write `none` only when the row is truly independent, and name the consuming rows otherwise.
 
@@ -103,6 +103,6 @@ Delegate research to `explore` via `task()` and never instruct a child to edit f
 
 ## Stop rules
 
-- Plan file exists, template filled, every todo has references + acceptance + `Verify:` + QA, dependency matrix consistent, size budget respected, `## Resolved decisions` complete: run the mandatory plan-reviewer audit (blockers -> revise -> re-review until approved), present the handoff summary with the reviewer's verdict and the plan path, and tell the user to switch to the `build` agent (shift+tab or the agent list), handing it the plan path. Never begin execution yourself; if the user asks you to implement, tell them they need to switch to build mode.
+- Plan file exists, template filled, every todo has references + acceptance + `Verify:` + QA, dependency matrix consistent, plan stays holdable in one look, `## Resolved decisions` complete: run the mandatory plan-reviewer audit (blockers -> revise -> re-review until approved), present the handoff summary with the reviewer's verdict and the plan path, and tell the user to switch to the `build` agent (shift+tab or the agent list), handing it the plan path. Never begin execution yourself; if the user asks you to implement, tell them they need to switch to build mode.
 - Brief presented and `status: awaiting-approval` recorded: wait. Do not re-explore unless the user changes scope.
 - Two research waves with no new useful facts: stop exploring, present the brief.
