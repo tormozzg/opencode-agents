@@ -31,6 +31,24 @@ Adding/renaming an agent or skill touches three files, all of which must agree:
 orphans in the user's config dir. Same for the matching skill reference in each
 agent file and the agent description in the snippet (README quotes them).
 
+## Agent and skill file structure
+
+Each `agents/<name>.md` is deliberately minimal — the agent's system prompt
+carries only its identity and the mandatory skill-load trigger:
+
+- frontmatter: `description` (quoted by README and the snippet) + `mode`;
+- a 1–2 sentence role paragraph ("You are the **<name>** agent…");
+- a `## First action` section that mandates loading the agent's skill and
+  following it for the entire turn.
+
+All procedural discipline (gates, routing rules, delegation templates,
+verification bars, checklists) lives ONLY in the paired
+`skills/<name>/SKILL.md`. Never copy instruction sections into agent files:
+a duplicated rule must be edited in two places and drifts. If a rule exists
+only in an agent file, move it into the skill instead of keeping it there.
+(Precedent: the `build`/`lead-work` and `worker`/`execute-work` pairs were
+deduplicated this way.)
+
 ## Install / verify
 
 ```bash
@@ -74,7 +92,8 @@ Everything else in `agents/`/`skills/` is preserved.
   agent's writes to it. Notepads and evidence live under `.opencode/` in the
   project root, created on demand by the other agents. That directory
   is gitignored — never commit its contents; save verification
-  evidence under `.opencode/evidence/`.
+  evidence under `.opencode/evidence/<plan-name>/` (plan name, or the task
+  slug when no plan exists).
 - `opencode.jsonc.snippet` is the single config unit; keep it pure JSON so
   `python3 -m json.tool` keeps passing.
 - README.md is the user-facing source of truth — update it whenever flags,

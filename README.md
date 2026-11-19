@@ -35,6 +35,15 @@ The skill files live in `skills/`, the agent definitions in `agents/`, and the
 registration snippet in `opencode.jsonc.snippet` (top-level `agent` key, plus
 `skills.paths` entries).
 
+### How agents and skills are structured
+
+Each agent definition is intentionally short: it holds the agent's identity
+(a couple of sentences) and one hard rule — load your discipline skill first
+and follow it for the whole turn. The full operating discipline (gates,
+routing rules, templates, checklists, verification bars) lives in the paired
+skill file, and only there — instructions are never duplicated between an
+agent file and its skill, so every rule is edited in exactly one place.
+
 ## Install
 
 One command:
@@ -194,7 +203,7 @@ config directory), and partly in OpenCode's global Plan directory:
 
 - Plan artifacts (the final plan and the durable draft) are written by `plan` into OpenCode's built-in Plan directory (`~/.opencode/plan`) — the built-in Plan mode restricts the plan agent's writes to that directory.
 - `.opencode/notepads/` — per-plan learnings, issues, and decisions recorded during execution
-- `.opencode/evidence/` — verification evidence saved by `build` and `explore` (command output, screenshots, responses, cited findings)
+- `.opencode/evidence/<plan-name>/` — verification evidence saved by `build`, `worker` and `explore` (command output, screenshots, responses, cited findings), grouped by plan name or task slug
 
 The agents and skills themselves still install globally to `~/.config/opencode/`;
 run-time artifacts live in the project (`.opencode/`) and in OpenCode's global
