@@ -20,10 +20,11 @@ there is also no `package.json`, no CI, no `.github/`.
 | `git-master` | subagent | `git-master` |
 | `architect` | subagent | `architect-work` |
 
-`plan`, `team-lead` and `discuss` are primary agents - select one as the active
-agent; they
-cannot be spawned by others; all the rest are invoked as subagents
-(`@worker`, `@explore`, …).
+`plan`, `team-lead` and `discuss` are primary agents — select one as the active
+agent; they cannot be spawned by others. All the rest are subagents
+(`@worker`, `@explore`, …). The other 3 skills (`code-idiom`, `refactor-code`,
+`slop-cleanup`) have no agent of their own: they are companion references that
+`execute-work` tells the worker to load on demand.
 
 ## Three-place invariant
 
@@ -67,6 +68,9 @@ bash -n install.sh && bash -n uninstall.sh      # shell syntax check
 python3 -m json.tool opencode.jsonc.snippet     # snippet is pure JSON
 ./install.sh --yes                              # install locally
 ```
+
+Both scripts are bash (not POSIX sh) and the installer additionally requires
+`python3` at runtime — the config merge runs its stdlib `json` module.
 
 Installer flags: `--yes`, `--model <agent>=<model>` (repeatable; agent must be
 one of the 10 pack agents, model must be whitespace-free, else exit 2 before
