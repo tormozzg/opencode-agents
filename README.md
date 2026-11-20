@@ -1,7 +1,7 @@
 # OpenCode Subagents Pack
 
 A small, self-contained pack for OpenCode that adds ten focused agents and their
-matching skills (fourteen in total - ten agent skills plus four extra skills). The pack only registers agents and skills; it does not modify
+matching skills (thirteen in total - ten agent skills plus three extra skills). The pack only registers agents and skills; it does not modify
 any other plugins, and it never auto-runs plans. Every plan and every code change stays
 under your explicit control.
 
@@ -24,9 +24,8 @@ under your explicit control.
 
 ### Skills
 
-Each agent loads one skill on startup (the last four have no agent of their
-own - `worker` loads the first three contextually during implementation, and
-any agent that uses the codegraph MCP loads the fourth):
+Each agent loads one skill on startup (the last three have no agent of their
+own - `worker` loads them contextually during implementation):
 
 - `plan-work` (plan)
 - `lead-work` (team-lead)
@@ -41,7 +40,6 @@ any agent that uses the codegraph MCP loads the fourth):
 - `code-idiom` (worker, contextually)
 - `refactor-code` (worker, contextually)
 - `slop-cleanup` (worker, contextually)
-- `codegraph-sync` (contextually, any agent using the codegraph MCP)
 
 The skill files live in `skills/`, the agent definitions in `agents/`, and the
 registration snippet in `opencode.jsonc.snippet` (top-level `agent` key, plus

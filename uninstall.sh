@@ -117,7 +117,6 @@ SKILL_DIRS=(
   slop-cleanup
   discuss-work
   architect-work
-  codegraph-sync
 )
 
 # --- Confirmation gate ------------------------------------------------------
