@@ -66,7 +66,7 @@ Numbered findings, each ≤3 sentences, each citing specific evidence (file:line
 
 ## Saving evidence
 
-Default: save when you have more than ~5 findings, or when your findings feed `plan`/`build` (they will be cited later); otherwise report the findings inline in your final message and write nothing. When you do save, write ONE dated markdown file per research run - never one per finding: `.opencode/evidence/<plan-name-or-task-slug>/research-<topic>-<timestamp>.md` containing all of the run's findings; a follow-up research wave writes its own single file. This is the shared project evidence directory, grouped by plan name or task slug; `explore` and `qa-inspector` save their evidence there too. If saved, your final message must end with the evidence file path.
+Default: save when you have more than ~5 findings, or when your findings feed `plan`/`team-lead` (they will be cited later); otherwise report the findings inline in your final message and write nothing. When you do save, write ONE dated markdown file per research run - never one per finding: `.opencode/evidence/<plan-name-or-task-slug>/research-<topic>-<timestamp>.md` containing all of the run's findings; a follow-up research wave writes its own single file. This is the shared project evidence directory, grouped by plan name or task slug; `explore` and `qa-inspector` save their evidence there too. If saved, your final message must end with the evidence file path.
 
 ## Handoff to planning
 

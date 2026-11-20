@@ -9,18 +9,18 @@ under your explicit control.
 
 ### Agents
 
-| Agent | Role |
-|-------|------|
-| `plan` | "Plan: the pack's planner - turns a request into ONE brief, decision-complete work plan: bounded size, dependency-annotated task rows, resolved defaults recorded in the plan, acceptance criteria the executor can run. Explores before asking, delegates research to explore only - never dispatches worker, never implements, never starts execution. Runs a mandatory plan-reviewer audit of the written plan before handoff. Use for planning, designing, or breaking down work." |
-| `build` | "Build: orchestrates execution of a plan or direct task by delegating everything. Loads the lead-work skill first, routes unclear topics to explore and ready work to worker, verifies every claim, runs a mandatory @code-reviewer review and @qa-inspector QA run before any commit, never writes code. Use for running a plan, coordinating waves, or driving work to completion." |
-| `discuss` | "Discuss: a discussion partner that debates code and improvement proposals - grounds the dialogue in facts via @explore and @code-reviewer, critiques constructively, and hands converged outcomes to plan or build. Never edits project files, never builds plans. Use for talking through designs, weighing alternatives, or pressure-testing an idea before planning." |
-| `worker` | "Worker: implements delegated tasks silently and verifies before declaring done. Loads the execute-work discipline first, then writes code, runs diagnostics/build/tests, and reports with evidence. Use for any delegated implementation work." |
-| `explore` | "Explore: investigates a topic across code, docs, and the web with an evidence-demander stance. Cites every claim, returns numbered concise findings. Use for research, fact-finding, or grounding decisions." |
-| `plan-reviewer` | "Plan reviewer: reviews draft work plans for executability and valid references. Loads the review-plan skill first, performs Momus + Metis review, returns blockers and notes. Never rewrites plans unless asked." |
-| `code-reviewer` | "Code reviewer: reviews diffs and completed changes for correctness, quality, and plan fidelity. Loads the review-code skill first, classifies the work type, checks blockers vs notes, returns comments or approval. Never fixes code itself." |
-| `qa-inspector` | "QA inspector: executes the plan's QA scenarios after code-reviewer approval, runs each scenario's commands for real, saves evidence under .opencode/evidence/<plan-name-or-task-slug>/, and returns per-scenario PASS/FAIL with an ALL PASS / N FAILED summary. Read-only to product code. Never fixes code itself. Use for 'run QA', 'QA gate', or 'прогонить QA-сценарии' requests before a commit." |
-| `git-master` | "Git Master: handles atomic commits, rebase/squash/fixup (history rewrite), and history search (blame, bisect, log -S, reflog). Loads the git-master skill first, commits atomically in the pack's fixed commit message format, with the message language detected from history, and protects shared history. Use for 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find the commit that'." |
-| `architect` | "Architect: designs the architecture for complex work - a new feature spanning multiple components, a whole project from zero, or server/infrastructure changes. Consulted by the plan agent; analyzes constraints and non-functional requirements, weighs alternatives with trade-offs, records key decisions, risks, and rollout/operations considerations, and writes ONE architecture evidence file under .opencode/evidence/. Read-only to product code: never writes code, never writes plan task rows. Use for 'design the architecture', 'спроектируй архитектуру', or when the planner hands off a complex design." |
+| Agent | Description | Variant |
+|-------|-------------|---------|
+| `plan` | "Plan: the pack's planner - turns a request into ONE brief, decision-complete work plan: bounded size, dependency-annotated task rows, resolved defaults recorded in the plan, acceptance criteria the executor can run. Explores before asking, delegates research to explore only - never dispatches worker, never implements, never starts execution. Runs a mandatory plan-reviewer audit of the written plan before handoff. Use for planning, designing, or breaking down work." | high |
+| `team-lead` | "Team Lead: orchestrates execution of a plan or direct task by delegating everything. Loads the lead-work skill first, routes unclear topics to explore and ready work to worker, verifies every claim, runs a mandatory @code-reviewer review and @qa-inspector QA run before any commit, never writes code. Use for running a plan, coordinating waves, or driving work to completion." | high |
+| `discuss` | "Discuss: a discussion partner that debates code and improvement proposals - grounds the dialogue in facts via @explore and @code-reviewer, critiques constructively, and hands converged outcomes to plan or team-lead. Never edits project files, never builds plans. Use for talking through designs, weighing alternatives, or pressure-testing an idea before planning." | high |
+| `worker` | "Worker: implements delegated tasks silently and verifies before declaring done. Loads the execute-work discipline first, then writes code, runs diagnostics/build/tests, and reports with evidence. Use for any delegated implementation work." | low |
+| `explore` | "Explore: investigates a topic across code, docs, and the web with an evidence-demander stance. Cites every claim, returns numbered concise findings. Use for research, fact-finding, or grounding decisions." | low |
+| `plan-reviewer` | "Plan reviewer: reviews draft work plans for executability and valid references. Loads the review-plan skill first, performs Momus + Metis review, returns blockers and notes. Never rewrites plans unless asked." | high |
+| `code-reviewer` | "Code reviewer: reviews diffs and completed changes for correctness, quality, and plan fidelity. Loads the review-code skill first, classifies the work type, checks blockers vs notes, returns comments or approval. Never fixes code itself." | low |
+| `qa-inspector` | "QA inspector: executes the plan's QA scenarios after code-reviewer approval, runs each scenario's commands for real, saves evidence under .opencode/evidence/<plan-name-or-task-slug>/, and returns per-scenario PASS/FAIL with an ALL PASS / N FAILED summary. Read-only to product code. Never fixes code itself. Use for 'run QA', 'QA gate', or 'прогонить QA-сценарии' requests before a commit." | low |
+| `git-master` | "Git Master: handles atomic commits, rebase/squash/fixup (history rewrite), and history search (blame, bisect, log -S, reflog). Loads the git-master skill first, commits atomically in the pack's fixed commit message format, with the message language detected from history, and protects shared history. Use for 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find the commit that'." | low |
+| `architect` | "Architect: designs the architecture for complex work - a new feature spanning multiple components, a whole project from zero, or server/infrastructure changes. Consulted by the plan agent; analyzes constraints and non-functional requirements, weighs alternatives with trade-offs, records key decisions, risks, and rollout/operations considerations, and writes ONE architecture evidence file under .opencode/evidence/. Read-only to product code: never writes code, never writes plan task rows. Use for 'design the architecture', 'спроектируй архитектуру', or when the planner hands off a complex design." | high |
 
 ### Skills
 
@@ -28,7 +28,7 @@ Each agent loads one skill on startup (the last three have no agent of their
 own - `worker` loads them contextually during implementation):
 
 - `plan-work` (plan)
-- `lead-work` (build)
+- `lead-work` (team-lead)
 - `discuss-work` (discuss)
 - `research-topic` (explore)
 - `execute-work` (worker)
@@ -68,14 +68,14 @@ You can also pin a per-agent model at install time with `--model <agent>=<model>
 (repeat the flag once per agent):
 
 ```bash
-./install.sh --yes --model plan=anthropic/claude-3-5-sonnet --model build=openai/gpt-4o
+./install.sh --yes --model plan=anthropic/claude-3-5-sonnet --model team-lead=openai/gpt-4o
 ```
 
 This writes a `"model"` property into each named agent's entry in the merged
 config, equivalent to editing the file by hand (see
 [Assigning a model to an agent](#assigning-a-model-to-an-agent)). The agent
 name must be one of the pack's 10 agents (`plan`, `worker`, `explore`,
-`build`, `discuss`, `plan-reviewer`, `code-reviewer`, `qa-inspector`, `git-master`, `architect`), and the model
+`team-lead`, `discuss`, `plan-reviewer`, `code-reviewer`, `qa-inspector`, `git-master`, `architect`), and the model
 string must be non-empty with no whitespace; anything else is rejected with an
 error before anything is installed. Omitting `--model` changes nothing.
 
@@ -132,11 +132,13 @@ config are lost when the merge runs (the backup keeps the original).
 
 ## How to invoke each agent
 
-Three agents in this pack are **primary**: `plan`, `build` and `discuss`. You
+Three agents in this pack are **primary**: `plan`, `team-lead` and `discuss`. You
 select one as the active agent before typing your message; none can be spawned
 by other agents. `plan` is primary by OpenCode's built-in default: its agent
 file carries no `mode` field — OpenCode's built-in plan mode grants its
-primary status. The remaining seven are subagents - you invoke them by naming
+primary status. The pack does not override OpenCode's built-in `build` agent —
+that agent stays standard, and the pack's orchestrator is `team-lead`. The
+remaining seven are subagents - you invoke them by naming
 them in your prompt:
 
 - `@explore` — "How does the auth flow work in this repo?"
@@ -150,13 +152,13 @@ them in your prompt:
 You can also select any of these as the active agent before typing your
 message.
 
-`plan`, `build` and `discuss` are primary agents, not subagents: select one as
+`plan`, `team-lead` and `discuss` are primary agents, not subagents: select one as
 the active agent first, then give it the work directly, e.g. "Plan a rate limit
 for /login." (plan) or "Execute the plan at ~/.opencode/plan/my-feature.md."
-(build). When the topic is not yet a task — say, weighing two approaches for a
+(team-lead). When the topic is not yet a task — say, weighing two approaches for a
 migration — pick `discuss` and debate it: "Which of these designs should we
 take to planning?" `plan` turns the request into a decision-complete plan and
-hands off to implementation; `build` orchestrates by delegating to the `explore`
+hands off to implementation; `team-lead` orchestrates by delegating to the `explore`
 and `worker` subagents. None can be spawned by other agents. `plan`'s
 primary status comes from OpenCode's built-in plan mode by default, so its
 agent file has no `mode` field.
@@ -168,16 +170,16 @@ session that debates the approach and converges on a design before planning):
 
 1. `plan` writes a decision-complete plan and runs the mandatory `plan-reviewer` audit before handoff. For complex work (a new subsystem or feature with many moving parts, a project from zero, or server/infrastructure changes) `plan` first consults `architect`, and the plan references the architecture doc `architect` wrote under `.opencode/evidence/`.
 2. `plan-reviewer` audits the plan and returns blockers or approval; `plan` resolves every blocker before handoff, and re-runs the audit after every plan revision - approval binds to the reviewed version.
-3. `build` picks up the approved plan and coordinates the waves.
+3. `team-lead` picks up the approved plan and coordinates the waves.
 4. `explore` answers the open questions the plan flagged.
 5. `worker` implements the delegated steps and verifies each one.
 6. `code-reviewer` checks the resulting diff for correctness and plan fidelity.
 7. `qa-inspector` runs the plan's QA scenarios for real, saves one evidence file per run, and reports PASS/FAIL; on FAIL, `worker` fixes and the cycle repeats before commit; a FAIL caused by a plan defect goes back to `plan` instead — `plan` revises and re-audits, and the cycle resumes from the revised plan.
 8. `git-master` commits the work atomically using the pack's fixed commit message template — see git-master's skill (`skills/git-master/SKILL.md`) for its definition.
 
-In short: `plan` → (`architect` for complex work) → `plan-reviewer` → `build` → `explore` →
+In short: `plan` → (`architect` for complex work) → `plan-reviewer` → `team-lead` → `explore` →
 `worker` → `code-reviewer` → `qa-inspector` → `git-master`.
-A QA FAIL caused by a plan defect loops back from `build` to `plan` for revision and re-audit before execution resumes.
+A QA FAIL caused by a plan defect loops back from `team-lead` to `plan` for revision and re-audit before execution resumes.
 
 ## Assigning a model to an agent
 
@@ -252,9 +254,9 @@ The uninstaller is the exact inverse of the installer:
   `<config-dir>/opencode.jsonc` and the most recent
   `opencode.json.backup-*` over `<config-dir>/opencode.json`
   (whenever such backups exist).
-- Removes only the pack's own 10 agent files and 13 skill directories, by exact
-  name. Nothing else in those folders is touched, and the source pack files in
-  this directory are never removed.
+- Removes only the pack's own 10 agent files and 13 skill directories, by
+  exact name. Nothing else in those folders is touched, and the source pack
+  files in this directory are never removed.
 
 It also supports interactive confirmation if you omit `--yes`, and it fails
 cleanly if `HOME` is unset and no `--config-dir` was given.

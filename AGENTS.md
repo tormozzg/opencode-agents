@@ -10,7 +10,7 @@ there is also no `package.json`, no CI, no `.github/`.
 | Agent (`agents/*.md`) | Mode | Skill (`skills/*/SKILL.md`) |
 |---|---|---|
 | `plan` | primary | `plan-work` |
-| `build` | primary | `lead-work` |
+| `team-lead` | primary | `lead-work` |
 | `discuss` | primary | `discuss-work` |
 | `explore` | subagent | `research-topic` |
 | `worker` | subagent | `execute-work` |
@@ -20,7 +20,7 @@ there is also no `package.json`, no CI, no `.github/`.
 | `git-master` | subagent | `git-master` |
 | `architect` | subagent | `architect-work` |
 
-`plan`, `build` and `discuss` are primary agents - select one as the active
+`plan`, `team-lead` and `discuss` are primary agents - select one as the active
 agent; they
 cannot be spawned by others; all the rest are invoked as subagents
 (`@worker`, `@explore`, …).
@@ -44,7 +44,10 @@ carries only its identity and the mandatory skill-load trigger:
 
 - frontmatter: `description` (quoted by README and the snippet) + `mode` —
   every agent except `plan`, whose primary status comes from OpenCode's
-  built-in plan mode by default, so its frontmatter carries only `description`;
+  built-in plan mode by default, so its frontmatter carries only `description` —
+  plus `variant` (`high`: plan, team-lead, architect, discuss, plan-reviewer;
+  `low`: explore, worker, code-reviewer, git-master, qa-inspector), set in
+  each agent file's frontmatter only;
 - a 1–2 sentence role paragraph ("You are the **<name>** agent…");
 - a `## First action` section that mandates loading the agent's skill and
   following it for the entire turn.
@@ -54,8 +57,8 @@ verification bars, checklists) lives ONLY in the paired
 `skills/<name>/SKILL.md`. Never copy instruction sections into agent files:
 a duplicated rule must be edited in two places and drifts. If a rule exists
 only in an agent file, move it into the skill instead of keeping it there.
-(Precedent: the `build`/`lead-work` and `worker`/`execute-work` pairs were
-deduplicated this way.)
+(Precedent: the `build`/`lead-work` and `worker`/`execute-work` pairs — `build`
+being the team-lead agent's former name — were deduplicated this way.)
 
 ## Install / verify
 

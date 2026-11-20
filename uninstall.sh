@@ -94,7 +94,7 @@ AGENT_FILES=(
   plan.md
   worker.md
   explore.md
-  build.md
+  team-lead.md
   plan-reviewer.md
   code-reviewer.md
   git-master.md

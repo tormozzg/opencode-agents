@@ -163,4 +163,4 @@ When the task prompt names a notepad (e.g. `.opencode/notepads/<plan-name>/`), A
 
 ## Handoff
 
-If your report hands off follow-up work, describe it in plain prose with paths; build decides the routing and executor.
+If your report hands off follow-up work, describe it in plain prose with paths; team-lead decides the routing and executor.

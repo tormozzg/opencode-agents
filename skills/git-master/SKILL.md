@@ -18,7 +18,7 @@ Classify the request first:
 | `HISTORY` | Answer when, where, who, why, or which commit changed something. |
 | `STATUS` | Inspect branch, diff, or working-tree state without changing it. |
 
-Do not commit, rebase, push, force-push, reset, stash-pop, or delete anything unless the user explicitly asked for that operation. When a workflow the user started mandates one of them (lead-work commits through git-master only when the user explicitly asks for a commit, and then only after code-reviewer approval and a passing qa-inspector run; build commits through git-master on request), that workflow's instruction is the ask. A direct user request to git-master is the user's own ask and by design does not require the pack's review/QA gates — the gates apply to the lead-work flow. An explicit instruction from a dispatching agent (build, lead-work) acting within its authority is also "the ask". If the request is only investigative, report findings and stop.
+Do not commit, rebase, push, force-push, reset, stash-pop, or delete anything unless the user explicitly asked for that operation. When a workflow the user started mandates one of them (lead-work commits through git-master only when the user explicitly asks for a commit, and then only after code-reviewer approval and a passing qa-inspector run; team-lead commits through git-master on request), that workflow's instruction is the ask. A direct user request to git-master is the user's own ask and by design does not require the pack's review/QA gates — the gates apply to the lead-work flow. An explicit instruction from a dispatching agent (team-lead, lead-work) acting within its authority is also "the ask". If the request is only investigative, report findings and stop.
 
 ## Ground Truth
 

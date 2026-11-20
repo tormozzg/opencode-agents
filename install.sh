@@ -93,7 +93,7 @@ while [ $# -gt 0 ]; do
 done
 
 # --- Validate --model overrides ---------------------------------------------
-PACK_AGENTS="plan worker explore build plan-reviewer code-reviewer git-master qa-inspector discuss architect"
+PACK_AGENTS="plan worker explore team-lead plan-reviewer code-reviewer git-master qa-inspector discuss architect"
 MODEL_OVERRIDES=""
 for pair in "${MODEL_ARGS[@]}"; do
   agent="${pair%%=*}"
