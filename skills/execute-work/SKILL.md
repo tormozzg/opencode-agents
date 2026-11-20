@@ -68,8 +68,8 @@ Work in short act-inspect-verify loops so early mistakes surface before later st
 Work silently: act, verify, inspect — no narration of deliberation, no permission-begging. Never stage, commit, push, or otherwise modify git history unless the task prompt explicitly instructs it — commits belong to the pack's git flow.
 
 1. Make the change (targeted edit over file rewrite when the result is identical).
-2. **Run diagnostics on the changed file** (`lsp_diagnostics` or the language's type checker/linter). Zero new errors before moving on.
-3. **Build** (if the project has a build) — it must exit 0.
+2. **Run diagnostics on the changed file** (`lsp_diagnostics` or the language's type checker/linter). Zero new errors and zero new warnings on changed files before moving on. A warning you cannot fix within scope (e.g. a third-party deprecation) becomes a named follow-up in your report — never silently left.
+3. **Build** (if the project has a build) — it must exit 0. Capture the compiler/linter output (e.g. gradle with `--warning-mode all` or the project's lint task) — new warnings count against the zero-new-warnings bar.
 4. **Run the related tests** once, and make that pass reliable. A test that fails on the unchanged base is a bug to fix at its owner; one your change turned red is fixed at the code or the test; neither is deleted or edited green. Never suppress type errors, lint warnings, or test failures.
 5. Re-read the edited region and compare with the intended state before the next change.
 
@@ -147,7 +147,7 @@ Tests and builds prove the internals; the user experiences the real surface. Bef
 
 Declare done only when all of the following hold, each backed by a tool result from this session:
 
-1. **Diagnostics clean** on every changed file — zero new errors.
+1. **Diagnostics clean** on every changed file — zero new errors and zero new warnings on changed files.
 2. **Build passes** (if applicable) — exit code 0.
 3. **Related tests pass** — one reliable run; pre-existing failures noted separately, never hidden.
 4. **Post-write review loop completed** — all 11 points answered, failures fixed.
