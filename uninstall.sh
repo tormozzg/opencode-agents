@@ -8,7 +8,7 @@
 #     <config-dir>/opencode.jsonc and the most recent
 #     <config-dir>/opencode.json.backup-* over
 #     <config-dir>/opencode.json (whenever such backups exist).
-#   - Removes exactly the 10 agent files and 13 skill directories installed
+#   - Removes exactly the 10 agent files and 14 skill directories installed
 #     by this pack (identified by exact name list below).
 #
 # Safety:
@@ -117,6 +117,7 @@ SKILL_DIRS=(
   slop-cleanup
   discuss-work
   architect-work
+  codegraph-sync
 )
 
 # --- Confirmation gate ------------------------------------------------------
@@ -177,7 +178,7 @@ for name in "${AGENT_FILES[@]}"; do
   fi
 done
 
-# --- Remove the 13 skill directories (by exact name; tolerate missing) ------
+# --- Remove the 14 skill directories (by exact name; tolerate missing) ------
 for name in "${SKILL_DIRS[@]}"; do
   if [ -d "${SKILLS_DST}/${name}" ]; then
     rm -rf "${SKILLS_DST:?}/${name}"
@@ -189,6 +190,6 @@ done
 echo ""
 echo "Uninstall complete."
 echo "  Agents : ${REMOVED_AGENTS}/10 file(s) removed from ${AGENTS_DST}"
-echo "  Skills : ${REMOVED_SKILLS}/13 director(ies) removed from ${SKILLS_DST}"
+echo "  Skills : ${REMOVED_SKILLS}/14 director(ies) removed from ${SKILLS_DST}"
 echo "User-created files in ${AGENTS_DST} and ${SKILLS_DST} were preserved."
 echo "Restart opencode for the restored config to take effect."

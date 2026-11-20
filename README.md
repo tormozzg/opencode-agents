@@ -1,7 +1,7 @@
 # OpenCode Subagents Pack
 
 A small, self-contained pack for OpenCode that adds ten focused agents and their
-matching skills (thirteen in total - ten agent skills plus three extra worker skills). The pack only registers agents and skills; it does not modify
+matching skills (fourteen in total - ten agent skills plus four extra skills). The pack only registers agents and skills; it does not modify
 any other plugins, and it never auto-runs plans. Every plan and every code change stays
 under your explicit control.
 
@@ -24,8 +24,9 @@ under your explicit control.
 
 ### Skills
 
-Each agent loads one skill on startup (the last three have no agent of their
-own - `worker` loads them contextually during implementation):
+Each agent loads one skill on startup (the last four have no agent of their
+own - `worker` loads the first three contextually during implementation, and
+any agent that uses the codegraph MCP loads the fourth):
 
 - `plan-work` (plan)
 - `lead-work` (team-lead)
@@ -40,6 +41,7 @@ own - `worker` loads them contextually during implementation):
 - `code-idiom` (worker, contextually)
 - `refactor-code` (worker, contextually)
 - `slop-cleanup` (worker, contextually)
+- `codegraph-sync` (contextually, any agent using the codegraph MCP)
 
 The skill files live in `skills/`, the agent definitions in `agents/`, and the
 registration snippet in `opencode.jsonc.snippet` (top-level `agent` key, plus
@@ -111,7 +113,7 @@ before anything is installed.
 What the installer does:
 
 - Copies the 10 agent files to `<config-dir>/agents/`.
-- Copies the 13 skill directories to `<config-dir>/skills/`.
+- Copies the 14 skill directories to `<config-dir>/skills/`.
 - Merges `opencode.jsonc.snippet` into `<config-dir>/opencode.jsonc` or
   `<config-dir>/opencode.json`, whichever already exists (`.jsonc` is
   preferred when both exist; `.jsonc` is created when neither does).
@@ -254,7 +256,7 @@ The uninstaller is the exact inverse of the installer:
   `<config-dir>/opencode.jsonc` and the most recent
   `opencode.json.backup-*` over `<config-dir>/opencode.json`
   (whenever such backups exist).
-- Removes only the pack's own 10 agent files and 13 skill directories, by
+- Removes only the pack's own 10 agent files and 14 skill directories, by
   exact name. Nothing else in those folders is touched, and the source pack
   files in this directory are never removed.
 

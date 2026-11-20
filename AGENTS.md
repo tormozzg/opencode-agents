@@ -3,7 +3,7 @@
 ## What this repo is
 
 Installable OpenCode pack: 10 agents in `agents/*.md`
-+ 13 skills in `skills/<name>/SKILL.md`, installed globally into the OpenCode
++ 14 skills in `skills/<name>/SKILL.md`, installed globally into the OpenCode
 config dir. It is not an app or library — there is no build, test, or lint here;
 there is also no `package.json`, no CI, no `.github/`.
 
@@ -22,9 +22,10 @@ there is also no `package.json`, no CI, no `.github/`.
 
 `plan`, `team-lead` and `discuss` are primary agents — select one as the active
 agent; they cannot be spawned by others. All the rest are subagents
-(`@worker`, `@explore`, …). The other 3 skills (`code-idiom`, `refactor-code`,
-`slop-cleanup`) have no agent of their own: they are companion references that
-`execute-work` tells the worker to load on demand.
+(`@worker`, `@explore`, …). The other 4 skills (`code-idiom`, `refactor-code`,
+`slop-cleanup`, `codegraph-sync`) have no agent of their own: they are
+companion references loaded on demand — the first three by `execute-work`'s
+worker, `codegraph-sync` by any agent that uses the codegraph MCP.
 
 ## Three-place invariant
 
@@ -96,7 +97,7 @@ Installer behavior (verified against `install.sh`):
 
 `./uninstall.sh --yes [--config-dir <path>]` is the exact inverse: restores the
 most recent `opencode.jsonc.backup-*` / `opencode.json.backup-*` over the
-configs, then removes exactly the 10 agent files and 13 skill dirs by name.
+configs, then removes exactly the 10 agent files and 14 skill dirs by name.
 Everything else in `agents/`/`skills/` is preserved.
 
 ## Repo conventions
