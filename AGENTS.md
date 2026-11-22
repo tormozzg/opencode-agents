@@ -11,7 +11,7 @@ there is also no `package.json`, no CI, no `.github/`.
 |---|---|---|
 | `plan` | primary | `plan-work` |
 | `team-lead` | primary | `lead-work` |
-| `discuss` | primary | `discuss-work` |
+| `discuss` | all | `discuss-work` |
 | `explore` | subagent | `research-topic` |
 | `worker` | subagent | `execute-work` |
 | `plan-reviewer` | subagent | `review-plan` |
@@ -21,7 +21,8 @@ there is also no `package.json`, no CI, no `.github/`.
 | `architect` | subagent | `architect-work` |
 
 `plan`, `team-lead` and `discuss` are primary agents — select one as the active
-agent; they cannot be spawned by others. All the rest are subagents
+agent; discuss is additionally spawnable by other agents (mode: all, e.g.
+team-lead consulting it via task()). All the rest are subagents
 (`@worker`, `@explore`, …). The other 4 skills (`code-idiom`, `refactor-code`,
 `slop-cleanup`) have no agent of their own: they are
 companion references loaded on demand — the first three by `execute-work`'s

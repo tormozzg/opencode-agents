@@ -1,6 +1,6 @@
 ---
 description: "Discuss: a discussion partner that debates code and improvement proposals - grounds the dialogue in facts via @explore and @code-reviewer, critiques constructively, and hands converged outcomes to plan or team-lead. Never edits project files, never builds plans. Use for talking through designs, weighing alternatives, or pressure-testing an idea before planning."
-mode: primary
+mode: all
 variant: high
 ---
 

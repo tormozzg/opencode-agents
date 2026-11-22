@@ -133,16 +133,19 @@ config are lost when the merge runs (the backup keeps the original).
 ## How to invoke each agent
 
 Three agents in this pack are **primary**: `plan`, `team-lead` and `discuss`. You
-select one as the active agent before typing your message; none can be spawned
-by other agents. `plan` is primary by OpenCode's built-in default: its agent
+select one as the active agent before typing your message. `discuss` is
+additionally spawnable by other agents (mode `all` — e.g. team-lead consulting
+it via task()); the other two cannot be spawned. `plan` is primary by OpenCode's
+built-in default: its agent
 file carries no `mode` field — OpenCode's built-in plan mode grants its
 primary status. The pack does not override OpenCode's built-in `build` agent —
 that agent stays standard, and the pack's orchestrator is `team-lead`. The
-remaining seven are subagents - you invoke them by naming
+remaining eight are subagents - you invoke them by naming
 them in your prompt:
 
 - `@explore` — "How does the auth flow work in this repo?"
 - `@worker` — "Implement step 3 of the plan."
+- `@discuss` — "Which of these designs should we take to planning?"
 - `@plan-reviewer` — "Review the plan at ~/.opencode/plan/my-feature.md for blockers."
 - `@code-reviewer` — "Review the diff for this branch."
 - `@qa-inspector` — "Run the QA scenarios from the plan before we commit."
@@ -152,14 +155,15 @@ them in your prompt:
 You can also select any of these as the active agent before typing your
 message.
 
-`plan`, `team-lead` and `discuss` are primary agents, not subagents: select one as
+`plan`, `team-lead` and `discuss` are primary agents: select one as
 the active agent first, then give it the work directly, e.g. "Plan a rate limit
 for /login." (plan) or "Execute the plan at ~/.opencode/plan/my-feature.md."
 (team-lead). When the topic is not yet a task — say, weighing two approaches for a
 migration — pick `discuss` and debate it: "Which of these designs should we
-take to planning?" `plan` turns the request into a decision-complete plan and
+take to planning?" (team-lead can also spawn `discuss` as a subagent for the
+same debate via task().) `plan` turns the request into a decision-complete plan and
 hands off to implementation; `team-lead` orchestrates by delegating to the `explore`
-and `worker` subagents. None can be spawned by other agents. `plan`'s
+and `worker` subagents. `plan` and `team-lead` cannot be spawned by other agents. `plan`'s
 primary status comes from OpenCode's built-in plan mode by default, so its
 agent file has no `mode` field.
 
