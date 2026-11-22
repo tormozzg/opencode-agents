@@ -65,6 +65,7 @@ Where execute-work states a rule inline, its rule and this one are the same rule
 - **Trivial functions get none.** A straightforward getter, passthrough, or single-obvious-action function (`getListUsers()` returning a user list) needs no doc — the name already says it.
 - **Document multi-step logic only when the order or combination is load-bearing** — workarounds, invariants, API ordering ("flush before read"): explain WHY the sequence exists, never narrate WHAT each step does. A long-but-obvious sequence is decomposed into named helpers instead of narrated.
 - **Never restate the signature.** Parameter names/types and return types are already in the code; a docstring that repeats them is documentation bloat — see review-code's documentation-bloat check.
+- **Behavior-changing edits keep docs true.** An edit that changes a function's behavior must update its doc comment in the same change — a doc describing the old behavior is misinformation. A complex function (one whose name cannot carry the full intent, above) left undocumented after a behavior-changing edit gets a WHY-level doc per the rules above. "Not my code" is not an exemption: you own the diff.
 
 ## Language specifics come from the language
 

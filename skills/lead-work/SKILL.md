@@ -37,11 +37,12 @@ Examples:
 You receive either a plan file (at the path you are given — typically OpenCode's built-in Plan directory `~/.opencode/plan`) or a direct task from the user/orchestrator.
 
 - **Plan**: read it, parse the top-level task checkboxes, build the dependency map, and dispatch waves until every checkbox is done.
+- **Todo ledger**: when the plan being executed has more than 3 task rows (or a direct task spans 3+ steps), maintain the `todowrite` list mirroring the plan's top-level task rows and update statuses in real time as waves complete — a stale todo list misleads worse than none.
 - **Direct task**: convert it into decision-complete delegation prompt(s).
 
 ## Resume after a context break
 
-On any new turn following a context break — a fresh session, compacted context, or resuming after the user returns — FIRST re-read: (a) the plan file and its top-level task checkboxes, (b) the notepads under `.opencode/notepads/<plan-name>/`, (c) the run's evidence under `.opencode/evidence/<plan-name>/`. Then rebuild the wave state from those artifacts and continue the loop — never resume from memory of what was done. The plan's checkboxes and the notepads ARE the durable state.
+On any new turn following a context break — a fresh session, compacted context, or resuming after the user returns — FIRST re-read: (a) the plan file and its top-level task checkboxes, (b) the notepads under `.opencode/notepads/<plan-name>/`, (c) the run's evidence under `.opencode/evidence/<plan-name>/`. Then rebuild the wave state from those artifacts — including the `todowrite` todo list, rebuilt from the plan's top-level task checkboxes — and continue the loop — never resume from memory of what was done. The plan's checkboxes and the notepads ARE the durable state.
 
 ## Routing
 

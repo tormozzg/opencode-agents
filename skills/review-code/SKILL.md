@@ -73,6 +73,7 @@ Flag these patterns wherever they appear in the diff (code, tests, comments, doc
 - [ ] **Premature abstraction**: helpers/utilities extracted for a single caller with no second use in sight.
 - [ ] **Over-validation**: excessive error checks, redundant null checks, defensive guards in trusted internal code.
 - [ ] **Documentation bloat**: JSDoc/docstrings restating the signature; README sections nobody consumes.
+- [ ] **Doc drift**: a behavior-affecting edit left a doc comment describing the old behavior — stale docs are misinformation, not doc polish: this is a BLOCKER.
 - [ ] **Dead code**: unused helpers, unused imports, commented-out code, vague TODOs.
 - [ ] **Redundant post-action verification**: re-checking what the framework guarantees; verification theater.
 - [ ] **Prose pins in tests**: asserting wording, headings, or doc text instead of machine-consumed values.
