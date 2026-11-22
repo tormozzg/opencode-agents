@@ -98,7 +98,7 @@ Installer behavior (verified against `install.sh`):
 
 `./uninstall.sh --yes [--config-dir <path>]` is the exact inverse: restores the
 most recent `opencode.jsonc.backup-*` / `opencode.json.backup-*` over the
-configs, then removes exactly the 10 agent files and 14 skill dirs by name.
+configs, then removes exactly the 10 agent files and 13 skill dirs by name.
 Everything else in `agents/`/`skills/` is preserved.
 
 ## Repo conventions

@@ -92,7 +92,7 @@ While reading, also verify the plan carries the pre-planning essentials Metis de
 - **Scope creep**: tasks beyond the stated goal (adjacent-module tests, premature abstraction, over-validation, documentation bloat) - flag as notes, block only if they contradict the stated scope.
 - **Constraints**: hard boundaries ("must not touch X") are stated and respected by the tasks.
 - **Self-identifying header**: the plan states its path, version, and review status; a missing header is a NOTE, not a blocker.
-- **Plan size**: the plan stays **holdable in one look** — mechanical or one-of-a-kind repetitive tasks coalesce into a single row, and work that grows beyond that groups into named phases, each with its own rows; a flat plan that dwarfs the orchestrator and cannot be decomposed into waves is a NOTE to split into phases.
+- **Plan size**: the plan stays **holdable in one look** — mechanical or one-of-a-kind repetitive tasks coalesce into a single row, and work that grows beyond that groups into named phases, each with its own rows; a flat plan with more than 12 task rows (the plan-work bound) is a NOTE to split into phases.
 - **Task-row grammar**: implementation rows are exactly `- [ ] N. <title>` and final-verifier rows `- [ ] F<n>. <title>`, checkbox in column 0, inside `## Todos` / `## Final verification wave`; a violation is a BLOCKER - it breaks the orchestrator's wave-building.
 - **Dependency matrix**: every implementation row carries a nested `Depends on: none | <row numbers>` line consistent with the task order; circular or dangling dependencies are BLOCKERS.
 - **Resolved decisions**: every default applied via the two-filter policy is recorded in a `## Resolved decisions` section (decision + why); silently-made defaults are a NOTE.

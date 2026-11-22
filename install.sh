@@ -5,7 +5,7 @@
 # Installs (into <config-dir>, the OpenCode config directory; by default
 # ~/.config/opencode, override with --config-dir <path>):
 #   - 10 agent files from ./agents/*.md       -> <config-dir>/agents/
-#   - 14 skill directories from ./skills/*    -> <config-dir>/skills/
+#   - 13 skill directories from ./skills/*    -> <config-dir>/skills/
 #   - Merges ./opencode.jsonc.snippet into    -> <config-dir>/opencode.jsonc
 #     or <config-dir>/opencode.json (whichever already exists; .jsonc is
 #     preferred when both exist, and .jsonc is created when neither does).

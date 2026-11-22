@@ -111,7 +111,7 @@ before anything is installed.
 What the installer does:
 
 - Copies the 10 agent files to `<config-dir>/agents/`.
-- Copies the 14 skill directories to `<config-dir>/skills/`.
+- Copies the 13 skill directories to `<config-dir>/skills/`.
 - Merges `opencode.jsonc.snippet` into `<config-dir>/opencode.jsonc` or
   `<config-dir>/opencode.json`, whichever already exists (`.jsonc` is
   preferred when both exist; `.jsonc` is created when neither does).
@@ -231,7 +231,7 @@ config directory), and partly in OpenCode's global Plan directory:
 
 - Plan artifacts (the final plan and the durable draft) are written by `plan` into OpenCode's built-in Plan directory (`~/.opencode/plan`) — the built-in Plan mode restricts the plan agent's writes to that directory.
 - `.opencode/notepads/` — per-plan learnings, issues, and decisions recorded during execution
-- `.opencode/evidence/<plan-name-or-task-slug>/` — design and verification evidence saved by `explore`, `architect`, `qa-inspector`, and `discuss` (discussion ledgers and citable findings) (one file per run: citable findings, architecture docs, and gate verdicts); `worker` quotes its proof inline in the final report
+- `.opencode/evidence/<plan-name-or-task-slug>/` — design and verification evidence saved by `explore`, `architect`, and `qa-inspector` (one file per run: citable findings, architecture docs, and gate verdicts); `discuss` saves discussion ledgers under `.opencode/evidence/discuss/`; `worker` quotes its proof inline in the final report
 - `.opencode/tmp/` — temporary/scratch verification files (throwaway repro scripts, one-off test scripts, temp fixtures) created by `worker` and `qa-inspector`; anything temporary created outside `.opencode/` is removed before the work is declared done
 
 The agents and skills themselves still install globally to `~/.config/opencode/`;
@@ -258,7 +258,7 @@ The uninstaller is the exact inverse of the installer:
   `<config-dir>/opencode.jsonc` and the most recent
   `opencode.json.backup-*` over `<config-dir>/opencode.json`
   (whenever such backups exist).
-- Removes only the pack's own 10 agent files and 14 skill directories, by
+- Removes only the pack's own 10 agent files and 13 skill directories, by
   exact name. Nothing else in those folders is touched, and the source pack
   files in this directory are never removed.
 
