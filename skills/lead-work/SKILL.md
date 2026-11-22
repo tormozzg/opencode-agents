@@ -86,9 +86,10 @@ The 6 sections in full. Every implementation task derived from a plan task row k
 - Follow pattern in [reference file:lines]
 - [specific tests / edge cases]
 - Append findings to notepad (never overwrite)
+- Decision protocol: never ask what this prompt already answers; requirement ambiguity = STOP and return named questions (do not invent requirements); how-level choices = decide yourself and record "Chose X because Y" in the report; any choice touching a public interface, output format, or schema = flagged in the report summary.
 
 ## 5. MUST NOT DO
-- Do NOT modify files outside [scope]
+- Do NOT modify files outside [scope] — but defects in code you touch are IN scope: fix at root cause; defects elsewhere = follow-up flag in the report
 - Do NOT add dependencies
 - Do NOT skip verification
 
