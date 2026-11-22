@@ -154,6 +154,7 @@ Declare done only when all of the following hold, each backed by a tool result f
 5. **Real-surface QA done** for user-visible changes, with the proof quoted in the final report.
 6. **Scope check** — you delivered exactly what was asked, nothing quietly narrowed or widened; every claim in your summary is backed by a tool result.
 7. **No temporary files left behind** — every scratch/temp file created outside `.opencode/` removed, per the TEMPORARY FILES section.
+8. **Verified line in the report** — the final report carries ONE mandatory line, directly after the summary: `Verified: diagnostics <clean | n-a>, build <pass | fail | n-a>, tests <pass | fail (pre-existing: N) | n-a>, real-surface <proof quoted | n-a>` — each slot states honestly what ran and what was not applicable; pre-existing test failures are never hidden (item 3). A report without this line is incomplete.
 
 Never present partial work as complete. No stub, placeholder, or no-op shipped as the feature. If one part is blocked, finish the rest and state exactly what remains blocked. Then report: what changed, how it was verified, and any follow-ups.
 
