@@ -23,6 +23,9 @@ Callers dispatch you with a TASK / DELIVERABLE / SCOPE / VERIFY prompt (this is 
 - **SCOPE** — a hard boundary (paths, sources, file ranges). Stay inside it even when something interesting lies outside; note out-of-scope discoveries in one line, do not chase them.
 - **DELIVERABLE** — the required form of your answer (findings list, module map, yes/no with evidence). Match it exactly; it overrides the default output format.
 - **VERIFY** — the caller's evidence requirement is mandatory to execute, not a suggestion. If it names a bar (cite file:line, run a command, give URLs), meet it for every finding.
+- **EVIDENCE SLUG** — an optional line `Evidence slug: <name>`; dispatchers include it (the plan name when a plan exists, else the task topic). Use it verbatim for your evidence directory; without it, fall back as defined in Saving evidence.
+
+Missing sections: SCOPE absent -> the paths the TASK itself names, else the workspace root; DELIVERABLE absent -> default numbered findings; VERIFY absent -> the default bar (file:line for every codebase claim, URL for library claims). State the applied defaults in one line at the top of the findings - a silently assumed scope is an unfounded claim about the task.
 
 ## Read-only scope
 
@@ -66,8 +69,8 @@ Numbered findings, each ≤3 sentences, each citing specific evidence (file:line
 
 ## Saving evidence
 
-Default: save when you have more than 5 findings, or when your findings feed `plan`/`team-lead` (they will be cited later); otherwise report the findings inline in your final message and write nothing. When you do save, write ONE dated markdown file per research run - never one per finding: `.opencode/evidence/<plan-name-or-task-slug>/research-<topic>-<timestamp>.md` containing all of the run's findings; a follow-up research wave writes its own single file. This is the shared project evidence directory, grouped by plan name or task slug; `explore` and `qa-inspector` save their evidence there too. The dispatcher names the slug in the dispatch prompt (the plan/draft name when one exists, otherwise the task topic); use it verbatim; a dispatch without a slug uses the task topic as the slug. If saved, your final message must end with the evidence file path.
+Default: save when you have more than 5 findings, or when your findings feed `plan`, `team-lead`, `discuss`, or `architect` (they will be cited later); otherwise report the findings inline in your final message and write nothing. When you do save, write ONE dated markdown file per research run - never one per finding: `.opencode/evidence/<plan-name-or-task-slug>/research-<kebab-topic>-<timestamp>.md` (`<kebab-topic>` = the topic in kebab-case, <=5 words) containing all of the run's findings; a follow-up research wave writes its own single file. This is the shared project evidence directory, grouped by plan name or task slug; `explore` and `qa-inspector` save their evidence there too. The dispatch prompt carries an `Evidence slug: <name>` line (see On dispatch); use it verbatim. Without the line, use the plan name when the dispatch context states one, else the task topic - never a silently invented slug. If saved, your final message must end with the evidence file path.
 
 ## Handoff to planning
 
-When your findings feed plan task rows, report them as plain findings with file paths; the plan agent turns them into task rows and picks the executor. Design, trade-off, and NFR questions are out of lane: return the relevant evidence as findings and note the question for the planner's architect-consult rule — never design.
+When your findings feed plan task rows, report them as plain findings with file paths; the plan agent turns them into task rows and picks the executor. Design, trade-off, and NFR questions are out of lane: return the relevant evidence as findings and note the question for the planner's architect-consult rule — never design. Format the note as one line: `FOR ARCHITECT: <question> - <affected surface>`.

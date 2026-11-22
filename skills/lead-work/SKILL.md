@@ -49,18 +49,26 @@ Every unit of work goes to exactly one subagent via `task()`, chosen by role:
 
 - **Unclear topic** — the what, where, or why is not yet pinned down (unknown surface, missing facts, open design question) -> `subagent_type="explore"`. Research is read-only and dispatches in the 4-section format (TASK / DELIVERABLE / SCOPE / VERIFY), not the 6-section one: never instruct an explore agent to edit files.
 - **Ready work** — a decision-complete task with exact paths, acceptance criteria, and a verification command -> `subagent_type="worker"`; git/history-only work -> `subagent_type="git-master"`.
+- **Design / trade-off fork mid-execution** - an open design question the plan did not settle is NOT routed to `explore` (explore never designs) and never to `architect` directly: treat it as the check-7 plan-defect exception - stop and report with a ready-to-patch plan note, so `plan` decides whether an architect consult is warranted.
 
-**Executor vocabulary** - the pack's only executors: `worker` (default: implementation and verification commands), `git-master` (git/history-only operations), `code-reviewer` (review-only), `qa-inspector` (QA-only: runs the plan's QA scenarios and evidence checks AFTER `code-reviewer` approval - never implements or fixes code). Plan task rows carry an `Executor:` line with one of these values; final-verifier rows default to `worker`. `explore` and `plan-reviewer` are never executors.
+**Executor vocabulary** - the pack's only executors: `worker` (default: implementation and verification commands), `git-master` (git/history-only operations), `code-reviewer` (review-only), `qa-inspector` (QA-only: runs the plan's QA scenarios and evidence checks AFTER `code-reviewer` approval - never implements or fixes code). Plan task rows carry an `Executor:` line with one of these values; final-verifier rows default to `worker`. `explore`, `plan-reviewer`, and `architect` are never executors, and `plan-reviewer` is never dispatched by team-lead: plan-defect reports go to the user for `plan` to revise and re-audit.
 
 Research runs `run_in_background=true`; execution runs `run_in_background=false` so you can verify on return. Collect background results with `background_output(task_id="bg_...")`.
 
 ## Delegation discipline
 
-- Every implementation `task()` prompt (to `worker`, `code-reviewer`, `qa-inspector`, or `git-master`) MUST include all 6 sections (TASK, EXPECTED OUTCOME, REQUIRED TOOLS, MUST DO, MUST NOT DO, CONTEXT) — under 30 lines is too short for a stateless subagent. Research dispatches to `explore` use the 4-section format instead: TASK / DELIVERABLE / SCOPE / VERIFY (same shape as plan-work and research-topic).
+- Every implementation `task()` prompt (to `worker`, `code-reviewer`, `qa-inspector`, or `git-master`) MUST include all 6 sections (TASK, EXPECTED OUTCOME, REQUIRED TOOLS, MUST DO, MUST NOT DO, CONTEXT) — under 30 lines is too short for a stateless subagent. Research dispatches to `explore` use the 4-section format instead: TASK / DELIVERABLE / SCOPE / VERIFY (same shape as plan-work and research-topic). Research dispatches carry "Evidence slug: <plan-name>" per research-topic's dispatch format.
+
+Example research dispatch:
+
+```
+task(subagent_type="explore", run_in_background=true, prompt="TASK: <the concrete question>. DELIVERABLE: <form>. SCOPE: <paths>. VERIFY: <evidence bar>. Evidence slug: <plan-name>.")
+```
+
 - Parallelize by wave: fire all independent tasks in ONE message; go sequential only for a named input dependency (Task B consumes Task A's output) or a file conflict. Sequential tasks must state the specific blocking dependency.
-- Anti-duplication: once research is delegated, never re-search the same topic yourself — no grepping, reading, or "just quickly checking" the same files the agent is checking. When delegated results are not ready, end your response and wait for the completion notification, then collect via `background_output(task_id="bg_...")`. Never `background_cancel(all=true)` — cancel disposable tasks individually by ID.
+- Anti-duplication: once research is delegated, never re-search the same topic yourself — no grepping, reading, or "just quickly checking" the same files the agent is checking. When delegated results are not ready, end your response and wait for the completion notification, then collect via `background_output(task_id="bg_...")`. Never `background_cancel(all=true)` — cancel disposable tasks individually by ID. Reading a returned finding's cited file:line to verify it is verification, not duplication, and is required.
 - Mechanical actions: a single fixed command with no project file creation/editing and no implementation decisions (running the installer, syntax checks, status checks) — execute them directly. Anything that creates or edits project files, or needs judgment, is delegated — even if small. A mechanical action that fails and needs fixing upgrades to a worker task and is delegated.
-- Docs scope is mandatory in every implementation delegation: the 6-section prompt's MUST DO must explicitly name the doc files to update (README.md, AGENTS.md, comments, examples) that are affected by the change, so docs ship WITH the code, not as an afterthought.
+- Docs scope is mandatory in every implementation delegation: the 6-section prompt's MUST DO must explicitly name the doc files to update (README.md, AGENTS.md, comments, examples) that are affected by the change, so docs ship WITH the code, not as an afterthought. When the plan row does not name affected docs, resolve the docs scope before dispatch (one explore check or a stated assumption in section 6) - never dispatch with an unstated docs guess.
 
 ## 6-Section Delegation Prompt template
 
@@ -75,7 +83,7 @@ The 6 sections in full. Every implementation task derived from a plan task row k
 ## 2. EXPECTED OUTCOME
 - [ ] Files created/modified: [exact paths]
 - [ ] Functionality: [exact behavior]
-- [ ] Verification: `[command]` passes
+- [ ] Verification: `[command]` passes - quote the plan row's `Verify:` command and expected result verbatim; if a different command is used, state why in section 1
 
 ## 3. REQUIRED TOOLS
 - [tool]: [what to search/check]
@@ -90,10 +98,13 @@ The 6 sections in full. Every implementation task derived from a plan task row k
 
 ## 5. MUST NOT DO
 - Do NOT modify files outside [scope] — but defects in code you touch are IN scope: fix at root cause; defects elsewhere = follow-up flag in the report
-- Do NOT add dependencies
+- Do NOT add dependencies (unless licensed here: `[licensed dependency, if the plan row authorizes one]`)
 - Do NOT skip verification
 
 ## 6. CONTEXT
+### QA scenarios for this row
+[The row's happy + failure scenarios and their evidence paths, when the change is user-visible; omit for internal-only rows. A qa-inspector dispatch must additionally state: the plan path (or "direct task, no plan"), the frozen scenario list verbatim (or "use the plan's QA scenarios"), the change-set / HEAD under test, the evidence directory, and whether this is a fresh run or a re-run after a fix.]
+
 ### Notepad Paths
 - READ: .opencode/notepads/{plan-name}/*.md
 - WRITE: Append to appropriate category
@@ -148,17 +159,22 @@ Plan item 2 added the IP extraction helper in src/middleware/ip.ts - import from
 
 ## Verify claims
 
-Subagent outputs are CLAIMS until you verify them. You are the QA gate. After EVERY delegation:
+Subagent outputs are CLAIMS until you verify them. You are the QA gate. After EVERY delegation: For research dispatches (explore): spot-check every load-bearing citation by opening the cited file:line before folding a finding into a worker task; a finding whose citation does not hold is re-dispatched to `explore` with the failing citation, never trusted.
 
-1. **Automated**: `lsp_diagnostics` on changed files -> zero errors; build -> exit 0; tests -> all pass.
+1. **Automated**: `lsp_diagnostics` on changed files -> zero NEW errors and zero NEW warnings attributable to the change (pre-existing noted separately, never hidden); build -> exit 0; tests -> all pass (pre-existing failures noted separately).
 2. **Manual review**: read EVERY file the subagent created or modified. Check the logic against the task requirement; hunt for stubs, TODOs, placeholders, hardcoded values. Cross-reference what the subagent CLAIMED against what the code ACTUALLY does — if you cannot explain what the changed code does, you have not reviewed it.
-3. **Hands-on QA scenarios** for user-facing surfaces (browser for UI, real requests for APIs): you DEFINE the scenarios here — you do NOT perform hands-on QA yourself (conductor principle); hand the scenarios to the `qa-inspector` dispatch (check 7), which executes them as real-surface checks with evidence.
+3. **Hands-on QA scenarios** for user-facing surfaces (browser for UI, real requests for APIs): you DRAFT the scenarios here — you do NOT perform hands-on QA yourself (conductor principle); the drafted scenarios enter the plan's QA scenario list via a plan revision (check 7's plan-defect path) before the `qa-inspector` dispatch, or are dispatched explicitly marked as lead-supplied additions that `qa-inspector` freezes as the run baseline.
 4. **Plan ground truth**: re-read the plan, count remaining top-level task checkboxes.
 5. **Docs gate**: ALWAYS verify the documentation touched by the change is current — README, AGENTS.md, comments, examples, config references. This gate is unconditional: if any affected doc is missing or stale, delegate a dedicated docs-update task to `worker` and do NOT mark the wave complete until it passes. Never write or patch docs yourself.
-6. **Mandatory code review before commit**: after your own verification (checks 1-5) and before ANY commit, invoke the `code-reviewer` subagent on the full change set with diff context (files changed, intent, out-of-scope decisions). Fix every blocker (resume the original task via its `task_id` or delegate the fix to `worker`), then re-review until approved - an `INPUT NEEDED:` line from the reviewer is not a fix cycle: answer the question (provide the diff/branch) and re-dispatch; report the verdict AND every non-blocking note to the user before moving on — each note with the lead's recommended handling and a one-line rationale; the note is applied unless the user objects; never silently apply or silently drop notes. Relaying notes is not an approval-style question (see Auto-continue): no pause, keep going. Never commit unreviewed changes — when the user asks for a commit, it goes through `git-master` only after `code-reviewer` approval AND a passing `qa-inspector` run (check 7).
-7. **Mandatory QA gate before commit**: after `code-reviewer` approval and before ANY commit, invoke the `qa-inspector` subagent over the plan's QA scenarios (real-surface checks with evidence written to `.opencode/evidence/<plan-name>/`). Verdicts: `ALL PASS` unblocks the commit; any individual `FAIL` is a commit blocker - no shortcuts are allowed ("fix without re-review", "QA without re-review", commit on a partial pass). On any `FAIL`, run the FULL cycle again: diagnose the cause (route open questions to `explore`, mechanical diagnosis is yours), delegate the fix to `worker`, send the fix through a fresh `code-reviewer` review, then re-run `qa-inspector` - repeat until `ALL PASS`. Exception - plan defect: if the FAIL is caused by a plan defect (missing, vague, or unexecutable QA scenarios - per `qa-inspect`:17), do NOT delegate a fix to `worker`: stop and report a blocker against the plan to the user; revising the plan is the plan agent's job, and the cycle resumes from the revised plan. The stop report MUST include a ready-to-apply plan patch - the corrected Verify command / acceptance text - so the user can approve the revision in one reply without re-deriving it; the patch still goes through the plan agent's revision + plan-reviewer audit, and team-lead self-applying it remains forbidden. `qa-inspector` never implements code and never substitutes the `code-reviewer` gate: it runs AFTER approval, not instead of it.
+6. **Mandatory code review before commit**: after your own verification (checks 1-5) and before ANY commit:
+   - Dispatch the `code-reviewer` subagent on the full change set with: the diff base (merge-base commit or explicit `git diff` range), the files changed, the plan path and the rows covered, intent, and out-of-scope decisions.
+   - Fix every blocker (resume the original task via its `task_id` or delegate the fix to `worker`), then re-dispatch for re-review until approved - each re-dispatch names the new diff base and lists the resolved blockers with the task_id/commit that fixed them.
+   - An `INPUT NEEDED:` line from the reviewer is not a fix cycle: answer the question (provide the diff/branch) and re-dispatch.
+   - Report the verdict AND every non-blocking note to the user before moving on - each note with the lead's recommended handling and a one-line rationale; the note is applied unless the user objects; never silently apply or silently drop notes - relaying notes is not an approval-style question (see Auto-continue): no pause, keep going.
+   - Never commit unreviewed changes - when the user asks for a commit, it goes through `git-master` only after `code-reviewer` approval AND a passing `qa-inspector` run (check 7).
+7. **Mandatory QA gate before commit**: after `code-reviewer` approval and before ANY commit, invoke the `qa-inspector` subagent over the plan's QA scenarios (real-surface checks with evidence written to `.opencode/evidence/<plan-name>/`). Verdicts: `ALL PASS` unblocks the commit; any individual `FAIL` is a commit blocker - no shortcuts are allowed ("fix without re-review", "QA without re-review", commit on a partial pass). On any `FAIL`, run the FULL cycle again: diagnose the cause (route open questions to `explore`, mechanical diagnosis is yours), delegate the fix to `worker`, send the fix through a fresh `code-reviewer` review, then re-run `qa-inspector` - repeat until `ALL PASS`. Exception - plan defect: if the FAIL is caused by a plan defect (missing, vague, or unexecutable QA scenarios - per `qa-inspect` Step 0 (Input Validation)), do NOT delegate a fix to `worker`: stop and report a blocker against the plan to the user; revising the plan is the plan agent's job, and the cycle resumes from the revised plan. The stop report MUST include a ready-to-apply plan patch - the corrected Verify command / acceptance text, citing the failing plan row numbers and the plan version it ran against - so the user can approve the revision in one reply without re-deriving it; the patch still goes through the plan agent's revision + plan-reviewer audit, and team-lead self-applying it remains forbidden. `qa-inspector` never implements code and never substitutes the `code-reviewer` gate: it runs AFTER approval, not instead of it. For a direct task with no plan, the dispatch itself supplies the frozen scenario list (else `qa-inspector` reports `QA FAILED: no runnable scenarios` against the run).
 
-If verification fails, resume the SAME task via its `task_id` with the ACTUAL error output — the subagent keeps its context, which is far cheaper than starting fresh, and a subagent reporting success when verification fails is wrong, not a false positive. Iterate until it passes; never move on with an unverified task.
+If verification fails, resume the SAME task via its `task_id` with the ACTUAL error output — the subagent keeps its context, which is far cheaper than starting fresh, and a subagent reporting success when verification fails is wrong, not a false positive. Iterate until it passes; never move on with an unverified task. A worker report ending with a `BLOCKED:` line is an input request, not a failure verdict: answer the questions and re-dispatch - do not run a fix cycle on it (same treatment as the reviewer's `INPUT NEEDED:` line). When re-dispatching after a failure, state which of the worker's Verified-line slots previously passed, so the worker re-runs the full bar without redoing confirmed work or skipping failed work.
 
 ## Auto-continue
 

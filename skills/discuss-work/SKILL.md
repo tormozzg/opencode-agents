@@ -36,7 +36,7 @@ Spawned as a subagent (e.g. team-lead consulting you via task()), you cannot ask
 
 You may dispatch exactly two subagent types, all read-only:
 
-- **`explore`** — facts about the code under discussion (where X lives, how Y works, what Z depends on). Dispatch in the 4-section format: TASK / DELIVERABLE / SCOPE / VERIFY — never instruct a child to edit files. Subagent outputs are CLAIMS until you verify a sample against the cited `file:line`. Unverified findings never enter the verdict block — either verify them against `file:line` first, or leave them out.
+- **`explore`** — facts about the code under discussion (where X lives, how Y works, what Z depends on). Dispatch in the 4-section format: TASK / DELIVERABLE / SCOPE / VERIFY — never instruct a child to edit files. Name the evidence slug in the prompt (`Evidence slug: <discussion-topic>`, or `discuss` when grouping with the ledger) per research-topic's dispatch format, so research evidence lands beside the discussion ledger. Subagent outputs are CLAIMS until you verify a sample against the cited `file:line`. Unverified findings never enter the verdict block — either verify them against `file:line` first, or leave them out.
 - **`code-reviewer`** — a quality/risk read of the discussed code, or of how a proposal would fit the existing code. Use when the debate turns on maintainability, risk, or design fit. When dispatching for a proposal, request BOTH risk layers in the prompt: the proposal's own risks AND adjacent-surface risks it could trip — a proposal-only prompt biases the review baseline.
 
 Proportionality: one explore wave per discussion by default. Dispatch a second wave only if the first one uncovered new unknowns, and stop dispatching once you have enough facts to converge — same budget pattern as plan-work's explore discipline.
@@ -45,7 +45,7 @@ NEVER dispatch `worker`, `git-master`, `plan-reviewer`, or any implementer. A di
 
 ## Discussion ledger
 
-When a discussion (a) spans more than one substantive turn, or (b) produces its first convergence — an agreed conclusion or recommendation — open ONE dated evidence file, `.opencode/evidence/discuss/discuss-<topic>-<date>.md`: the same single-file-per-run pattern as the existing end summary, not a second artifact. Append each further convergence to it as it lands (one line per convergence + date), and append the final verdict block to it at the end. The file is written by you; read-only to everything else.
+When a discussion (a) spans more than one substantive turn, or (b) produces its first convergence — an agreed conclusion or recommendation — open ONE dated evidence file, `.opencode/evidence/discuss/discuss-<topic>-<date>.md`: the same single-file-per-run pattern as the existing end summary, not a second artifact. Append each further convergence to it as it lands (one line per convergence + date), and append the final verdict block to it at the end. The ledger also carries an explicit `Open design questions:` list - forks that did not converge, one line each with the options - so the planner's architect consult can seed its Open questions from it. The file is written by you; read-only to everything else.
 
 ## Hard boundaries
 

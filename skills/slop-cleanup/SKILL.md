@@ -23,7 +23,7 @@ Hunt one pattern at a time. Signature → first move:
 | **Weak-value tests** | Pass on a default/bogus input even with broken code — e.g. a test on an identity/default value that also matches the bug | Assert a value only correct output would produce; make the input non-trivial. |
 | **Copy-paste duplicates** | The same block repeated with small edits | Keep one implementation, reuse it — for the second real caller, not a hypothetical one. |
 | **Needless pass-through abstractions** | Wrapper delegating 1:1 with no second caller and no added meaning | Inline it. |
-| **Oversized modules** | Pure LOC past execute-work's healthy band (Step 1 measurement) | Split by responsibility — each part still single-responsibility-named. |
+| **Oversized modules** | Pure LOC in execute-work's DEFECT band (> 250, Step 1 measurement); the 200-250 warning band is reported, not acted on | Split by responsibility — each part still single-responsibility-named. |
 | **Placeholder stubs** | Empty handlers, `not implemented` paths shipped as complete | Implement for real or remove + report as unfinished — never leave as "done". |
 
 - **Junk test is the most dangerous category.** A green suite with junk tests is *less* safety net than no suite: it manufactures false confidence while protecting nothing. Delete-then-rewrite beats patching.

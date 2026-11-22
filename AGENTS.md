@@ -23,7 +23,7 @@ there is also no `package.json`, no CI, no `.github/`.
 `plan`, `team-lead` and `discuss` are primary agents — select one as the active
 agent; discuss is additionally spawnable by other agents (mode: all, e.g.
 team-lead consulting it via task()). All the rest are subagents
-(`@worker`, `@explore`, …). The other 4 skills (`code-idiom`, `refactor-code`,
+(`@worker`, `@explore`, …). The other **3** skills (`code-idiom`, `refactor-code`,
 `slop-cleanup`) have no agent of their own: they are
 companion references loaded on demand — the first three by `execute-work`'s
 worker.
@@ -50,7 +50,7 @@ carries only its identity and the mandatory skill-load trigger:
   built-in plan mode by default, so its frontmatter carries only `description` —
   plus `variant` (`high`: plan, team-lead, architect, discuss, plan-reviewer;
   `low`: explore, worker, code-reviewer, git-master, qa-inspector), set in
-  each agent file's frontmatter only;
+  each agent file's frontmatter only; `worker` runs at `low` by design: its discipline is backstopped externally - the lead's verification checks 1-5 (lead-work) and the mandatory code-reviewer and qa-inspector gates - not by a higher reasoning variant; revisit only with evidence of skipped review points from real dispatches.
 - a 1–2 sentence role paragraph ("You are the **<name>** agent…");
 - a `## First action` section that mandates loading the agent's skill and
   following it for the entire turn.

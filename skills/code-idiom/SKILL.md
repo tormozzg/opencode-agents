@@ -47,8 +47,8 @@ Where execute-work states a rule inline, its rule and this one are the same rule
 - **Catch the specific type.** A broad `except Exception` that names nothing recoverable is a bug factory: it swallows the failure you needed to see. If you cannot name the types, you cannot name the recovery.
 - **Leave the state consistent.** An operation that fails leaves the object/system as it was (or as documented), never half-mutated — the caller's recovery depends on it.
 - **Validation failures are not exceptions.**
-  - User input can be invalid in several ways at once: collect the failures into a notification (a structured list of problems) and answer them together.
-  - Throw-on-first-error forces the user to re-discover each remaining problem one round-trip at a time.
+  - When the consumer answers the input as a whole (a form, a batch submission), collect the failures into a notification (a structured list of problems) and answer them together - throw-on-first-error forces the user to re-discover each remaining problem one round-trip at a time.
+  - When the consumer proceeds per item (a stream, a pipeline), fail fast per item.
   - Throwing is for the *unrecoverable*, not the *expected and answerable*.
 - **Log at error boundaries per project practice**, leveled by consumer, stable message with data in fields — see execute-work review point 11.
 

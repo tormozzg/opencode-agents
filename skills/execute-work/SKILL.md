@@ -1,13 +1,13 @@
 ---
 name: execute-work
-description: "Worker discipline for delegated implementation tasks: ownership, pre-write language gate, YAGNI ladder, type-driven design, scenario contract before coding, diagnostics/build/tests, the mandatory post-write review loop, real-surface manual QA, and declaring done only with evidence. Load before writing or editing any code."
+description: "Worker discipline for delegated implementation tasks: ownership, pre-write language gate, scenario contract before coding, diagnostics/build/tests, the mandatory post-write review loop, real-surface manual QA, and declaring done only with evidence. Load before writing or editing any code."
 ---
 
 # Execute Work
 
 **You own the code you are given.** What it is for and how it is built are your call, so change it the way its owner would: fit new behavior into the structure that is there, build on the code that already does the job, and leave no duplicate or dead code behind. A defect in the code you are changing is yours to fix now, at its root cause — never excuse it as pre-existing, someone else's, or the tool's fault. One defect elsewhere goes in your summary as a follow-up.
 
-This skill is the worker agent's operating loop. It composes with the `code-idiom` skill — if it is available in your environment, load it; otherwise the inline Phase 0 rules below are the discipline. This file owns the *workflow* around the code.
+This skill is the worker agent's operating loop. It composes with the `code-idiom` skill - part of this pack and always installed: load it before writing code (Phase 0 step 2). The YAGNI ladder and the type-driven design rules live THERE and only there; this file does not duplicate them. This file owns the *workflow* around the code.
 
 ---
 
@@ -16,36 +16,22 @@ This skill is the worker agent's operating loop. It composes with the `code-idio
 **Do not write or edit a single line of code before completing this gate.**
 
 1. **Identify the language** from the file extension, manifest, or the task description.
-2. **Load the language-specific reference** before writing anything: (1) if `code-idiom` is available in your environment, load it as the idiom reference; (2) for constructs it does not cover, consult the language's official docs; (3) follow the codebase's own conventions. No exceptions for "small" or "one-off" code — disposable scripts get the full discipline.
+2. **Load the language-specific reference** before writing anything: (1) load `code-idiom` (pack-shipped; mandatory before any code edit); if the skill load fails, STOP - do not write code from memory; report the load failure and stop. (2) For constructs it does not cover, consult the language's official docs (context7 first; websearch fallback when context7 has no matching library); (3) follow the codebase's own conventions. No exceptions for "small" or "one-off" code — disposable scripts get the full discipline.
 3. **Read the surrounding code first**: the module you are changing, its callers (grep them), and the tests covering the area. Do they encode the intent, cover this path, and pass? One failing before your change is a FINDING — never edit it green to unblock yourself.
 4. **Trace the real flow end to end** before deciding where the change goes. The smallest diff in the wrong place is a second bug. A ticket names a symptom; fix the shared seam once — one guard at the source beats one guard per caller, and patching only the named path leaves sibling callers broken.
-5. **Blocker exit for underspecified tasks.** If after tracing the real flow you still cannot state the scenario contract (input/behavior/observable result), STOP — do not invent requirements and do not loop on Phase 0. Return a blocker report: what is ambiguous, what you traced, and the specific questions that unblock you. Fixing a defect you discovered is not blocked work — only requirements ambiguity is. Questions the dispatch prompt already answers are forbidden — parse the whole prompt before asking. How-level choices are yours: decide and record "Chose X because Y" in the report; a choice that changes a public interface, output format, or schema existing consumers rely on is flagged in the report summary — never silent.
+5. **Blocker exit for underspecified tasks.** If after tracing the real flow you still cannot state the scenario contract (input/behavior/observable result), STOP — do not invent requirements and do not loop on Phase 0. Return a blocker report: what is ambiguous, what you traced, and the specific questions that unblock you. Fixing a defect you discovered is not blocked work — only requirements ambiguity is. Questions the dispatch prompt already answers are forbidden — parse the whole prompt before asking. How-level choices are yours: decide and record "Chose X because Y" in the report; a choice that changes a public interface, output format, or schema existing consumers rely on is flagged in the report summary — never silent. End the blocker report with one machine-readable line: `BLOCKED: <question 1>; <question 2>` - an input request, not a failure verdict (mirrors review-code's `INPUT NEEDED:`). The `BLOCKED:` line is emitted ONLY on this blocker exit and never appears in a normal done-report.
 
 ---
 
-## YAGNI LADDER — STOP AT THE FIRST RUNG THAT HOLDS
+## Dispatch types - gate applicability
 
-Before writing anything, climb in order and stop at the first rung that holds:
-
-1. Does this need to exist at all? (YAGNI)
-2. Does this codebase already have it? Reuse the helper or pattern; do not re-implement.
-3. Does the standard library do it?
-4. Does a native platform feature cover it?
-5. Does an installed dependency solve it?
-6. Can it be one line?
-7. Only then: write the minimum that works.
-
-The ladder is a fast decision, not a written essay — pick the rung and move. No helpers, abstractions, or defensive checks for hypothetical needs; no parallel copies of code that already does the job.
+For a dispatch that edits no code (verification commands, QA support, read-only analysis), Phase 0 steps 1-2 are n-a - say so in one line and run the done bar with its n-a slots. For docs-only edits, run a light gate: read the surrounding document's structure and conventions before editing.
 
 ---
 
-## TYPE-DRIVEN DESIGN
+## CODING DISCIPLINE - see code-idiom
 
-- **The type system is your proof system.** Make illegal states unrepresentable. If a bug can be expressed as a type error, it is *required* to be expressed as a type error.
-- **Parse, don't validate.** Untrusted input crosses a boundary exactly once — parsed into a typed value at the boundary. Inside, code receives typed values and never re-validates.
-- **One name = one concept.** A `UserId` is not a `string`; a `Seconds` is not a `Milliseconds`. Distinct semantic primitives get distinct types.
-- **Exhaustive variant matching, always.** Discriminated unions and enums are matched exhaustively with the language's exhaustiveness mechanism (`assert_never` / compiler-enforced `match` / `assertNever`). `if`/`elif`/`else` is forbidden for discriminating on a tagged variant.
-- **Trust framework guarantees; validate only at boundaries.** No null checks for values the type system proves non-null, no `try/except` around code that cannot raise, no defensive layer for a scenario you cannot name.
+The YAGNI ladder, type-driven design, boundaries, error handling, and naming are owned by the `code-idiom` skill. Load it (Phase 0 step 2) and follow it for the entire task.
 
 ---
 
@@ -65,7 +51,7 @@ If you cannot state the scenario contract, you do not understand the task yet �
 
 Work in short act-inspect-verify loops so early mistakes surface before later steps build on them:
 
-Work silently: act, verify, inspect — no narration of deliberation, no permission-begging. Never stage, commit, push, or otherwise modify git history unless the task prompt explicitly instructs it — commits belong to the pack's git flow.
+Work silently: act, verify, inspect — no narration of deliberation, no permission-begging. Never stage, commit, push, or otherwise modify git history - commits belong to the pack's git flow (git-master, after code-reviewer approval); if the task asks for the change to be committed, report commit-readiness and let the lead route it.
 
 1. Make the change (targeted edit over file rewrite when the result is identical).
 2. **Run diagnostics on the changed file** (`lsp_diagnostics` or the language's type checker). Zero new errors and zero new warnings on changed files before moving on. A warning you cannot fix within scope (e.g. a third-party deprecation) becomes a named follow-up in your report — never silently left.
@@ -117,7 +103,7 @@ Run this review internally, then report it compactly before you declare done: ei
 
 ### Step 3 — escalate if needed
 
-- Any code smell fired, or the review surfaced more than two issues: if `refactor-code` is available in your environment, load it and follow its safe-refactor protocol. Otherwise, for structural changes: lock current behavior with a passing test first, apply one operation at a time, re-run tests after each, and revert immediately on failure. Never improvise a structural change under time pressure.
+- A structural fix spanning more than one named operation, or the review surfacing more than two issues: if `refactor-code` is available in your environment, load it and follow its safe-refactor protocol. Otherwise, for structural changes: lock current behavior with a passing test first, apply one operation at a time, re-run tests after each, and revert immediately on failure. Never improvise a structural change under time pressure. Single mechanical fixes (a rename, inlining a one-off helper) apply the step loop inline.
 - Inherited AI-generated patterns (broad excepts, dead helpers, junk tests, oversized modules): if `slop-cleanup` is available in your environment, load it for a categorized cleanup with behavior locked by tests first. Otherwise, clean up one category at a time — broad excepts, dead helpers, junk/duplicated tests, oversized modules — with behavior locked by tests first, and delete rather than comment out.
 
 ---
@@ -128,7 +114,7 @@ Tests and builds prove the internals; the user experiences the real surface. Bef
 
 - **Exercise the actual entry point** — run the CLI command, open the page, hit the endpoint, start the TUI — not a test double of it.
 - Verify the behavior you changed **and** the adjacent behavior your change could have disturbed.
-- For UI work: check both light and dark, and a narrow plus a wide viewport, if applicable.
+- For UI work: where theming applies, check both light and dark; where layout is responsive, check a narrow and a wide viewport.
 - Capture the evidence (command output, screenshot, response body) — "it should work" is not evidence.
 - Report the proof inline in the final report — quote the command output, screenshot description or path as reported, response body; write NO evidence files: evidence files belong to `explore` (citable findings) and `qa-inspector` (gate verdicts), not to the worker.
 
@@ -137,7 +123,7 @@ Tests and builds prove the internals; the user experiences the real surface. Bef
 ## TEMPORARY FILES
 
 - Create temporary/scratch verification files (throwaway repro scripts, one-off test scripts, temp fixtures) ONLY under `.opencode/` (e.g. `.opencode/tmp/`) — it is gitignored, so the repo stays clean even if cleanup is skipped.
-- Files placed in the repository are ONLY permanent tests with real regression value, in the repo's standard test location, committed together with the change.
+- Files placed in the repository are ONLY permanent tests with real regression value, in the repo's standard test location, landing together with the change through the pack's git flow.
 - Before declaring done: remove every temporary file created outside `.opencode/`; leave nothing scratch-like in the working tree.
 - Evidence files under `.opencode/evidence/` are NOT temporary — they are the audit trail and are kept.
 
@@ -154,7 +140,7 @@ Declare done only when all of the following hold, each backed by a tool result f
 5. **Real-surface QA done** for user-visible changes, with the proof quoted in the final report.
 6. **Scope check** — you delivered exactly what was asked, nothing quietly narrowed or widened; every claim in your summary is backed by a tool result.
 7. **No temporary files left behind** — every scratch/temp file created outside `.opencode/` removed, per the TEMPORARY FILES section.
-8. **Verified line in the report** — the final report carries ONE mandatory line, directly after the summary: `Verified: diagnostics <clean | n-a>, build <pass | fail | n-a>, tests <pass | fail (pre-existing: N) | n-a>, real-surface <proof quoted | n-a>` — each slot states honestly what ran and what was not applicable; pre-existing test failures are never hidden (item 3). A report without this line is incomplete.
+8. **Verified line in the report** — the final report carries ONE mandatory line, directly after the summary: `Verified: diagnostics <clean | n-a>, build <pass | fail | n-a>, warnings <n on changed files | n-a>, tests <pass | fail (pre-existing: N) | n-a>, real-surface <proof quoted | n-a>, review <all pass | n failed: fixed | n-a>, scope <as asked | deviation: ...>, temp-files <clean | residue: what>, state <HEAD or diff base>` — each slot states honestly what ran and what was not applicable; pre-existing test failures are never hidden (item 3). A report without this line is incomplete.
 
 Never present partial work as complete. No stub, placeholder, or no-op shipped as the feature. If one part is blocked, finish the rest and state exactly what remains blocked. Then report: what changed, how it was verified, and any follow-ups.
 
