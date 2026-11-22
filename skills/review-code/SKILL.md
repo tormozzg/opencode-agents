@@ -47,13 +47,14 @@ You are invoked by `lead-work` with structured context: files changed, intent, a
    - Claims in the summary ("follows pattern in X", "covered by test Y") verified against the actual code?
 3. **Review the code** (parallelize independent reads):
    - **Correctness**: logic errors, unhandled edge cases, error handling at boundaries, async/race issues, resource leaks. Security lens: secrets/credentials committed in the diff, dangerous defaults (open bind addresses, disabled auth, permissive ACLs), unjustified dependency changes — BLOCKER.
-   - **New warnings**: any compiler/linter warning the diff introduces (visible in build/lint output) is a BLOCKER for the author to fix; pre-existing warnings are out of scope.
+   - **New warnings**: any compiler/build warning the diff introduces (visible in the build output) is a BLOCKER for the author to fix; pre-existing warnings are out of scope.
    - **Design**: fits the existing structure, no parallel copies of existing helpers, no abstractions for hypothetical needs, no defensive checks in trusted code.
    - **Complexity**: simplest thing that works; no over-engineering, no premature generality.
    - **Tests**: new/changed behavior covered where the repo keeps tests; tests can fail (see junk classes below); no fixed sleeps or timing luck; mocks keep real asserted behavior.
    - **Naming**: names match what the thing does; no misleading or vague names.
    - **Docs**: comments explain WHY not WHAT; no doc bloat; user-facing docs updated only if the change warrants it.
-4. **Run the verification the author claims** (read-only execution is allowed): build, tests, lint — confirm they actually pass. Compare warning output against the pre-change state — new warnings introduced by the diff are blockers. A claimed-but-unverified pass is a blocker. "Read-only" applies to sources; temporary build/test artifacts (`target/`, `node_modules/`, `.pyc`) are fine to produce.
+4. **Run the verification the author claims** (read-only execution is allowed): build, tests — confirm they actually pass. Compare warning output against the pre-change state — new warnings introduced by the diff are blockers. Static analysis: if the project uses Qodana, consult its findings for this diff —
+   run `qodana scan` when the project provides a runnable Qodana setup, otherwise read the latest available report (SARIF or CI artifact); findings attributable to this diff are BLOCKERs, same tier as new warnings. A claimed-but-unverified pass is a blocker. "Read-only" applies to sources; temporary build/test artifacts (`target/`, `node_modules/`, `.pyc`) are fine to produce.
    - QA scenarios from the plan are exercised by the `qa-inspector` agent, not by you — do not run them here; note it if the plan requires them and none are referenced.
 
 ## AI Slop Checklist

@@ -68,9 +68,9 @@ Work in short act-inspect-verify loops so early mistakes surface before later st
 Work silently: act, verify, inspect — no narration of deliberation, no permission-begging. Never stage, commit, push, or otherwise modify git history unless the task prompt explicitly instructs it — commits belong to the pack's git flow.
 
 1. Make the change (targeted edit over file rewrite when the result is identical).
-2. **Run diagnostics on the changed file** (`lsp_diagnostics` or the language's type checker/linter). Zero new errors and zero new warnings on changed files before moving on. A warning you cannot fix within scope (e.g. a third-party deprecation) becomes a named follow-up in your report — never silently left.
-3. **Build** (if the project has a build) — it must exit 0. Capture the compiler/linter output (e.g. gradle with `--warning-mode all` or the project's lint task) — new warnings count against the zero-new-warnings bar.
-4. **Run the related tests** once, and make that pass reliable. A test that fails on the unchanged base is a bug to fix at its owner; one your change turned red is fixed at the code or the test; neither is deleted or edited green. Never suppress type errors, lint warnings, or test failures.
+2. **Run diagnostics on the changed file** (`lsp_diagnostics` or the language's type checker). Zero new errors and zero new warnings on changed files before moving on. A warning you cannot fix within scope (e.g. a third-party deprecation) becomes a named follow-up in your report — never silently left.
+3. **Build** (if the project has a build) — it must exit 0. Capture the compiler/build output — new warnings count against the zero-new-warnings bar.
+4. **Run the related tests** once, and make that pass reliable. A test that fails on the unchanged base is a bug to fix at its owner; one your change turned red is fixed at the code or the test; neither is deleted or edited green. Never suppress type errors, compiler warnings, or test failures.
 5. Re-read the edited region and compare with the intended state before the next change.
 
 **Re-dispatched on the same task with an error report?** Fix the named failure at its root and re-run the FULL verification bar (diagnostics, build, tests, review loop) before declaring done — do not treat "I fixed the error" as done.
