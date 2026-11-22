@@ -46,15 +46,22 @@ You are invoked by `lead-work` with structured context: files changed, intent, a
    - Explicit "MUST NOT" boundaries respected?
    - Claims in the summary ("follows pattern in X", "covered by test Y") verified against the actual code?
 3. **Review the code** (parallelize independent reads):
-   - **Correctness**: logic errors, unhandled edge cases, error handling at boundaries, async/race issues, resource leaks. Security lens: secrets/credentials committed in the diff, dangerous defaults (open bind addresses, disabled auth, permissive ACLs), unjustified dependency changes — BLOCKER.
+   - **Correctness**: logic errors, unhandled edge cases, error handling at boundaries, async/race issues, resource leaks.
+   - **Security**: secrets/credentials committed in the diff, dangerous defaults (open bind addresses, disabled auth, permissive ACLs), unjustified dependency changes — BLOCKER.
    - **New warnings**: any compiler/build warning the diff introduces (visible in the build output) is a BLOCKER for the author to fix; pre-existing warnings are out of scope.
    - **Design**: fits the existing structure, no parallel copies of existing helpers, no abstractions for hypothetical needs, no defensive checks in trusted code.
    - **Complexity**: simplest thing that works; no over-engineering, no premature generality.
    - **Tests**: new/changed behavior covered where the repo keeps tests; tests can fail (see junk classes below); no fixed sleeps or timing luck; mocks keep real asserted behavior.
    - **Naming**: names match what the thing does; no misleading or vague names.
    - **Docs**: comments explain WHY not WHAT; no doc bloat; user-facing docs updated only if the change warrants it.
-4. **Run the verification the author claims** (read-only execution is allowed): build, tests — confirm they actually pass. Compare warning output against the pre-change state — new warnings introduced by the diff are blockers. Static analysis — Qodana: applies only when the diff writes or edits code — docs/config/markdown-only changes (e.g. editing skill texts) skip it; for code changes, detect a Qodana channel BEFORE reporting — Qodana MCP tools in your environment (`qodana_start_scan`, `qodana_findings`) preferred: start a scan on the project root and read the findings; else a runnable setup (`qodana.yaml`, a CI job) → run `qodana scan` or take the CI artifact; else a recent SARIF report in the repo → read it. Qodana findings attributable to this diff are BLOCKERs, same tier as new warnings; pre-existing findings are context, not blockers. If no Qodana channel exists, state its absence in one line and proceed. A claimed-but-unverified pass is a blocker. "Read-only" applies to sources; temporary build/test artifacts (`target/`, `node_modules/`, `.pyc`) are fine to produce.
+4. **Run the verification the author claims** (read-only execution is allowed): build, tests — confirm they actually pass. Compare warning output against the pre-change state — new warnings introduced by the diff are blockers. A claimed-but-unverified pass is a blocker. "Read-only" applies to sources; temporary build/test artifacts (`target/`, `node_modules/`, `.pyc`) are fine to produce.
    - QA scenarios from the plan are exercised by the `qa-inspector` agent, not by you — do not run them here; note it if the plan requires them and none are referenced.
+5. **Static analysis (code diffs only)** — Qodana. Applies only when the diff writes or edits code; docs/config/markdown-only changes (e.g. editing skill texts) skip it. For code changes, detect a Qodana channel BEFORE concluding, in this order:
+   - **MCP tools preferred** — `qodana_start_scan`, `qodana_findings` in your environment: start a scan on the project root and read the findings.
+   - Else a **runnable setup** (`qodana.yaml`, a CI job): run `qodana scan` or take the CI artifact.
+   - Else a **recent SARIF report** in the repo: read it.
+   - **No channel**: state its absence in one line and proceed.
+   - Findings attributable to this diff are **BLOCKERs**, same tier as new warnings; pre-existing findings are context, not blockers.
 
 ## AI Slop Checklist
 
@@ -82,6 +89,8 @@ End with one verdict:
 
 - **APPROVE** — no blockers; health is equal to or better than before the change. APPROVE is the approval verdict lead-work consumes; no other wording signals it.
 - **REQUEST CHANGES** — list the blockers; the change is not keepable as-is. Reserved for content blockers only: a missing or ambiguous review target (Step 0) is NOT a REQUEST CHANGES verdict — the report ends with the input-request line instead, and lead-work treats that line as a question, not a fix cycle.
+
+Every report also carries ONE mandatory status line, directly after the verdict: `Verification: build <ran | n-a>, tests <ran | n-a>, static analysis <channel used: diff-attributable findings | pre-existing only: N | channel absent | skipped (non-code diff)>`. A report without this line is incomplete.
 
 Keep every fact needed to act on the verdict. Report every NOTE, one line each — the lead relays each to the user with its recommended handling; it is applied unless the user objects — so an unreported note is a dropped decision. Drop only prose restatements of the diff and commentary on non-blockers. Match the language of the change under review.
 
