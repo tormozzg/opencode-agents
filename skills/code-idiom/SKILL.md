@@ -1,6 +1,6 @@
 ---
 name: code-idiom
-description: "Language-independent coding discipline for the worker: types as proofs (make illegal states unrepresentable), boundaries that parse instead of validate, the YAGNI ladder with its applicability boundary, catch-only-recoverable error handling, positive naming, and where language specifics come from. Load before writing code in any language."
+description: "Language-independent coding discipline for the worker: types as proofs (make illegal states unrepresentable), boundaries that parse instead of validate, the YAGNI ladder with its applicability boundary, catch-only-recoverable error handling, positive naming, doc comments when the name cannot carry intent, and where language specifics come from. Load before writing code in any language."
 ---
 
 # Code Idiom
@@ -57,6 +57,14 @@ Where execute-work states a rule inline, its rule and this one are the same rule
 - Name what the thing **is**, not what it is not: `isValid` over `isNotValid`, `isActive` over `isNotInactive`. Double negatives force the reader to compute the meaning.
 - **Positive conditions branch readably**: `if isActive` over `if !isDisabled`. Keep both names when both states are real (`ACTIVE`/`INACTIVE`), and make the positive form the default branch.
 - Names match what the thing does; a name you have to apologize for in a comment is the wrong name.
+
+## Doc comments: intent the name cannot carry
+
+- **Rename first.** A name you have to apologize for in a comment is the wrong name (see Naming above) — a comment is never a substitute for a rename.
+- **Document what the name cannot carry**: why the thing exists, the invariants it maintains, constraints on callers, non-obvious side effects or ordering requirements.
+- **Trivial functions get none.** A straightforward getter, passthrough, or single-obvious-action function (`getListUsers()` returning a user list) needs no doc — the name already says it.
+- **Document multi-step logic only when the order or combination is load-bearing** — workarounds, invariants, API ordering ("flush before read"): explain WHY the sequence exists, never narrate WHAT each step does. A long-but-obvious sequence is decomposed into named helpers instead of narrated.
+- **Never restate the signature.** Parameter names/types and return types are already in the code; a docstring that repeats them is documentation bloat — see review-code's documentation-bloat check.
 
 ## Language specifics come from the language
 

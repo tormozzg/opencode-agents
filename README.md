@@ -37,7 +37,9 @@ own - `worker` loads them contextually during implementation):
 - `qa-inspect` (qa-inspector)
 - `git-master` (git-master)
 - `architect-work` (architect)
-- `code-idiom` (worker, contextually)
+- `code-idiom` (worker, contextually) — coding discipline: types, boundaries,
+  YAGNI, error handling, naming, and doc comments when the name cannot carry
+  intent
 - `refactor-code` (worker, contextually)
 - `slop-cleanup` (worker, contextually)
 
