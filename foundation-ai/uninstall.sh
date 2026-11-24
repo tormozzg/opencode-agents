@@ -54,6 +54,7 @@ if [[ "$ASSUME_YES" -ne 1 ]]; then
   [[ "$reply" == "yes" || "$reply" == "YES" ]] || { echo "Aborted."; exit 1; }
 fi
 
+mkdir -p "$STATE_DIR/uninstalled-current"
 UNINSTALL_DIR="$(mktemp -d "$STATE_DIR/uninstalled-current/$(date +%Y%m%d-%H%M%S).XXXXXX")"
 
 for ((i=${#RELS[@]}-1; i>=0; i--)); do
