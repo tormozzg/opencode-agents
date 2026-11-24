@@ -59,7 +59,7 @@ assert actual == expected, f"skill set mismatch: missing={expected-actual}, extr
 dispatches = set()
 for skill_path in skills.glob("*/SKILL.md"):
     dispatches.update(re.findall(r"""subagent_type=["']([a-z0-9-]+)["']""", skill_path.read_text(encoding="utf-8")))
-allowed_dispatches = {"elijah-baley", "kelden-amadiro", "andrew-martin", "han-fastolfe", "golan-trevize", "jothan-leebig"}
+allowed_dispatches = {"elijah-baley", "dors-venabili", "kelden-amadiro", "andrew-martin", "han-fastolfe", "golan-trevize", "jothan-leebig"}
 assert dispatches <= allowed_dispatches, f"unknown or removed subagent IDs in skills: {dispatches-allowed_dispatches}"
 
 def frontmatter(name):
@@ -69,9 +69,9 @@ def frontmatter(name):
 
 # Exact V1 Task allowlists; all other child IDs must be denied.
 rules = {
-    "hari-seldon": {"daniel-olivaw", "giskard-reventlov", "dors-venabili"},
+    "hari-seldon": {"daniel-olivaw", "giskard-reventlov"},
     "daniel-olivaw": {"elijah-baley", "andrew-martin", "han-fastolfe", "golan-trevize", "jothan-leebig"},
-    "giskard-reventlov": {"elijah-baley", "kelden-amadiro"},
+    "giskard-reventlov": {"elijah-baley", "dors-venabili", "kelden-amadiro"},
 }
 for agent, allowed in rules.items():
     fm = frontmatter(agent)
@@ -79,7 +79,7 @@ for agent, allowed in rules.items():
     found = set(re.findall(r'(?m)^\s+"([a-z0-9-]+)": allow$', fm))
     assert found == allowed, f"{agent}: allowlist mismatch: expected {allowed}, got {found}"
 
-tier2 = {"elijah-baley", "kelden-amadiro", "andrew-martin", "han-fastolfe", "golan-trevize", "jothan-leebig"}
+tier2 = {"elijah-baley", "dors-venabili", "kelden-amadiro", "andrew-martin", "han-fastolfe", "golan-trevize", "jothan-leebig"}
 for agent in tier2:
     fm = frontmatter(agent)
     assert '"*": deny' in fm, f"{agent}: Tier 2 must deny all task dispatch"

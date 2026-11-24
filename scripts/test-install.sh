@@ -46,6 +46,7 @@ cp "$CONFIG/opencode.jsonc" "$TMP/config.before"
 bash "$INSTALL" --yes --config-dir "$CONFIG"
 [[ -f "$CONFIG/agents/hari-seldon.md" ]] || { echo "FAIL: agent not installed" >&2; exit 1; }
 [[ -f "$CONFIG/skills/security-review/SKILL.md" ]] || { echo "FAIL: security skill not installed" >&2; exit 1; }
+[[ -f "$CONFIG/skills/security-advisory/SKILL.md" ]] || { echo "FAIL: planning advisory skill not installed" >&2; exit 1; }
 [[ -f "$CONFIG/foundation-ai/protocols/security-policy.md" ]] || { echo "FAIL: protocol not installed" >&2; exit 1; }
 [[ -f "$CONFIG/foundation-ai/opencode.jsonc.fragment" ]] || { echo "FAIL: config fragment not installed" >&2; exit 1; }
 [[ "$(cat "$CONFIG/agents/my-agent.md")" == "my-agent" ]] || { echo "FAIL: unrelated agent was changed" >&2; exit 1; }
