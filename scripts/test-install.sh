@@ -2,9 +2,9 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-INSTALL="$ROOT/foundation-ai/install.sh"
-UNINSTALL="$ROOT/foundation-ai/uninstall.sh"
+ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+INSTALL="$ROOT/install.sh"
+UNINSTALL="$ROOT/uninstall.sh"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 

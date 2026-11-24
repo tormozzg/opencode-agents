@@ -84,7 +84,7 @@ Source inventory and upstream behavior audit are complete. No upstream files wer
 
 The migration has progressed beyond the initial starter audit:
 
-- All 13 upstream skill bodies are preserved verbatim under `foundation-ai/source-snapshot/skills/`. Their Git blob SHAs were compared against the pinned source tree; all 13 are exact matches.
+- All 13 upstream skill bodies are preserved verbatim under `source-snapshot/skills/`. Their Git blob SHAs were compared against the pinned source tree; all 13 are exact matches.
 - All 13 source skills now have Foundation AI counterparts under `.opencode/skills/`; the new `security-review` makes 14 total. A heading-level audit found no dropped source sections. The plan-work architecture consult is intentionally converted into Giskard loading `architect-work`, and the Git Master heading is renamed for Andrew Martin's `git-operations` skill.
 - Nine agent definitions, six protocols, the V1 config, and explicit task/edit permission scopes are present.
 - The repository `.gitignore` now tracks only the pack-definition paths under `.opencode/` while keeping runtime artifacts ignored.

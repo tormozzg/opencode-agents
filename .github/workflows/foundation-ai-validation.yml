@@ -3,11 +3,23 @@ name: Foundation AI validation
 on:
   push:
     branches:
-      - "foundation-ai/**"
+      - "scripts/**"
+      - "source-snapshot/**"
+      - "README.md"
+      - "OPENCODE_1_19_COMPATIBILITY.md"
+      - "SOURCE_*.md"
+      - "RELEASE_NOTES_*.md"
+      - "opencode.jsonc.fragment"
     paths:
       - ".opencode/**"
       - "opencode.jsonc"
-      - "foundation-ai/**"
+      - "scripts/**"
+      - "source-snapshot/**"
+      - "README.md"
+      - "OPENCODE_1_19_COMPATIBILITY.md"
+      - "SOURCE_*.md"
+      - "RELEASE_NOTES_*.md"
+      - "opencode.jsonc.fragment"
       - "AGENTS.md"
       - "README.md"
       - "install.sh"
@@ -17,7 +29,13 @@ on:
     paths:
       - ".opencode/**"
       - "opencode.jsonc"
-      - "foundation-ai/**"
+      - "scripts/**"
+      - "source-snapshot/**"
+      - "README.md"
+      - "OPENCODE_1_19_COMPATIBILITY.md"
+      - "SOURCE_*.md"
+      - "RELEASE_NOTES_*.md"
+      - "opencode.jsonc.fragment"
       - "AGENTS.md"
       - "README.md"
       - "install.sh"
@@ -41,9 +59,9 @@ jobs:
       - name: Check out source
         uses: actions/checkout@v4
       - name: Validate structure and OpenCode V1 permissions
-        run: bash foundation-ai/scripts/validate-pack.sh
+        run: bash scripts/validate-pack.sh
       - name: Test safe install, reinstall, and uninstall
-        run: bash foundation-ai/scripts/test-install.sh
+        run: bash scripts/test-install.sh
 
   opencode-v1-19-runtime-smoke:
     runs-on: ubuntu-latest
@@ -80,7 +98,7 @@ jobs:
         run: |
           GLOBAL_HOME="$RUNNER_TEMP/global-home"
           mkdir -p "$GLOBAL_HOME"
-          HOME="$GLOBAL_HOME" bash foundation-ai/install.sh --yes
+          HOME="$GLOBAL_HOME" bash install.sh --yes
           cp "$GLOBAL_HOME/.config/opencode/foundation-ai/opencode.jsonc.fragment" "$GLOBAL_HOME/.config/opencode/opencode.jsonc"
           cd "$RUNNER_TEMP"
           HOME="$GLOBAL_HOME" XDG_CONFIG_HOME="$GLOBAL_HOME/.config" opencode agent list | tee "$RUNNER_TEMP/global-agents.txt"
@@ -89,4 +107,4 @@ jobs:
           grep -q '^susan-calvin (all)$' "$RUNNER_TEMP/global-agents.txt"
           HOME="$GLOBAL_HOME" XDG_CONFIG_HOME="$GLOBAL_HOME/.config" opencode debug config > "$RUNNER_TEMP/global-config.json"
           jq -e '.default_agent == "daniel-olivaw" and .subagent_depth == 2' "$RUNNER_TEMP/global-config.json"
-          HOME="$GLOBAL_HOME" bash "$GITHUB_WORKSPACE/foundation-ai/uninstall.sh" --yes
+          HOME="$GLOBAL_HOME" bash "$GITHUB_WORKSPACE/uninstall.sh" --yes

@@ -1,278 +1,109 @@
-## Foundation AI (migration branch)
+# Foundation AI for OpenCode 1.19
 
-This branch contains the Foundation AI migration: nine coordinated agents, fourteen skills, six protocols, and an OpenCode 1.19 configuration. The root `install.sh` and `uninstall.sh` now invoke the Foundation AI installer and uninstaller. The legacy ten-agent/thirteen-skill documentation below describes the pre-migration pack; its old installer flags and installation behavior no longer apply on this branch. See [Foundation AI documentation](foundation-ai/README.md), [OpenCode 1.19 compatibility notes](foundation-ai/OPENCODE_1_19_COMPATIBILITY.md), and [v1.0 release-candidate notes](foundation-ai/RELEASE_NOTES_v1.0.0-rc1.md). The original source skills are preserved in the migration snapshot.
+Foundation AI is a nine-agent, three-tier orchestration system built on OpenCode V1 agent nesting.
 
----
+## Architecture
 
-# OpenCode Subagents Pack
-
-A small, self-contained pack for OpenCode that adds ten focused agents and their
-matching skills (thirteen in total - ten agent skills plus three extra skills). The pack only registers agents and skills; it does not modify
-any other plugins, and it never auto-runs plans. Every plan and every code change stays
-under your explicit control.
-
-## What's inside
-
-### Agents
-
-| Agent | Description | Variant |
-|-------|-------------|---------|
-| `plan` | "Plan: the pack's planner - turns a request into ONE brief, decision-complete work plan: bounded size, dependency-annotated task rows, resolved defaults recorded in the plan, acceptance criteria the executor can run. Explores before asking, delegates research to explore only - never dispatches worker, never implements, never starts execution. Runs a mandatory plan-reviewer audit of the written plan before handoff. Use for planning, designing, or breaking down work." | high |
-| `team-lead` | "Team Lead: orchestrates execution of a plan or direct task by delegating everything. Loads the lead-work skill first, routes unclear topics to explore and ready work to worker, verifies every claim, runs a mandatory @code-reviewer review and @qa-inspector QA run before any commit, never writes code. Use for running a plan, coordinating waves, or driving work to completion." | high |
-| `discuss` | "Discuss: a discussion partner that debates code and improvement proposals - grounds the dialogue in facts via @explore and @code-reviewer, critiques constructively, and hands converged outcomes to plan or team-lead. Never edits project files, never builds plans. Use for talking through designs, weighing alternatives, or pressure-testing an idea before planning." | high |
-| `worker` | "Worker: implements delegated tasks silently and verifies before declaring done. Loads the execute-work discipline first, then writes code, runs diagnostics/build/tests, and reports with evidence. Use for any delegated implementation work." | low |
-| `explore` | "Explore: investigates a topic across code, docs, and the web with an evidence-demander stance. Cites every claim, returns numbered concise findings. Use for research, fact-finding, or grounding decisions." | low |
-| `plan-reviewer` | "Plan reviewer: reviews draft work plans for executability and valid references. Loads the review-plan skill first, performs Momus + Metis review, returns blockers and notes. Never rewrites plans - returns blockers instead, even on request." | high |
-| `code-reviewer` | "Code reviewer: reviews diffs and completed changes for correctness, quality, and plan fidelity. Loads the review-code skill first, classifies the work type, checks blockers vs notes, returns comments or approval. Never fixes code itself." | low |
-| `qa-inspector` | "QA inspector: executes the plan's QA scenarios after code-reviewer approval, runs each scenario's commands for real, saves evidence under .opencode/evidence/<plan-name-or-task-slug>/, and returns per-scenario PASS/FAIL with an ALL PASS / N FAILED summary. Read-only to product code. Never fixes code itself. Use for 'run QA', 'QA gate', or 'прогонить QA-сценарии' requests before a commit." | low |
-| `git-master` | "Git Master: handles atomic commits, rebase/squash/fixup (history rewrite), and history search (blame, bisect, log -S, reflog). Loads the git-master skill first, commits atomically in the pack's fixed commit message format, with the message language detected from history, and protects shared history. Use for 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find the commit that'." | low |
-| `architect` | "Architect: designs the architecture for complex work - a new feature spanning multiple components, a whole project from zero, or server/infrastructure changes. Consulted by the plan agent; analyzes constraints and non-functional requirements, weighs alternatives with trade-offs, records key decisions, risks, and rollout/operations considerations, and writes ONE architecture evidence file under .opencode/evidence/. Read-only to product code: never writes code, never writes plan task rows. Use for 'design the architecture', 'спроектируй архитектуру', or when the planner hands off a complex design." | high |
-
-### Skills
-
-Each agent loads one skill on startup (the last three have no agent of their
-own - `worker` loads them contextually during implementation):
-
-- `plan-work` (plan)
-- `lead-work` (team-lead)
-- `discuss-work` (discuss)
-- `research-topic` (explore)
-- `execute-work` (worker)
-- `review-plan` (plan-reviewer)
-- `review-code` (code-reviewer)
-- `qa-inspect` (qa-inspector)
-- `git-master` (git-master)
-- `architect-work` (architect)
-- `code-idiom` (worker, contextually) — coding discipline: types, boundaries,
-  YAGNI, error handling, naming, and doc comments when the name cannot carry
-  intent
-- `refactor-code` (worker, contextually)
-- `slop-cleanup` (worker, contextually)
-
-The skill files live in `skills/`, the agent definitions in `agents/`, and the
-registration snippet in `opencode.jsonc.snippet` (top-level `agent` key, plus
-`skills.paths` entries).
-
-### How agents and skills are structured
-
-Each agent definition is intentionally short: it holds the agent's identity
-(a couple of sentences) and one hard rule — load your discipline skill first
-and follow it for the whole turn. The full operating discipline (gates,
-routing rules, templates, checklists, verification bars) lives in the paired
-skill file, and only there — instructions are never duplicated between an
-agent file and its skill, so every rule is edited in exactly one place.
-
-## Install
-
-One command:
-
-```bash
-./install.sh --yes
+```text
+TIER 0
+└── R. DANIEL OLIVAW — Superchief (default entry point)
+    ├── TIER 1: R. GISKARD REVENTLOV — Planner
+    │   ├── ELIJAH BALEY — Shared Investigator
+    │   └── KELDEN AMADIRO — Independent Plan Reviewer
+    │
+    └── TIER 1: SUSAN CALVIN — Technical Lead
+        ├── ELIJAH BALEY — Shared Investigator
+        ├── ANDREW MARTIN — Implementer + Git
+        ├── HAN FASTOLFE — Independent Code Reviewer
+        ├── GOLAN TREVIZE — Independent QA
+        └── JOTHAN LEEBIG — Independent Security Engineer
 ```
 
-Drop `--yes` if you want the interactive confirmation prompt instead.
+Daniel is the default entry point. Giskard and Susan are also directly selectable. Tier 2 agents are child-only and cannot dispatch further tasks.
 
-You can also pin a per-agent model at install time with `--model <agent>=<model>`
-(repeat the flag once per agent):
+## Included
 
-```bash
-./install.sh --yes --model plan=anthropic/claude-3-5-sonnet --model team-lead=openai/gpt-4o
-```
+- **9 agents** in `.opencode/agents/`
+- **14 skills** in `.opencode/skills/` (13 migrated from the upstream pack plus the new `security-review`)
+- **6 protocols** in `.opencode/protocols/`
+- OpenCode 1.19 project config: `opencode.jsonc`
+- Original upstream skills preserved verbatim under `source-snapshot/skills/`
+- Source manifest and audit under `foundation-ai/`
 
-This writes a `"model"` property into each named agent's entry in the merged
-config, equivalent to editing the file by hand (see
-[Assigning a model to an agent](#assigning-a-model-to-an-agent)). The agent
-name must be one of the pack's 10 agents (`plan`, `worker`, `explore`,
-`team-lead`, `discuss`, `plan-reviewer`, `code-reviewer`, `qa-inspector`, `git-master`, `architect`), and the model
-string must be non-empty with no whitespace; anything else is rejected with an
-error before anything is installed. Omitting `--model` changes nothing.
+## Install in a project
 
-You can also set the global default model — the top-level `"model"` key in
-the merged config — with `--default-model <model>` (repeat the flag to
-change it; the last value wins):
+For project-local use, copy the `.opencode/` directory and `opencode.jsonc` into the target project, or use this repository as the project. OpenCode discovers project-local agents and skills from these locations.
 
-```bash
-./install.sh --yes --default-model openai/gpt-4o
-```
+For global use, run `bash ./install.sh --yes --config-dir ~/.config/opencode` from this repository. The installer stages files, refuses to overwrite unowned name collisions, backs up previously Foundation AI-managed files, and records a manifest for the matching uninstaller. It does not edit your active `opencode.jsonc`; it writes a config fragment under `~/.config/opencode/foundation-ai/opencode.jsonc.fragment` for manual merging. Run `bash ./uninstall.sh` to remove only manifest-listed files and restore the original pre-install files.
 
-When the flag is given, the merged config's top-level `"model"` is set to
-that value (overwriting any existing one); when it is omitted, the
-top-level `"model"` is never touched. The value must be non-empty with no
-whitespace; anything else is rejected with an error before anything is
-installed.
+If the target project already has an `opencode.jsonc`, merge these two root settings into its existing JSONC object without deleting existing settings or comments:
 
-By default everything is installed into the active user's
-`~/.config/opencode`. To target a different OpenCode config directory instead
-— for example a sandbox user's config — pass `--config-dir <path>`:
-
-```bash
-./install.sh --yes --config-dir /path/to/sandbox/home/.config/opencode
-```
-
-A leading `~` in the path is expanded to your `$HOME`, so
-`--config-dir '~/somewhere/.config/opencode'` also works. All install
-targets follow the flag: `<path>/agents/`, `<path>/skills/`, and
-`<path>/opencode.jsonc` (or an existing `opencode.json`). The value must be
-non-empty; a missing or empty value is rejected with a usage error (exit 2)
-before anything is installed.
-
-What the installer does:
-
-- Copies the 10 agent files to `<config-dir>/agents/`.
-- Copies the 13 skill directories to `<config-dir>/skills/`.
-- Merges `opencode.jsonc.snippet` into `<config-dir>/opencode.jsonc` or
-  `<config-dir>/opencode.json`, whichever already exists (`.jsonc` is
-  preferred when both exist; `.jsonc` is created when neither does).
-
-Here `<config-dir>` is `~/.config/opencode` by default, or the path given
-with `--config-dir`.
-
-- **Backs up each existing config file first**, to `<file>.backup-<timestamp>`,
-  before writing anything (if both `opencode.jsonc` and `opencode.json` exist,
-  both are backed up).
-
-Safety notes: the script refuses to run if `HOME` is unset **and** no
-`--config-dir` was given (a `--config-dir` value with a leading `~` still
-needs `HOME` to expand), aborts rather than corrupting an unparseable config,
-and never deletes the pack's own source files.
-Because the merge uses a plain JSON writer, any JSONC comments in your existing
-config are lost when the merge runs (the backup keeps the original).
-
-## How to invoke each agent
-
-Three agents in this pack are **primary**: `plan`, `team-lead` and `discuss`. You
-select one as the active agent before typing your message. `discuss` is
-additionally spawnable by other agents (mode `all` — e.g. team-lead consulting
-it via task()); the other two cannot be spawned. `plan` is primary by OpenCode's
-built-in default: its agent
-file carries no `mode` field — OpenCode's built-in plan mode grants its
-primary status. The pack does not override OpenCode's built-in `build` agent —
-that agent stays standard, and the pack's orchestrator is `team-lead`. The
-remaining eight are subagents - you invoke them by naming
-them in your prompt:
-
-- `@explore` — "How does the auth flow work in this repo?"
-- `@worker` — "Implement step 3 of the plan."
-- `@discuss` — "Which of these designs should we take to planning?"
-- `@plan-reviewer` — "Review the plan at ~/.opencode/plan/my-feature.md for blockers."
-- `@code-reviewer` — "Review the diff for this branch."
-- `@qa-inspector` — "Run the QA scenarios from the plan before we commit."
-- `@git-master` — "Commit the current changes atomically."
-- `@architect` — "Design the architecture for the new notification subsystem."
-
-You can also select any of these as the active agent before typing your
-message.
-
-`plan`, `team-lead` and `discuss` are primary agents: select one as
-the active agent first, then give it the work directly, e.g. "Plan a rate limit
-for /login." (plan) or "Execute the plan at ~/.opencode/plan/my-feature.md."
-(team-lead). When the topic is not yet a task — say, weighing two approaches for a
-migration — pick `discuss` and debate it: "Which of these designs should we
-take to planning?" (team-lead can also spawn `discuss` as a subagent for the
-same debate via task().) `plan` turns the request into a decision-complete plan and
-hands off to implementation; `team-lead` orchestrates by delegating to the `explore`
-and `worker` subagents. `plan` and `team-lead` cannot be spawned by other agents. `plan`'s
-primary status comes from OpenCode's built-in plan mode by default, so its
-agent file has no `mode` field.
-
-## Example workflow
-
-A typical chain for a medium-sized change (optionally preceded by a `discuss`
-session that debates the approach and converges on a design before planning):
-
-1. `plan` writes a decision-complete plan and runs the mandatory `plan-reviewer` audit before handoff. For complex work (a new subsystem or feature with many moving parts, a project from zero, or server/infrastructure changes) `plan` first consults `architect`, and the plan references the architecture doc `architect` wrote under `.opencode/evidence/`.
-2. `plan-reviewer` audits the plan and returns blockers or approval; `plan` resolves every blocker before handoff, and re-runs the audit after every plan revision - approval binds to the reviewed version.
-3. `team-lead` picks up the approved plan and coordinates the waves; each run's implementation happens in a git worktree under `.worktrees/<name>` (branch `wt/<name>`), merged back into main by `git-master` on completion — see `team-lead`'s skill (`skills/lead-work/SKILL.md`) for the isolation rules.
-4. `explore` answers the open questions the plan flagged.
-5. `worker` implements the delegated steps and verifies each one.
-6. `code-reviewer` checks the resulting diff for correctness and plan fidelity.
-7. `qa-inspector` runs the plan's QA scenarios for real, saves one evidence file per run, and reports PASS/FAIL; on FAIL, `worker` fixes and the cycle repeats before commit; a FAIL caused by a plan defect goes back to `plan` instead — `plan` revises and re-audits, and the cycle resumes from the revised plan.
-8. `git-master` commits the work atomically using the pack's fixed commit message template — see git-master's skill (`skills/git-master/SKILL.md`) for its definition.
-
-In short: `plan` → (`architect` for complex work) → `plan-reviewer` → `team-lead` → `explore` →
-`worker` → `code-reviewer` → `qa-inspector` → `git-master`.
-A QA FAIL caused by a plan defect loops back from `team-lead` to `plan` for revision and re-audit before execution resumes.
-
-## Assigning a model to an agent
-
-Every agent in this pack inherits the global default model (the top-level
-`"model"` key in your OpenCode config) unless you override it. The quickest
-way to set the global default is the installer's `--default-model` flag, and
-the quickest way to pin a per-agent model is its `--model` flag (see
-[Install](#install)); to pin one agent to a specific model by hand, edit
-`~/.config/opencode/opencode.jsonc` after
-installing and add a `"model"` property to that agent's entry under the
-top-level `"agent"` key. For example, to make `plan` use a different
-model than the rest (the `description` in this example is abridged, not a
-verbatim quote of the agent's description):
-
-```jsonc
+```json
 {
-  "$schema": "https://opencode.ai/config.json",
-  "model": "openai/gpt-4o",
-  "agent": {
-    "plan": {
-      "description": "Plan: the pack's planner - turns a request into ONE decision-complete work plan. ...",
-      "skill": "plan-work",
-      "model": "anthropic/claude-3-5-sonnet"
-    }
-    // ... other agents unchanged
-  }
+  "default_agent": "daniel-olivaw",
+  "subagent_depth": 2
 }
 ```
 
-Here `plan` gets `anthropic/claude-3-5-sonnet` while every other agent
-keeps the global default. Any valid OpenCode model string works, such as
-`openai/gpt-4o` or `anthropic/claude-3-5-sonnet`; pick one your OpenCode
-installation actually supports (the full list lives in OpenCode's config
-schema at `https://opencode.ai/config.json`).
+Do not replace the user's existing configuration wholesale. The project configuration file in this repository is a minimal example, not a universal drop-in replacement for an existing config.
 
-OpenCode reads its config once at startup, so quit and restart OpenCode
-after saving the file. The running session will keep using the old model
-until then.
+Restart OpenCode after installing or changing agent files.
 
-## Project artifacts
+## OpenCode 1.19 requirements
 
-When the pack's agents run in your project, they write their working artifacts
-in two places — partly in the project root's `.opencode/` (not in the global
-config directory), and partly in OpenCode's global Plan directory:
+This pack targets the OpenCode V1 configuration model:
+- `default_agent` is `daniel-olivaw`.
+- `subagent_depth: 2` permits Tier 1 → Tier 2 nested delegation.
+- Agent frontmatter uses singular `permission:` and `permission.task` allowlists.
+- Tier 2 agents explicitly deny all task dispatch.
+- Do not use OpenCode 2.x `permissions[]` / `subagent` syntax.
 
-- Plan artifacts (the final plan and the durable draft) are written by `plan` into OpenCode's built-in Plan directory (`~/.opencode/plan`) — the built-in Plan mode restricts the plan agent's writes to that directory.
-- `.opencode/notepads/` — per-plan learnings, issues, and decisions recorded during execution
-- `.opencode/evidence/<plan-name-or-task-slug>/` — design and verification evidence saved by `explore`, `architect`, and `qa-inspector` (one file per run: citable findings, architecture docs, and gate verdicts); `discuss` saves discussion ledgers under `.opencode/evidence/discuss/`; `worker` quotes its proof inline in the final report
-- `.opencode/tmp/` — temporary/scratch verification files (throwaway repro scripts, one-off test scripts, temp fixtures) created by `worker` and `qa-inspector`; anything temporary created outside `.opencode/` is removed before the work is declared done
+See [OpenCode 1.19 compatibility](OPENCODE_1_19_COMPATIBILITY.md). The V1 schema has been checked against version-specific source research, but the full runtime matrix must still be executed against an installed OpenCode 1.19.x before release.
 
-Notepads and evidence always live in the MAIN checkout's `.opencode/`, even
-while `team-lead` runs the implementation in a git worktree — dispatch prompts
-reference them by absolute paths into the main checkout.
+## Workflow
 
-The agents and skills themselves still install globally to `~/.config/opencode/`;
-run-time artifacts live in the project (`.opencode/`) and in OpenCode's global
-Plan directory.
+### Planning
+Giskard researches through Elijah, applies `architect-work` for complex designs, prepares a decision-complete plan, and sends it to Kelden for independent review. Daniel obtains explicit user approval before implementation begins.
 
-## Uninstall
+### Implementation
+Susan decomposes the approved plan and delegates to Andrew. Han performs independent code review. Jothan performs risk-triggered security review. Golan executes frozen QA scenarios. Andrew fixes findings and independently reviewed gates are repeated. Susan authorizes Git commit only after all required gates pass.
 
-```bash
-./uninstall.sh --yes
-```
+### Security triggers
+Jothan must review changes involving authentication/authorization, secrets, sensitive data, public APIs, uploads, parsing/deserialization, injection sinks, user-controlled HTML, network boundaries, cryptography, dependencies/supply chain, permissions, or security configuration.
 
-To roll back an install that targeted an alternative config directory, pass
-the same `--config-dir <path>` (a leading `~` expands to `$HOME`; a missing
-or empty value is rejected with a usage error, exit 2):
+Critical/High findings block. Medium requires remediation or explicit Daniel/user risk acceptance. Jothan is read-only and does not fix findings.
 
-```bash
-./uninstall.sh --yes --config-dir /path/to/sandbox/home/.config/opencode
-```
+## Skills
 
-The uninstaller is the exact inverse of the installer:
+| Skill | Owner / use |
+|---|---|
+| `plan-work` | Giskard |
+| `architect-work` | Giskard's architecture capability |
+| `review-plan` | Kelden |
+| `research-topic` | Elijah |
+| `lead-work` | Susan |
+| `execute-work` | Andrew |
+| `discuss-work` | Shared discussion mode; no separate agent |
+| `code-idiom` | Andrew, companion |
+| `refactor-code` | Andrew, companion |
+| `slop-cleanup` | Andrew, companion |
+| `review-code` | Han |
+| `qa-inspect` | Golan |
+| `git-operations` | Andrew |
+| `security-review` | Jothan |
 
-- Restores the most recent `opencode.jsonc.backup-*` over
-  `<config-dir>/opencode.jsonc` and the most recent
-  `opencode.json.backup-*` over `<config-dir>/opencode.json`
-  (whenever such backups exist).
-- Removes only the pack's own 10 agent files and 13 skill directories, by
-  exact name. Nothing else in those folders is touched, and the source pack
-  files in this directory are never removed.
+## Safety and release status
 
-It also supports interactive confirmation if you omit `--yes`, and it fails
-cleanly if `HOME` is unset and no `--config-dir` was given.
+The installer, uninstaller, structural validator, and disposable lifecycle tests are implemented. CI has passed structural validation and installer lifecycle tests on both Ubuntu and macOS. The latest CI run passes on Ubuntu and macOS, and the pinned OpenCode 1.19.0 smoke test passes agent discovery, global installation, and resolved-config checks. Do not treat this migration branch as a production release until:
+- the Ubuntu and macOS lifecycle test matrix passes;
+- nested Tier 1 → Tier 2 task dispatch and disallowed-child rejection pass end-to-end against OpenCode 1.19.0 (config parsing and agent discovery already pass);
+- quality-gate, security-trigger, and end-to-end orchestration tests pass;
+- final audit and release approval are complete.
+
+## Source traceability
+
+Upstream repository: https://github.com/tormozzg/opencode-agents
+
+Pinned source commit: `85edc5cd01bb8c60d98e08cf696456eea502667f`
+
+The exact original 13 skill bodies are retained in `source-snapshot/skills/`. Migration changes are in the active `.opencode/skills/` tree.

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 AGENTS="${ROOT}/.opencode/agents"
 SKILLS="${ROOT}/.opencode/skills"
 PROTOCOLS="${ROOT}/.opencode/protocols"
-SNAPSHOT="${ROOT}/foundation-ai/source-snapshot/skills"
+SNAPSHOT="${ROOT}/source-snapshot/skills"
 
 fail() { echo "FAIL: $*" >&2; exit 1; }
 pass() { echo "PASS: $*"; }
@@ -13,7 +13,7 @@ pass() { echo "PASS: $*"; }
 [[ -d "$AGENTS" ]] || fail "agents directory missing"
 [[ -d "$SKILLS" ]] || fail "skills directory missing"
 [[ -d "$PROTOCOLS" ]] || fail "protocols directory missing"
-for script in "$ROOT/foundation-ai/install.sh" "$ROOT/foundation-ai/uninstall.sh" "$ROOT/foundation-ai/scripts/test-install.sh"; do
+for script in "$ROOT/install.sh" "$ROOT/uninstall.sh" "$ROOT/scripts/test-install.sh"; do
   bash -n "$script" || fail "shell syntax error: $script"
 done
 pass "installer, uninstaller, and lifecycle-test shell syntax"

@@ -5,7 +5,7 @@
 This repository contains two distinct packs:
 
 - **Foundation AI (active migration target):** `.opencode/agents/`, `.opencode/skills/`, `.opencode/protocols/`, and `opencode.jsonc`.
-- **Upstream/original pack (preserved for traceability):** `agents/`, `skills/`, `opencode.jsonc.snippet`, and the original root installer history.
+- **Upstream source snapshots:** `source-snapshot/agents/` and `source-snapshot/skills/`; the pinned source manifest records the original installer and config snippet hashes.
 
 Do not install or modify the original pack when working on Foundation AI. The root `install.sh` and `uninstall.sh` are entry-point wrappers for `foundation-ai/install.sh` and `foundation-ai/uninstall.sh`.
 
