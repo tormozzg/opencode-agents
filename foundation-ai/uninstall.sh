@@ -54,10 +54,15 @@ if [[ "$ASSUME_YES" -ne 1 ]]; then
   [[ "$reply" == "yes" || "$reply" == "YES" ]] || { echo "Aborted."; exit 1; }
 fi
 
+UNINSTALL_DIR="$(mktemp -d "$STATE_DIR/uninstalled-current/$(date +%Y%m%d-%H%M%S).XXXXXX")"
+
 for ((i=${#RELS[@]}-1; i>=0; i--)); do
   rel="${RELS[$i]}"
   target="$CONFIG_DIR/$rel"
-  if [[ -e "$target" || -L "$target" ]]; then rm -rf "$target"; fi
+  if [[ -e "$target" || -L "$target" ]]; then
+    mkdir -p "$(dirname "$UNINSTALL_DIR/$rel")"
+    mv "$target" "$UNINSTALL_DIR/$rel"
+  fi
   if [[ -e "$BACKUP_DIR/$rel" || -L "$BACKUP_DIR/$rel" ]]; then
     mkdir -p "$(dirname "$target")"
     mv "$BACKUP_DIR/$rel" "$target"
@@ -72,5 +77,6 @@ rmdir "$CONFIG_DIR/foundation-ai" 2>/dev/null || true
 rm -f "$MANIFEST" "$POINTER" "$ORIGIN"
 
 echo "Foundation AI managed files removed/restored."
-echo "Backups retained at: $BACKUP_DIR"
+echo "Original files restored from: $BACKUP_DIR"
+echo "Current installed files (including any local edits) preserved at: $UNINSTALL_DIR"
 echo "Your OpenCode configuration file was never modified."
