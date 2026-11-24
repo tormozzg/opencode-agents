@@ -97,3 +97,9 @@ A PASS is scoped to the reviewed commit/diff and assumptions. It is not a blanke
 Return the report to Susan Calvin. For Critical/High findings, state that the gate blocks and request Andrew Martin to remediate; do not continue toward commit. For Medium findings, identify the required remediation or the explicit Daniel/user risk-acceptance decision. Escalate immediately if the change materially expands the attack surface, crosses a new trust boundary, changes security assumptions, or requires accepting risk beyond the approved plan.
 
 After fixes, retest independently and update the same finding IDs. Do not allow Andrew's claim of completion to substitute for your own verification.
+## 8. Stable finding identity and candidate binding
+
+- Assign stable task-scoped IDs (for example, `SEC-001`) on first report. Preserve each ID, original title, original severity, and full status history through every remediation/retest; never renumber or recycle IDs.
+- Retest the same finding under the same ID. Record new evidence and use `FIXED-PENDING-RETEST` until your independent verification succeeds; only then mark `VERIFIED-FIXED`. If the issue remains, keep it OPEN. If remediation reveals a distinct issue, create a new linked ID rather than overwriting the original.
+- Any severity change requires explicit evidence and rationale; never silently downgrade. An `ACCEPTED-RISK` disposition requires explicit Daniel/user approval, rationale, scope, and compensating controls.
+- Every verdict names the exact approved plan version, candidate commit SHA or reproducible diff snapshot, and changed-path set. A change after review invalidates the verdict for the new candidate and requires the relevant security review again.
