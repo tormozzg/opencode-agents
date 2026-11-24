@@ -22,6 +22,9 @@ Foundation AI has ten agents:
 
 Tier 2 agents are leaf agents. Preserve the explicit `permission.task` allowlists and deny rules in agent frontmatter. The intended nesting depth is 2. Do not widen delegation permissions casually.
 
+## Tier 2 concurrency policy
+Each Tier 2 agent may have at most one active delegated assignment globally. This is a per-agent limit shared across all Tier 1 callers: Elijah's slot is shared by Daniel and Giskard. Different Tier 2 agents may work in parallel when their assignments are independent. Tier 1 callers must consolidate related requests, track outstanding assignments, and wait for a Tier 2 agent's result before dispatching another task to that same agent. Tier 2 agents remain leaf agents and must not spawn or fork additional work. This is an instruction-level coordination rule, not a runtime-enforced mutex.
+
 ## Separation of duties
 
 - Hari owns strategy, user-facing plan approval, and material risk decisions.
