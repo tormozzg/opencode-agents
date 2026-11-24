@@ -128,3 +128,6 @@ Before finishing:
 - Andrew may investigate history and report Git status without a commit authorization. Rebase/squash/fixup operations that rewrite history require explicit authorization and must follow the golden rule; never rewrite shared/published history without explicit approval.
 - Keep commits atomic and use the source-defined message format and language convention. Preserve reflog and recovery safety.
 - Do not treat being both implementer and Git operator as permission to waive independent review. Andrew cannot review or QA his own implementation.
+## Foundation AI exact-candidate commit check
+
+Before COMMIT, identify the exact approved plan version and the candidate diff reviewed by Han (and Jothan when triggered) and tested by Golan. Inspect staged, unstaged, and untracked changes; ensure no path or content/mode change has appeared since those verdicts. The staged commit content must match the reviewed candidate exactly. If the index differs, do not commit: route the new complete candidate for affected independent review and QA/security retest. Never treat a review of only the incremental patch as approval of the final staged tree. Record the candidate identity and reviewer verdict references in the commit handoff. Do not stage unrelated or unrecognized user changes.
