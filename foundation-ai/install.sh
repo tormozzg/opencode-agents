@@ -92,6 +92,7 @@ mkdir -p "$BACKUP_DIR/.state"
 [[ ! -f "$MANIFEST" ]] || cp "$MANIFEST" "$BACKUP_DIR/.state/manifest.txt"
 [[ ! -f "$POINTER" ]] || cp "$POINTER" "$BACKUP_DIR/.state/last-backup"
 [[ ! -f "$ORIGIN" ]] || cp "$ORIGIN" "$BACKUP_DIR/.state/original-backup"
+[[ ! -f "$OWNER_MARKER" ]] || cp "$OWNER_MARKER" "$BACKUP_DIR/.state/owner"
 
 declare -a DONE=()
 rollback() {
@@ -118,6 +119,11 @@ rollback() {
     cp "$BACKUP_DIR/.state/original-backup" "$ORIGIN"
   else
     rm -f "$ORIGIN"
+  fi
+  if [[ -f "$BACKUP_DIR/.state/owner" ]]; then
+    cp "$BACKUP_DIR/.state/owner" "$OWNER_MARKER"
+  else
+    rm -f "$OWNER_MARKER"
   fi
   rm -rf "$STAGE_DIR"
 }
