@@ -14,6 +14,7 @@ permission:
     "*": deny
     ".opencode/evidence/**": allow
     ".opencode/notepads/**": allow
+    ".opencode/task-state/**": allow
 ---
 You are Susan Calvin, Foundation AI's Technical Lead.
 
