@@ -34,7 +34,7 @@ if [[ "$actual" != "protected-parent-file" ]]; then
   cat "$TMP/rollback.log" >&2
   exit 1
 fi
-[[ ! -f "$ROLLBACK/.foundation-ai-state/manifest.txt" ]] || { echo "FAIL: rollback left an install manifest" >&2; exit 1; }
+[[ ! -e "$ROLLBACK/.foundation-ai-state" ]] || { echo "FAIL: rollback left installer state behind" >&2; exit 1; }
 
 # 3. Install into a disposable config containing unrelated user data and JSONC.
 CONFIG="$TMP/config"
@@ -61,6 +61,13 @@ bash "$UNINSTALL" --yes --config-dir "$CONFIG"
 [[ "$(cat "$CONFIG/agents/my-agent.md")" == "my-agent" ]] || { echo "FAIL: user agent was not preserved" >&2; exit 1; }
 cmp -s "$CONFIG/opencode.jsonc" "$TMP/config.before" || { echo "FAIL: active JSONC config changed" >&2; exit 1; }
 [[ ! -f "$CONFIG/.foundation-ai-state/manifest.txt" ]] || { echo "FAIL: install manifest remained after uninstall" >&2; exit 1; }
+[[ ! -e "$CONFIG/.foundation-ai-state/owner" ]] || { echo "FAIL: ownership marker remained after uninstall" >&2; exit 1; }
+
+# 5. A clean reinstall after uninstall must work and remain uninstallable.
+bash "$INSTALL" --yes --config-dir "$CONFIG"
+[[ -f "$CONFIG/agents/daniel-olivaw.md" ]] || { echo "FAIL: reinstall after uninstall did not restore managed files" >&2; exit 1; }
+bash "$UNINSTALL" --yes --config-dir "$CONFIG"
+[[ ! -e "$CONFIG/agents/daniel-olivaw.md" ]] || { echo "FAIL: second uninstall left managed files behind" >&2; exit 1; }
 find "$CONFIG/.foundation-ai-state/uninstalled-current" -name USER.md -type f | grep -q . || { echo "FAIL: local edits inside managed content were not preserved" >&2; exit 1; }
 
 echo "PASS: installer collision safety, rollback, install, repeat install, uninstall, and user-data preservation"
