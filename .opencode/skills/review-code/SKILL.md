@@ -109,3 +109,6 @@ On a re-dispatch after a fix: verify each previously reported BLOCKER is resolve
 - Review Andrew Martin's changes against the approved plan, inspect the diff and relevant context, and return blockers/notes with evidence. Never edit, fix, commit, or approve your own changes.
 - Return findings to Susan Calvin. Andrew performs fixes; Han performs the re-review.
 - Security review by Jothan Leebig is a separate gate and is not replaced by this code review. QA by Golan Trevize is also separate.
+## Foundation AI exact-diff binding
+
+Every verdict must identify the approved plan version, candidate commit SHA (or reproducible diff snapshot), and complete changed-path set reviewed. Approval applies only to that exact candidate. Any subsequent content or mode change invalidates the verdict for the changed candidate; review the complete final diff again before commit. On remediation, retain prior finding IDs and dispositions, verify fixes, and issue a fresh verdict tied to the new candidate. A review of only the incremental patch must never be represented as approval of the complete final diff.
