@@ -43,7 +43,7 @@ if [[ -e "$STATE_DIR" && ! -f "$OWNER_MARKER" ]]; then
 fi
 mkdir -p "$CONFIG_DIR"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
-BACKUP_DIR="$STATE_DIR/backups/$TIMESTAMP-$"
+BACKUP_DIR=""
 STAGE_DIR="$(mktemp -d "$CONFIG_DIR/.foundation-ai-stage-$TIMESTAMP.XXXXXX")"
 
 declare -a RELS=()
@@ -79,7 +79,7 @@ if [[ "$ASSUME_YES" -ne 1 ]]; then
   echo "Install 9 agents, 14 skills, 6 protocols, and a config fragment into:"
   echo "  $CONFIG_DIR"
   echo "Existing Foundation AI-managed paths will be backed up to:"
-  echo "  $BACKUP_DIR"
+  echo "  $STATE_DIR/backups/"
   echo "Unowned paths will NOT be overwritten."
   read -r -p "Proceed? [yes/N] " reply
   [[ "$reply" == "yes" || "$reply" == "YES" ]] || { rm -rf "$STAGE_DIR" "$BACKUP_DIR"; echo "Aborted."; exit 1; }
