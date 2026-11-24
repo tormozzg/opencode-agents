@@ -98,7 +98,7 @@ Once the final plan is written, you MUST dispatch `kelden-amadiro` via `task()` 
 Dispatch template:
 
 ```
-task(subagent_type="kelden-amadiro", description="Audit the plan", prompt="TASK: act as the kelden-amadiro. Audit the plan file at <PLAN_PATH> for executability and valid references. DELIVERABLE: the review report with the verdict. SCOPE: read-only. VERIFY: exactly one plan path above; no other .md path is the plan.")
+task(subagent_type="kelden-amadiro", description="Audit the plan", prompt="TASK: act as Kelden Amadiro. Audit the plan file at <PLAN_PATH> for executability and valid references. DELIVERABLE: the review report with the verdict. SCOPE: read-only. VERIFY: exactly one plan path above; no other .md path is the plan.")
 ```
 
 The prompt names exactly one `.md` plan path and labels it as the plan.
@@ -113,7 +113,7 @@ The prompt names exactly one `.md` plan path and labels it as the plan.
 Before any brief, decision, or plan line, fan out `elijah-baley` dispatches for every unknown discoverable fact - research is delegated, never done by yourself. Every delegated prompt names TASK / DELIVERABLE / SCOPE / VERIFY, states the role inside the prompt, and includes only the context the child needs. Research dispatches carry "Evidence slug: <plan-name>" per research-topic's dispatch format when a plan directory is in play:
 
 ```
-task(subagent_type="explore", description="Map the implementation surface", prompt="TASK: map every module involved in authentication and how they interconnect. DELIVERABLE: module list with file paths, one-line responsibility each. SCOPE: src/auth/** only. VERIFY: cite file:line for each claim. Evidence slug: <plan-name>.")
+task(subagent_type="elijah-baley", description="Map the implementation surface", prompt="TASK: map every module involved in authentication and how they interconnect. DELIVERABLE: module list with file paths, one-line responsibility each. SCOPE: src/auth/** only. VERIFY: cite file:line for each claim. Evidence slug: <plan-name>.")
 ```
 
 Delegate research to `elijah-baley` via `task()` and never instruct a child to edit files. Close each agent after integrating its result.
