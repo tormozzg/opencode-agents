@@ -1,5 +1,5 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "default_agent": "daniel-olivaw",
+  "default_agent": "hari-seldon",
   "subagent_depth": 2
 }
