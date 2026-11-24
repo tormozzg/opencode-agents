@@ -13,6 +13,10 @@ pass() { echo "PASS: $*"; }
 [[ -d "$AGENTS" ]] || fail "agents directory missing"
 [[ -d "$SKILLS" ]] || fail "skills directory missing"
 [[ -d "$PROTOCOLS" ]] || fail "protocols directory missing"
+for script in "$ROOT/foundation-ai/install.sh" "$ROOT/foundation-ai/uninstall.sh" "$ROOT/foundation-ai/scripts/test-install.sh"; do
+  bash -n "$script" || fail "shell syntax error: $script"
+done
+pass "installer, uninstaller, and lifecycle-test shell syntax"
 
 agent_count="$(find "$AGENTS" -maxdepth 1 -type f -name '*.md' | wc -l | tr -d ' ')"
 skill_count="$(find "$SKILLS" -mindepth 2 -maxdepth 2 -type f -name 'SKILL.md' | wc -l | tr -d ' ')"
