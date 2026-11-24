@@ -1,6 +1,6 @@
 ---
 name: git-operations
-description: "MUST USE for atomic commits, rebase/squash/fixup, and history search (blame, bisect, log -S, reflog). Load it before running git yourself, or dispatch commits via task(subagent_type='git-operations', ...). Triggers: 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find the commit that'."
+description: "MUST USE for atomic commits, rebase/squash/fixup, and history search (blame, bisect, log -S, reflog). Load this skill before running any Git operation. It is Andrew Martin's own skill, not a separately registered agent. Triggers: 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find the commit that'."
 ---
 
 # Git Operations
