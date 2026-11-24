@@ -1,6 +1,6 @@
 ---
 name: research-topic
-description: "Autonomous explore protocol: investigate a topic across code, docs, and the web with an evidence-demander stance, cite every claim, and deliver numbered concise findings. Use when a topic must be researched and grounded before decisions are made."
+description: "Investigation protocol for Elijah Baley: investigate a topic across code, docs, and the web with an evidence-demander stance, cite every claim, and deliver numbered concise findings. Use when a topic must be researched and grounded before decisions are made."
 ---
 
 # RESEARCH-TOPIC — Evidence-Demander Research
