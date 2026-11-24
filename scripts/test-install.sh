@@ -11,11 +11,11 @@ trap 'rm -rf "$TMP"' EXIT
 # 1. Collision must abort without overwriting foreign data or creating state.
 COLLISION="$TMP/collision"
 mkdir -p "$COLLISION/agents"
-printf 'foreign-agent\n' > "$COLLISION/agents/daniel-olivaw.md"
+printf 'foreign-agent\n' > "$COLLISION/agents/hari-seldon.md"
 if bash "$INSTALL" --yes --config-dir "$COLLISION" >/dev/null 2>&1; then
   echo "FAIL: installer accepted an unowned name collision" >&2; exit 1
 fi
-[[ "$(cat "$COLLISION/agents/daniel-olivaw.md")" == "foreign-agent" ]] || { echo "FAIL: collision file changed" >&2; exit 1; }
+[[ "$(cat "$COLLISION/agents/hari-seldon.md")" == "foreign-agent" ]] || { echo "FAIL: collision file changed" >&2; exit 1; }
 [[ ! -e "$COLLISION/.foundation-ai-state" ]] || { echo "FAIL: collision created installer state" >&2; exit 1; }
 
 
@@ -26,7 +26,7 @@ printf 'protected-parent-file\n' > "$ROLLBACK/foundation-ai/protocols"
 if bash "$INSTALL" --yes --config-dir "$ROLLBACK" > "$TMP/rollback.log" 2>&1; then
   echo "FAIL: installer unexpectedly succeeded with a blocking parent file" >&2; exit 1
 fi
-[[ ! -e "$ROLLBACK/agents/daniel-olivaw.md" ]] || { echo "FAIL: rollback left an agent behind" >&2; exit 1; }
+[[ ! -e "$ROLLBACK/agents/hari-seldon.md" ]] || { echo "FAIL: rollback left an agent behind" >&2; exit 1; }
 [[ ! -e "$ROLLBACK/skills/plan-work" ]] || { echo "FAIL: rollback left a skill behind" >&2; exit 1; }
 actual="$(cat "$ROLLBACK/foundation-ai/protocols")"
 if [[ "$actual" != "protected-parent-file" ]]; then
@@ -44,7 +44,7 @@ printf '{\n  // user comment\n  "model": "example/model"\n}\n' > "$CONFIG/openco
 cp "$CONFIG/opencode.jsonc" "$TMP/config.before"
 
 bash "$INSTALL" --yes --config-dir "$CONFIG"
-[[ -f "$CONFIG/agents/daniel-olivaw.md" ]] || { echo "FAIL: agent not installed" >&2; exit 1; }
+[[ -f "$CONFIG/agents/hari-seldon.md" ]] || { echo "FAIL: agent not installed" >&2; exit 1; }
 [[ -f "$CONFIG/skills/security-review/SKILL.md" ]] || { echo "FAIL: security skill not installed" >&2; exit 1; }
 [[ -f "$CONFIG/foundation-ai/protocols/security-policy.md" ]] || { echo "FAIL: protocol not installed" >&2; exit 1; }
 [[ -f "$CONFIG/foundation-ai/opencode.jsonc.fragment" ]] || { echo "FAIL: config fragment not installed" >&2; exit 1; }
@@ -55,7 +55,7 @@ cmp -s "$CONFIG/opencode.jsonc" "$TMP/config.before" || { echo "FAIL: active JSO
 bash "$INSTALL" --yes --config-dir "$CONFIG"
 printf 'local-edit\n' > "$CONFIG/skills/security-review/USER.md"
 bash "$UNINSTALL" --yes --config-dir "$CONFIG"
-[[ ! -e "$CONFIG/agents/daniel-olivaw.md" ]] || { echo "FAIL: managed agent remained after uninstall" >&2; exit 1; }
+[[ ! -e "$CONFIG/agents/hari-seldon.md" ]] || { echo "FAIL: managed agent remained after uninstall" >&2; exit 1; }
 [[ ! -e "$CONFIG/skills/security-review" ]] || { echo "FAIL: managed skill remained after uninstall" >&2; exit 1; }
 [[ ! -e "$CONFIG/foundation-ai/protocols" ]] || { echo "FAIL: managed protocols remained after uninstall" >&2; exit 1; }
 [[ "$(cat "$CONFIG/agents/my-agent.md")" == "my-agent" ]] || { echo "FAIL: user agent was not preserved" >&2; exit 1; }
@@ -65,9 +65,9 @@ cmp -s "$CONFIG/opencode.jsonc" "$TMP/config.before" || { echo "FAIL: active JSO
 
 # 5. A clean reinstall after uninstall must work and remain uninstallable.
 bash "$INSTALL" --yes --config-dir "$CONFIG"
-[[ -f "$CONFIG/agents/daniel-olivaw.md" ]] || { echo "FAIL: reinstall after uninstall did not restore managed files" >&2; exit 1; }
+[[ -f "$CONFIG/agents/hari-seldon.md" ]] || { echo "FAIL: reinstall after uninstall did not restore managed files" >&2; exit 1; }
 bash "$UNINSTALL" --yes --config-dir "$CONFIG"
-[[ ! -e "$CONFIG/agents/daniel-olivaw.md" ]] || { echo "FAIL: second uninstall left managed files behind" >&2; exit 1; }
+[[ ! -e "$CONFIG/agents/hari-seldon.md" ]] || { echo "FAIL: second uninstall left managed files behind" >&2; exit 1; }
 find "$CONFIG/.foundation-ai-state/uninstalled-current" -name USER.md -type f | grep -q . || { echo "FAIL: local edits inside managed content were not preserved" >&2; exit 1; }
 
 echo "PASS: installer collision safety, rollback, install, repeat install, uninstall, and user-data preservation"
