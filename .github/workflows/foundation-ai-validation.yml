@@ -8,6 +8,10 @@ on:
       - ".opencode/**"
       - "opencode.jsonc"
       - "foundation-ai/**"
+      - "AGENTS.md"
+      - "README.md"
+      - "install.sh"
+      - "uninstall.sh"
       - ".github/workflows/foundation-ai-validation.yml"
   pull_request:
     paths:
