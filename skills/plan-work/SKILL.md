@@ -65,6 +65,17 @@ Every default applied via the two-filter policy MUST reach the final plan: a man
 
 The durable draft is the resume point. Record `intent`, decisions, the approval gate, and the ledgers in a durable draft file in your permitted plan directory as you go. On any later turn, read the draft and resume from those fields instead of rerouting from memory. Long sessions outlive your context; plan generation reads the draft, not your memory. When the user references a prior discuss session — or a ledger exists at `.opencode/evidence/discuss/` for the topic — read it as the decision record (this read is part of allowance (a)) and cite it in the plan like an architect evidence file; its conclusions are inputs to the two-filter policy and the approval gate, never a substitute for either.
 
+
+## Plan artifact persistence
+
+Writing plan artifacts is part of Giskard's core planning responsibility, not an optional handoff step.
+
+- Before the first write, ensure the required directory exists. Create missing plan directories yourself (for example, with `mkdir -p .opencode/plans/drafts`); do not wait for the user or another agent to create them.
+- Write and update your own draft and final plan files directly under the permitted `.opencode/plans/**` scope. Never ask Elijah, Dors, or Kelden to write or edit plan artifacts.
+- After every create or update, verify the exact target file exists and is non-empty. Re-read the file and check its plan path, version, review status, and the sections you just wrote. Do not report a plan as saved based only on a successful-looking tool response.
+- If directory creation, writing, or verification fails, diagnose and retry within your permissions. If it still fails, report the exact failed operation and path; do not silently substitute a response-only plan or claim that the artifact was persisted.
+- Keep all plan artifacts inside `.opencode/plans/**`. This write authority does not permit edits to product code, configuration, tests, evidence owned by other agents, or any files outside the plan directory. It does not authorize implementation, Git operations, or approval of your own plan.
+
 ## Approval gate
 
 When exploration is exhausted and the unknowns are answered:
