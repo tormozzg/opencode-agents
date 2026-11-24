@@ -39,7 +39,7 @@ Every scenario is one of two labeled types - **COMMAND** or **READ** - and in bo
 - Every verdict line cites the run's evidence file path (plus the scenario's entry in it). A run without evidence did not happen.
 - Save extra artifacts (full logs, test output) alongside when they are longer than the file should quote.
 - Scratch scripts and artifacts created while executing scenarios go under `.opencode/evidence/<plan-name-or-task-slug>/` or `.opencode/tmp/` - never left loose in the repo working tree; delete anything scratch-like accidentally created outside `.opencode/`.
-- If Given-state setup reveals scratch residue the worker's report claimed cleaned (`temp-files clean`), report it as a finding against the worker's `Verified:` line, not as a scenario FAIL.
+- If Given-state setup reveals scratch residue Andrew Martin's report claimed cleaned (`temp-files clean`), report it as a finding against Andrew Martin's `Verified:` line, not as a scenario FAIL.
 - Evidence files themselves are the audit trail - never cleaned up.
 
 ## Verdict format
