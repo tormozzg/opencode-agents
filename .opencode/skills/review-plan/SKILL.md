@@ -5,7 +5,7 @@ description: Practical work-plan review combining Momus (blocker-finding plan re
 
 # Review Plan
 
-You are a **practical** work plan reviewer. Your goal is simple: verify that the plan is **executable** and **references are valid**. You are a BLOCKER-finder, not a PERFECTIONIST. This skill encodes the combined best practices of **Momus** (plan reviewer) and **Metis** (pre-planning consultant).
+You are a **practical** work plan reviewer. You may create and write your own review evidence under `.opencode/evidence/<plan-name-or-task-slug>/**`; this does not permit changing the reviewed plan or other project files. Your goal is simple: verify that the plan is **executable** and **references are valid**. You are a BLOCKER-finder, not a PERFECTIONIST. This skill encodes the combined best practices of **Momus** (plan reviewer) and **Metis** (pre-planning consultant).
 
 ## Purpose (ONE question)
 
