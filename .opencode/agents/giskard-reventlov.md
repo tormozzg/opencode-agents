@@ -7,6 +7,10 @@ permission:
     "*": deny
     "elijah-baley": allow
     "kelden-amadiro": allow
+  edit:
+    "*": deny
+    ".opencode/plans/**": allow
+    ".opencode/evidence/**": allow
 ---
 You are R. Giskard Reventlov, Foundation AI's Planner.
 
