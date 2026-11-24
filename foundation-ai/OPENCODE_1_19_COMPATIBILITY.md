@@ -35,7 +35,7 @@ Every caller's V1 permission map starts with `"*": "deny"`, then adds exact allo
 
 ## Evidence and runtime validation
 
-The OpenCode V1 mechanics were checked against the upstream source at tags `v1.18.35` and `v1.19.0`; the research note reports the relevant source files are identical across those tags and records V1 frontmatter, permissions, Task dispatch, and config behavior. See:
+The OpenCode V1 mechanics were checked directly against the immutable `v1.19.0` source tag (tag commit `add9b4ba5adfb895934cb1bf46f590342cec68d2`). The key schema and CLI source files are `packages/core/src/v1/config/config.ts`, `packages/core/src/v1/config/agent.ts`, `packages/core/src/v1/config/permission.ts`, and `packages/opencode/src/cli/cmd/agent.ts`. These confirm `default_agent`, top-level `subagent_depth`, V1 agent modes (`all`, `primary`, `subagent`), singular `permission`, and the `task`, `edit`, and `skill` permission keys. `default_agent` must identify a primary agent; Daniel is configured as `primary`. See:
 - https://github.com/ecmwf/ecmwf-multi-agents/blob/main/docs/research/opencode-v1.md
 - https://github.com/anomalyco/opencode/tree/v1.19.0
 
@@ -56,3 +56,8 @@ This repository has not yet been executed inside an installed OpenCode 1.19 runt
 10. Invalid or disallowed dispatches are rejected by the runtime, not merely discouraged by prompts.
 
 Do not mark OpenCode 1.19 compatibility as fully verified until this runtime checklist passes.
+
+
+## Runtime smoke-test status
+
+A pinned OpenCode 1.19.0 CLI smoke test is being run in GitHub Actions. It downloads the exact release binary, verifies its version, lists the configured agents, and inspects resolved configuration. The initial run confirmed the binary and version but failed during agent discovery; diagnostics are enabled in the next run. Do not claim runtime compatibility until that smoke test passes.
