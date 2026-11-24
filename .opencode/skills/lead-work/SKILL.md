@@ -219,3 +219,10 @@ task(subagent_type="jothan-leebig", description="Independent security review", p
 ```
 
 Critical/High findings block. Medium requires remediation or explicit Daniel/user risk acceptance with rationale and compensating controls. Low/Informational findings may pass with notes. Andrew fixes findings; Jothan independently retests the same finding IDs. Do not let QA or code review substitute for this gate. If no trigger applies, record the reason and mark security review N/A for this change.
+## Foundation AI review-baseline discipline
+
+- Before dispatching Han, Jothan, or Golan, record the exact approved plan path/version and the implementation candidate identity (commit SHA when committed, otherwise a reproducible diff snapshot and complete changed-path list). Do not use "latest" as an identity.
+- Each reviewer must echo the plan version and exact candidate identity in the verdict. If a tool cannot compute a hash, record the strongest available immutable identifier and state the limitation.
+- Any content or mode change after a verdict invalidates that verdict for the changed candidate. Re-dispatch the affected independent reviewer; rerun security checks when the changed surface affects security, and rerun the full frozen QA scenario set for the affected scope after implementation fixes.
+- Retest findings under their original IDs. Preserve the original QA scenario set and its version/hash throughout the run. If acceptance criteria or scenarios need revision, stop and escalate to Daniel for plan revision, independent plan review, and renewed approval; never edit expected results to make a run pass.
+- The final commit candidate must be the same reviewed candidate. Check staged, unstaged, and untracked paths before authorizing commit; do not treat a partial/incremental review as approval of a changed complete diff.
