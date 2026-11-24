@@ -60,7 +60,7 @@ Do not mark OpenCode 1.19 compatibility as fully verified until this runtime che
 
 ## Runtime smoke-test status
 
-<badge>Passed — OpenCode 1.19.0</badge>
+**Passed — OpenCode 1.19.0**
 
 The GitHub Actions smoke test downloaded the pinned `v1.19.0` Linux CLI and verified:
 
