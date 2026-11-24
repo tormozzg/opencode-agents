@@ -63,6 +63,22 @@ Every default applied via the two-filter policy MUST reach the final plan: a man
 
 ## Durable draft
 
+
+## Draft lifecycle and review handoff
+
+Treat the durable draft as the continuously maintained working plan, not a scratch note created only when planning is nearly finished.
+
+1. **Start early.** As soon as the request is understood well enough to name its intent and plan slug, create `.opencode/plans/drafts/<plan-name>.md`. Record the intent, affected users, initial IS/GAP ledgers, known constraints, open questions, current decisions, and current workflow status. Do this before or alongside research dispatches; do not wait until discovery is complete.
+2. **Maintain incrementally.** After each meaningful research result, user answer, or planning decision, update the same durable draft. Add evidence and file references, close or revise ledger rows, record resolved decisions with rationale, and keep unresolved owner-decisions explicit. The draft must reflect the latest known state, not a transcript or a collection of stale alternatives.
+3. **Revise deliberately.** When new evidence or user scope changes invalidate an assumption, edit the affected draft sections and record what changed and why. Preserve useful decision history briefly, but remove superseded conclusions from the active plan so they cannot be mistaken for current direction.
+4. **Prepare the review candidate.** Once exploration and the approval gate are satisfied, turn the current draft into the final plan at `.opencode/plans/<plan-name>.md`. Give it a monotonically increasing version and `reviewed: no`. The final plan must be self-contained; do not rely on the draft as hidden context for the executor.
+5. **Advisory pass, then formal audit.** For substantive plans, send the current draft/final candidate to Dors for read-only advisory critique before Kelden's formal audit. Incorporate or explicitly disposition Dors's recommendations, update the plan version if the final plan changed, then submit that exact final file and version to Kelden. Trivial mechanical changes may skip Dors as specified elsewhere in this skill.
+6. **Audit feedback means a new version.** If Kelden returns blockers, revise the final plan, increment its version, set `reviewed: no`, verify the persisted file, and send that exact new version back to Kelden. Repeat until Kelden returns `[OKAY]`. Never patch a reviewed file without incrementing its version and repeating the audit.
+7. **Bind the handoff.** After `[OKAY]`, make only the permitted `reviewed: no` to `reviewed: yes` header flip. Report the exact final path, version, Kelden verdict, and any content hash available. Hari's user-approval gate applies to that exact reviewed version; any execution-affecting change requires a new version, new Kelden audit, and fresh user approval.
+
+At every stage, verify that the draft/final file exists, is non-empty, and contains the latest intended updates. Do not tell the user that a draft or plan is saved, updated, or ready for review until the persisted file has been re-read and checked.
+
+
 The durable draft is the resume point. Record `intent`, decisions, the approval gate, and the ledgers in a durable draft file in your permitted plan directory as you go. On any later turn, read the draft and resume from those fields instead of rerouting from memory. Long sessions outlive your context; plan generation reads the draft, not your memory. When the user references a prior discuss session — or a ledger exists at `.opencode/evidence/discuss/` for the topic — read it as the decision record (this read is part of allowance (a)) and cite it in the plan like an architect evidence file; its conclusions are inputs to the two-filter policy and the approval gate, never a substitute for either.
 
 
