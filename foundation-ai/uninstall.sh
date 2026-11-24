@@ -33,7 +33,8 @@ case "$BACKUP_DIR" in
 esac
 [[ -d "$BACKUP_DIR" ]] || { echo "ERROR: recorded backup directory is missing: $BACKUP_DIR" >&2; exit 1; }
 
-declare -a RELS=()\nwhile IFS= read -r rel; do RELS+=("$rel"); done < "$MANIFEST"
+declare -a RELS=()
+while IFS= read -r rel; do RELS+=("$rel"); done < "$MANIFEST"
 for rel in "${RELS[@]}"; do
   [[ -n "$rel" && "$rel" != /* && "$rel" != *".."* ]] || { echo "ERROR: unsafe manifest path: $rel" >&2; exit 1; }
   case "$rel" in
