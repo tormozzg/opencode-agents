@@ -1,3 +1,9 @@
+## Foundation AI migration area
+
+The original pack described below remains the upstream source snapshot. This branch additionally contains the Foundation AI implementation in `.opencode/agents/`, `.opencode/skills/`, `.opencode/protocols/`, and `opencode.jsonc`, with migration notes and exact upstream skill snapshots under `foundation-ai/`. Do not confuse the original `agents/` and `skills/` directories with the new OpenCode project-local `.opencode/` tree. See `foundation-ai/README.md` and `foundation-ai/OPENCODE_1_19_COMPATIBILITY.md` before changing the migration.
+
+---
+
 # AGENTS.md
 
 ## What this repo is
