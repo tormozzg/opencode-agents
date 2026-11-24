@@ -25,6 +25,13 @@ Tier 2 agents are leaf agents. Preserve the explicit `permission.task` allowlist
 ## Tier 2 concurrency policy
 Each Tier 2 agent may have at most one active delegated assignment globally. This is a per-agent limit shared across all Tier 1 callers: Elijah's slot is shared by Daniel and Giskard. Different Tier 2 agents may work in parallel when their assignments are independent. Tier 1 callers must consolidate related requests, track outstanding assignments, and wait for a Tier 2 agent's result before dispatching another task to that same agent. Tier 2 agents remain leaf agents and must not spawn or fork additional work. This is an instruction-level coordination rule, not a runtime-enforced mutex.
 
+## Discussion and review routing
+
+- Hari may call Elijah directly for conversational, read-only codebase discussion and preliminary investigation. This is not a formal code review, security audit, QA verdict, or implementation task.
+- Elijah's one-active-task slot remains global across Hari, Daniel, and Giskard. If occupied, Hari waits; do not bypass the concurrency rule.
+- Formal review-only requests route through Hari to Daniel. Daniel coordinates Han Fastolfe for independent code review and Jothan Leebig for a separate security review when requested or triggered. Review-only work does not dispatch Andrew Martin, modify files, or begin implementation.
+- Findings and recommendations return to Hari. Any fixes require a separate explicit implementation request and the normal planning/approval gates.
+
 ## Separation of duties
 
 - Hari owns strategy, user-facing plan approval, and material risk decisions.
