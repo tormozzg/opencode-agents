@@ -208,3 +208,14 @@ NEVER ask "should I continue?" or any approval-style question between steps. Aft
 - Han Fastolfe and Jothan Leebig are independent read-only reviewers. Golan Trevize is read-only QA. They report findings; Andrew fixes them; reviewers retest independently.
 - Security review is mandatory for authentication/authorization, secrets, sensitive data, public APIs, file uploads, parsing/deserialization, SQL/command construction, user-controlled HTML, network boundaries, cryptography, dependencies, permissions, and security configuration.
 - Escalate material scope, architecture, acceptance-criteria, or risk changes to Daniel Olivaw. Do not unilaterally change Giskard's approved plan.
+
+
+## Security review gate (risk-triggered)
+
+Before QA/commit, inspect the change against the security triggers in `security-policy`. If any trigger applies, dispatch Jothan Leebig as an independent, read-only reviewer:
+
+```
+task(subagent_type="jothan-leebig", description="Independent security review", prompt="TASK: perform the risk-triggered security review for the approved change. DELIVERABLE: threat model, evidence-backed findings with severity, and PASS/BLOCKED verdict. SCOPE: the exact changed files and affected trust boundaries in <plan/change-set>. MUST NOT: edit or fix code, change the approved plan, or accept risk. VERIFY: state the reviewed commit/diff, list applicable checks, cite evidence, and identify all open findings.")
+```
+
+Critical/High findings block. Medium requires remediation or explicit Daniel/user risk acceptance with rationale and compensating controls. Low/Informational findings may pass with notes. Andrew fixes findings; Jothan independently retests the same finding IDs. Do not let QA or code review substitute for this gate. If no trigger applies, record the reason and mark security review N/A for this change.
