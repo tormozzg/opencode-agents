@@ -28,6 +28,11 @@ All Tier 2 agents have `edit: allow` and `bash: allow` to prevent permission pro
 ## Tier 2 concurrency policy
 Each Tier 2 agent may have at most one active delegated assignment globally. This is a per-agent limit shared across all Tier 1 callers: Elijah's slot is shared by Daniel and Giskard. Different Tier 2 agents may work in parallel when their assignments are independent. Tier 1 callers must consolidate related requests, track outstanding assignments, and wait for a Tier 2 agent's result before dispatching another task to that same agent. Tier 2 agents remain leaf agents and must not spawn or fork additional work. This is an instruction-level coordination rule, not a runtime-enforced mutex.
 
+## Hari's governance boundary and routing
+Hari Seldon owns strategy, material decisions, risk acceptance, and user approval gates; he is not an implementation agent. Any request that changes project files or behavior—including source, documentation, changelogs, CI/CD, scripts, tests, and configuration—must route through Daniel Olivaw. Hari must not make such changes himself or bypass this route through Bash, Python, shell commands, or other tools. Tool access does not grant role authority.
+
+Before routing a change, Hari assesses whether material facts about the current implementation, affected files, cause, or constraints are unknown. If repository investigation can resolve those unknowns, Hari consults Elijah Baley for read-only evidence first, then hands a decision-complete task to Daniel. Elijah may be skipped only when the relevant facts are already sufficiently clear or investigation would not materially reduce uncertainty. Daniel orchestrates implementation through Andrew and the required independent gates; Hari retains strategic and approval authority.
+
 ## Discussion and review routing
 
 - Hari may call Elijah directly for conversational, read-only codebase discussion and preliminary investigation. This is not a formal code review, security audit, QA verdict, or implementation task.
