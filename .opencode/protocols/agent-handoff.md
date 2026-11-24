@@ -27,3 +27,5 @@ Every delegated task must be statelessly executable and auditable.
 - Reviewers do not fix what they review. QA does not fix product code.
 - A child returns evidence and status, not merely a claim of completion.
 - Scope, architecture, risk, or acceptance changes return to Daniel for approval.
+## Revision identity
+The CONTEXT field must name the exact approved plan path and version (and content hash when available), not merely "latest". For implementation/review/QA handoffs, identify the exact candidate commit or diff snapshot, changed-path set, and relevant review/QA/security baseline IDs. If any identifier is unavailable, state that explicitly and establish it before the gate; do not infer identity from a vague summary.
