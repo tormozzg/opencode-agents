@@ -41,10 +41,9 @@ ORIGIN="$STATE_DIR/original-backup"
 if [[ -e "$STATE_DIR" && ! -f "$OWNER_MARKER" ]]; then
   echo "ERROR: refusing to use existing unowned state directory: $STATE_DIR" >&2; exit 1
 fi
-mkdir -p "$CONFIG_DIR" "$STATE_DIR/backups"
-printf 'foundation-ai-managed-v1\n' > "$OWNER_MARKER"
+mkdir -p "$CONFIG_DIR"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
-BACKUP_DIR="$(mktemp -d "$STATE_DIR/backups/$TIMESTAMP.XXXXXX")"
+BACKUP_DIR="$STATE_DIR/backups/$TIMESTAMP-$"
 STAGE_DIR="$(mktemp -d "$CONFIG_DIR/.foundation-ai-stage-$TIMESTAMP.XXXXXX")"
 
 declare -a RELS=()
@@ -86,6 +85,8 @@ if [[ "$ASSUME_YES" -ne 1 ]]; then
   [[ "$reply" == "yes" || "$reply" == "YES" ]] || { rm -rf "$STAGE_DIR" "$BACKUP_DIR"; echo "Aborted."; exit 1; }
 fi
 
+mkdir -p "$STATE_DIR/backups" "$BACKUP_DIR"
+printf 'foundation-ai-managed-v1\n' > "$OWNER_MARKER"
 mkdir -p "$BACKUP_DIR/.state"
 [[ ! -f "$MANIFEST" ]] || cp "$MANIFEST" "$BACKUP_DIR/.state/manifest.txt"
 [[ ! -f "$POINTER" ]] || cp "$POINTER" "$BACKUP_DIR/.state/last-backup"
