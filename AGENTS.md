@@ -30,7 +30,6 @@ Tier 2 agents are leaf agents. Preserve the explicit `permission.task` allowlist
 - Andrew implements and owns permitted Git operations.
 - Han performs independent read-only code review.
 - Golan performs independent QA against defined scenarios.
-- Jothan performs independent read-only security review and does not fix findings.
 - Do not let an implementer approve their own work or silently bypass a quality gate.
 - Critical/High security findings block completion. Medium findings require remediation or explicit risk acceptance by Hari/user.
 
