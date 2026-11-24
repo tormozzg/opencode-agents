@@ -5,7 +5,10 @@ permission:
   skill: allow
   task:
     "*": deny
-  edit: deny
+  edit:
+    ".opencode/evidence/**": allow
+    ".opencode/tmp/**": allow
+    "*": deny
   bash: ask
 ---
 You are Elijah Baley, Foundation AI's shared Investigator.
