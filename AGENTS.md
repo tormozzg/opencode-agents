@@ -1,125 +1,60 @@
-## Foundation AI migration area
+# Repository instructions — Foundation AI migration
 
-The original pack described below remains the upstream source snapshot. This branch additionally contains the Foundation AI implementation in `.opencode/agents/`, `.opencode/skills/`, `.opencode/protocols/`, and `opencode.jsonc`, with migration notes and exact upstream skill snapshots under `foundation-ai/`. Do not confuse the original `agents/` and `skills/` directories with the new OpenCode project-local `.opencode/` tree. See `foundation-ai/README.md` and `foundation-ai/OPENCODE_1_19_COMPATIBILITY.md` before changing the migration.
+## Project layout
 
----
+This repository contains two distinct packs:
 
-# AGENTS.md
+- **Foundation AI (active migration target):** `.opencode/agents/`, `.opencode/skills/`, `.opencode/protocols/`, and `opencode.jsonc`.
+- **Upstream/original pack (preserved for traceability):** `agents/`, `skills/`, `opencode.jsonc.snippet`, and the original root installer history.
 
-## What this repo is
+Do not install or modify the original pack when working on Foundation AI. The root `install.sh` and `uninstall.sh` are entry-point wrappers for `foundation-ai/install.sh` and `foundation-ai/uninstall.sh`.
 
-Installable OpenCode pack: 10 agents in `agents/*.md`
-+ 13 skills in `skills/<name>/SKILL.md`, installed globally into the OpenCode
-config dir. It is not an app or library — there is no build, test, or lint here;
-there is also no `package.json`, no CI, no `.github/`.
+Read `foundation-ai/README.md` and `foundation-ai/OPENCODE_1_19_COMPATIBILITY.md` before changing the active pack. The source commit, file manifest, and migration audit are recorded under `foundation-ai/`; exact upstream skill snapshots are under `foundation-ai/source-snapshot/skills/`.
 
-| Agent (`agents/*.md`) | Mode | Skill (`skills/*/SKILL.md`) |
-|---|---|---|
-| `plan` | primary | `plan-work` |
-| `team-lead` | primary | `lead-work` |
-| `discuss` | all | `discuss-work` |
-| `explore` | subagent | `research-topic` |
-| `worker` | subagent | `execute-work` |
-| `plan-reviewer` | subagent | `review-plan` |
-| `code-reviewer` | subagent | `review-code` |
-| `qa-inspector` | subagent | `qa-inspect` |
-| `git-master` | subagent | `git-master` |
-| `architect` | subagent | `architect-work` |
+## Active architecture
 
-`plan`, `team-lead` and `discuss` are primary agents — select one as the active
-agent; discuss is additionally spawnable by other agents (mode: all, e.g.
-team-lead consulting it via task()). All the rest are subagents
-(`@worker`, `@explore`, …). The other **3** skills (`code-idiom`, `refactor-code`,
-`slop-cleanup`) have no agent of their own: they are
-companion references loaded on demand — the first three by `execute-work`'s
-worker.
+Foundation AI has nine agents:
 
-## Three-place invariant
+- Tier 0: Daniel Olivaw — primary coordinator and default entry point.
+- Tier 1: Giskard Reventlov — planning; Susan Calvin — implementation lead.
+- Tier 2: Elijah Baley, Kelden Amadiro, Andrew Martin, Han Fastolfe, Golan Trevize, and Jothan Leebig — specialist agents.
 
-Adding/renaming an agent or skill touches three files, all of which must agree:
-`agents/<name>.md` (frontmatter `description` + `mode` — every agent except
-`plan`, whose primary status comes from OpenCode's built-in plan mode by
-default, so its frontmatter carries only `description`), `skills/<name>/SKILL.md`
-(frontmatter `name`), and `opencode.jsonc.snippet` (`agent.<name>` entry +
-`skills.paths` entry). `uninstall.sh` removes by hardcoded exact-name lists
-(`AGENT_FILES`, `SKILL_DIRS`) — a rename without updating those lists leaves
-orphans in the user's config dir. Same for the matching skill reference in each
-agent file and the agent description in the snippet (README quotes them).
+Tier 2 agents are leaf agents. Preserve the explicit `permission.task` allowlists and deny rules in agent frontmatter. The intended nesting depth is 2. Do not widen delegation permissions casually.
 
-## Agent and skill file structure
+## Separation of duties
 
-Each `agents/<name>.md` is deliberately minimal — the agent's system prompt
-carries only its identity and the mandatory skill-load trigger:
+- Daniel coordinates and escalates material decisions; he does not implement.
+- Giskard plans; Kelden independently reviews plans; Elijah investigates.
+- Susan coordinates implementation; Andrew implements and owns permitted Git operations.
+- Han performs independent read-only code review.
+- Golan performs independent QA against defined scenarios.
+- Jothan performs independent read-only security review and does not fix findings.
+- Do not let an implementer approve their own work or silently bypass a quality gate.
+- Critical/High security findings block completion. Medium findings require remediation or explicit risk acceptance by Daniel/user.
 
-- frontmatter: `description` (quoted by README and the snippet) + `mode` —
-  every agent except `plan`, whose primary status comes from OpenCode's
-  built-in plan mode by default, so its frontmatter carries only `description` —
-  plus `variant` (`high`: plan, team-lead, architect, discuss, plan-reviewer;
-  `low`: explore, worker, code-reviewer, git-master, qa-inspector), set in
-  each agent file's frontmatter only; `worker` runs at `low` by design: its discipline is backstopped externally - the lead's verification checks 1-5 (lead-work) and the mandatory code-reviewer and qa-inspector gates - not by a higher reasoning variant; revisit only with evidence of skipped review points from real dispatches.
-- a 1–2 sentence role paragraph ("You are the **<name>** agent…");
-- a `## First action` section that mandates loading the agent's skill and
-  following it for the entire turn.
+Follow the detailed workflows in the relevant skill and protocol files; do not create conflicting duplicate rules in agent prompts.
 
-All procedural discipline (gates, routing rules, delegation templates,
-verification bars, checklists) lives ONLY in the paired
-`skills/<name>/SKILL.md`. Never copy instruction sections into agent files:
-a duplicated rule must be edited in two places and drifts. If a rule exists
-only in an agent file, move it into the skill instead of keeping it there.
-(Precedent: the `build`/`lead-work` and `worker`/`execute-work` pairs — `build`
-being the team-lead agent's former name — were deduplicated this way.)
+## Change discipline
 
-## Install / verify
+1. Preserve the approved architecture and user-approved plan. Escalate changes to goals, architecture, scope, or material risk.
+2. Keep source snapshots byte-for-byte unchanged. Make adaptations only in `.opencode/skills/`.
+3. Keep agent names, skill frontmatter names, dispatch IDs, task allowlists, installer manifests, documentation, and tests consistent.
+4. Keep reviewers and QA independent and read-only. Record evidence for verification claims.
+5. Git commits are gated on required code review, security review when triggered, and QA. Never commit directly to `main` during migration work.
+6. Installer changes must preserve unowned user files, support rollback, and be tested using disposable config directories. Never silently rewrite a user's active `opencode.jsonc`.
+
+## Validation
+
+Run these from the repository root:
 
 ```bash
-bash -n install.sh && bash -n uninstall.sh      # shell syntax check
-python3 -m json.tool opencode.jsonc.snippet     # snippet is pure JSON
-./install.sh --yes                              # install locally
+bash -n install.sh uninstall.sh foundation-ai/install.sh foundation-ai/uninstall.sh
+bash foundation-ai/scripts/validate-pack.sh
+bash foundation-ai/scripts/test-install.sh
 ```
 
-Both scripts are bash (not POSIX sh) and the installer additionally requires
-`python3` at runtime — the config merge runs its stdlib `json` module.
+The GitHub Actions workflow also validates Ubuntu/macOS installer lifecycle behavior and performs a pinned OpenCode 1.19.0 runtime smoke test. Passing structural checks does not by itself prove every nested orchestration route; report runtime coverage accurately.
 
-Installer flags: `--yes`, `--model <agent>=<model>` (repeatable; agent must be
-one of the 10 pack agents, model must be whitespace-free, else exit 2 before
-anything is installed), `--default-model <model>` (repeatable, last value
-wins; model must be whitespace-free, else exit 2 before anything is
-installed), `--config-dir <path>` (also `--flag=value` form; `~`
-expands to `$HOME`). Default target: `~/.config/opencode`.
+## Release discipline
 
-Installer behavior (verified against `install.sh`):
-- Copies `agents/*.md` → `<config-dir>/agents/`, each `skills/*/` dir →
-  `<config-dir>/skills/<name>/` (replaces same-named skill dirs).
-- Merges `opencode.jsonc.snippet` into `<config-dir>/opencode.jsonc` (or an
-  existing `opencode.json`; `.jsonc` preferred/created). Existing config gets a
-  `<file>.backup-<timestamp>` first.
-- Merge is per-key: user-set per-agent `"model"` keys survive re-install
-  (snippet keys win on conflict); the top-level `"model"` is never touched
-  UNLESS `--default-model <model>` is given, in which case it is set to that
-  value (overwriting any existing top-level `"model"`).
-- The merge uses python3 stdlib `json`: JSONC comments in an existing config
-  are LOST on merge (the backup keeps the original). Unparseable existing
-  config aborts the merge, not corrupts it.
-- OpenCode reads its config at startup — restart after install to apply.
-
-`./uninstall.sh --yes [--config-dir <path>]` is the exact inverse: restores the
-most recent `opencode.jsonc.backup-*` / `opencode.json.backup-*` over the
-configs, then removes exactly the 10 agent files and 13 skill dirs by name.
-Everything else in `agents/`/`skills/` is preserved.
-
-## Repo conventions
-
-- Run-time artifacts live in two places. Plan artifacts (`plan`'s final plan
-  and durable draft) go into OpenCode's built-in Plan directory
-  (`~/.opencode/plan`), because the built-in Plan mode restricts the plan
-  agent's writes to it. Notepads and evidence live under `.opencode/` in the
-  project root, created on demand by the other agents. That directory
-  is gitignored — never commit its contents; save verification
-  evidence under `.opencode/evidence/<plan-name>/` (plan name, or the task
-  slug when no plan exists). Implementation worktrees live in the gitignored
-  `.worktrees/` of the project root, while notepads and evidence stay in
-  the main checkout's `.opencode/`.
-- `opencode.jsonc.snippet` is the single config unit; keep it pure JSON so
-  `python3 -m json.tool` keeps passing.
-- README.md is the user-facing source of truth — update it whenever flags,
-  behavior, or agent/skill content change; keep prose in sync, not duplicated.
+All Foundation AI migration work belongs on `foundation-ai/v1.0-migration` until the final audit and release approval. Keep `main` unchanged. Do not claim v1.0 is production-ready while required release gates remain open.
