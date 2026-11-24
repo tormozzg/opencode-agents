@@ -64,14 +64,14 @@ rules = {
 }
 for agent, allowed in rules.items():
     fm = frontmatter(agent)
-    assert re.search(r'(?m)^\s+"\\*": deny$', fm), f"{agent}: missing wildcard task deny"
+    assert '"*": deny' in fm, f"{agent}: missing wildcard task deny"
     found = set(re.findall(r'(?m)^\s+"([a-z0-9-]+)": allow$', fm))
     assert found == allowed, f"{agent}: allowlist mismatch: expected {allowed}, got {found}"
 
 tier2 = {"elijah-baley", "kelden-amadiro", "andrew-martin", "han-fastolfe", "golan-trevize", "jothan-leebig"}
 for agent in tier2:
     fm = frontmatter(agent)
-    assert re.search(r'(?m)^\s+"\\*": deny$', fm), f"{agent}: Tier 2 must deny all task dispatch"
+    assert '"*": deny' in fm, f"{agent}: Tier 2 must deny all task dispatch"
     assert not re.search(r'(?m)^\s+"[a-z0-9-]+": allow$', fm), f"{agent}: Tier 2 must not allow child agents"
 
 for agent in tier2 - {"andrew-martin"}:
