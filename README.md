@@ -1,6 +1,6 @@
 ## Foundation AI (migration branch)
 
-This branch also contains an experimental Foundation AI implementation: nine coordinated agents, fourteen skills, six protocols, and an OpenCode 1.19 configuration. It is separate from the original ten-agent/thirteen-skill pack documented below. See [Foundation AI documentation](foundation-ai/README.md) and the [OpenCode 1.19 compatibility notes](foundation-ai/OPENCODE_1_19_COMPATIBILITY.md). The original pack remains available and its source files are unchanged.
+This branch contains the Foundation AI migration: nine coordinated agents, fourteen skills, six protocols, and an OpenCode 1.19 configuration. The root `install.sh` and `uninstall.sh` now invoke the Foundation AI installer and uninstaller. The legacy ten-agent/thirteen-skill documentation below describes the pre-migration pack; its old installer flags and installation behavior no longer apply on this branch. See [Foundation AI documentation](foundation-ai/README.md), [OpenCode 1.19 compatibility notes](foundation-ai/OPENCODE_1_19_COMPATIBILITY.md), and [v1.0 release-candidate notes](foundation-ai/RELEASE_NOTES_v1.0.0-rc1.md). The original source skills are preserved in the migration snapshot.
 
 ---
 
