@@ -13,24 +13,26 @@ Read `README.md` and `OPENCODE_1_19_COMPATIBILITY.md` before changing the active
 
 ## Active architecture
 
-Foundation AI has nine agents:
+Foundation AI has ten agents:
 
-- Tier 0: Daniel Olivaw — primary coordinator and default entry point.
-- Tier 1: Giskard Reventlov — planning; Susan Calvin — implementation lead.
-- Tier 2: Elijah Baley, Kelden Amadiro, Andrew Martin, Han Fastolfe, Golan Trevize, and Jothan Leebig — specialist agents.
+- Tier 0: Hari Seldon — Grand Leader and default entry point.
+- Tier 1: Daniel Olivaw — Technical Lead / COO; Giskard Reventlov — Planner; Dors Venabili — read-only Security Assistant.
+- Tier 2: Elijah Baley, Kelden Amadiro, Andrew Martin, Han Fastolfe, Golan Trevize, and Jothan Leebig.
 
 Tier 2 agents are leaf agents. Preserve the explicit `permission.task` allowlists and deny rules in agent frontmatter. The intended nesting depth is 2. Do not widen delegation permissions casually.
 
 ## Separation of duties
 
-- Daniel coordinates and escalates material decisions; he does not implement.
+- Hari owns strategy, user-facing plan approval, and material risk decisions.
+- Daniel coordinates approved implementation; he does not implement.
 - Giskard plans; Kelden independently reviews plans; Elijah investigates.
-- Susan coordinates implementation; Andrew implements and owns permitted Git operations.
+- Dors provides leadership-level security oversight; Jothan performs independent technical security review.
+- Andrew implements and owns permitted Git operations.
 - Han performs independent read-only code review.
 - Golan performs independent QA against defined scenarios.
 - Jothan performs independent read-only security review and does not fix findings.
 - Do not let an implementer approve their own work or silently bypass a quality gate.
-- Critical/High security findings block completion. Medium findings require remediation or explicit risk acceptance by Daniel/user.
+- Critical/High security findings block completion. Medium findings require remediation or explicit risk acceptance by Hari/user.
 
 Follow the detailed workflows in the relevant skill and protocol files; do not create conflicting duplicate rules in agent prompts.
 
