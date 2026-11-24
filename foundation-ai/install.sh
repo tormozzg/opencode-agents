@@ -28,7 +28,8 @@ AGENT_SRC="$ROOT/.opencode/agents"
 SKILL_SRC="$ROOT/.opencode/skills"
 PROTOCOL_SRC="$ROOT/.opencode/protocols"
 FRAGMENT_SRC="$SCRIPT_DIR/opencode.jsonc.fragment"
-STATE_DIR="$CONFIG_DIR/foundation-ai"
+STATE_DIR="$CONFIG_DIR/.foundation-ai-state"
+OWNER_MARKER="$STATE_DIR/owner"
 MANIFEST="$STATE_DIR/manifest.txt"
 POINTER="$STATE_DIR/last-backup"
 ORIGIN="$STATE_DIR/original-backup"
@@ -37,7 +38,11 @@ ORIGIN="$STATE_DIR/original-backup"
   echo "ERROR: Foundation AI source files are incomplete." >&2; exit 1;
 }
 
+if [[ -e "$STATE_DIR" && ! -f "$OWNER_MARKER" ]]; then
+  echo "ERROR: refusing to use existing unowned state directory: $STATE_DIR" >&2; exit 1
+fi
 mkdir -p "$CONFIG_DIR" "$STATE_DIR/backups"
+printf 'foundation-ai-managed-v1\n' > "$OWNER_MARKER"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
 BACKUP_DIR="$(mktemp -d "$STATE_DIR/backups/$TIMESTAMP.XXXXXX")"
 STAGE_DIR="$(mktemp -d "$CONFIG_DIR/.foundation-ai-stage-$TIMESTAMP.XXXXXX")"
