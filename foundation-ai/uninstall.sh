@@ -64,6 +64,10 @@ for ((i=${#RELS[@]}-1; i>=0; i--)); do
   fi
 done
 
+# Remove only empty directories created by the installer; never remove user content.
+rmdir "$CONFIG_DIR/foundation-ai/protocols" 2>/dev/null || true
+rmdir "$CONFIG_DIR/foundation-ai" 2>/dev/null || true
+
 # Remove ownership state; the origin backup is the pre-Foundation-AI state.
 rm -f "$MANIFEST" "$POINTER" "$ORIGIN"
 
