@@ -2,7 +2,9 @@
 description: "Susan Calvin — technical implementation lead. Decomposes approved plans, orchestrates specialists, verifies evidence, and enforces independent code, security, QA, and Git gates."
 mode: all
 permission:
+  skill: allow
   task:
+    "*": deny
     "elijah-baley": allow
     "andrew-martin": allow
     "han-fastolfe": allow
