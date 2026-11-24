@@ -57,7 +57,7 @@ fi
 # Preflight all collisions and stage every source before changing installed files.
 for rel in "${RELS[@]}"; do
   target="$CONFIG_DIR/$rel"
-  if [[ -e "$target" && -z "${PREVIOUS[$rel]+x}" ]]; then
+  if [[ ( -e "$target" || -L "$target" ) && -z "${PREVIOUS[$rel]+x}" ]]; then
     echo "ERROR: refusing to overwrite unowned path: $target" >&2
     echo "Move it yourself or back it up and remove it before installing." >&2
     rm -rf "$STAGE_DIR" "$BACKUP_DIR"
@@ -91,8 +91,8 @@ rollback() {
   local rel
   for ((i=${#DONE[@]}-1; i>=0; i--)); do
     rel="${DONE[$i]}"
-    rm -rf "$CONFIG_DIR/$rel"
-    if [[ -e "$BACKUP_DIR/$rel" ]]; then
+    if [[ -e "$CONFIG_DIR/$rel" || -L "$CONFIG_DIR/$rel" ]]; then rm -rf "$CONFIG_DIR/$rel"; fi
+    if [[ -e "$BACKUP_DIR/$rel" || -L "$BACKUP_DIR/$rel" ]]; then
       mkdir -p "$(dirname "$CONFIG_DIR/$rel")"
       mv "$BACKUP_DIR/$rel" "$CONFIG_DIR/$rel"
     fi
@@ -114,7 +114,7 @@ trap 'rollback; exit 1' ERR INT TERM
 for rel in "${RELS[@]}"; do
   target="$CONFIG_DIR/$rel"
   mkdir -p "$(dirname "$target")"
-  if [[ -e "$target" ]]; then
+  if [[ -e "$target" || -L "$target" ]]; then
     mkdir -p "$(dirname "$BACKUP_DIR/$rel")"
     mv "$target" "$BACKUP_DIR/$rel"
   fi
