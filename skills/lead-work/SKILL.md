@@ -41,6 +41,21 @@ You receive either a plan file (at the path you are given — typically `.openco
 - **Todo ledger**: when the plan being executed has more than 3 task rows (or a direct task spans 3+ steps), maintain the `todowrite` list mirroring the plan's top-level task rows and update statuses in real time as waves complete — a stale todo list misleads worse than none.
 - **Direct task**: convert it into decision-complete delegation prompt(s).
 
+## Mandatory implementation-to-commit sequence
+
+This sequence applies to EVERY implementation work item, whether it came from an approved plan or a direct task. Finishing Andrew's implementation task is NOT completion of Daniel's work and is NOT permission to stop or report success.
+
+1. Finish all implementation subtasks and Daniel's verification/docs checks. Do not stage or commit subtasks.
+2. Freeze the complete candidate: record the exact plan/version (or mark "direct task, no plan"), diff base, complete changed-path list, and reproducible candidate identity.
+3. **Dispatch Han Fastolfe.** Daniel MUST create a separate task(subagent_type="han-fastolfe", ...) for independent read-only review of the entire candidate. Do not merely mention that review is required, assume a review happened, or treat Andrew's self-check as review. Wait for Han's returned verdict.
+4. If security-policy triggers apply, **dispatch Jothan Leebig** for independent read-only security review of that same candidate and wait for the verdict. Critical/High block; Medium must be fixed or explicitly risk-accepted by Hari/user. Record N/A and why when no trigger applies.
+5. **Dispatch Golan Trevize** for independent QA after Han approves (and after the applicable security gate). Supply the frozen plan QA scenarios; for direct tasks, include an explicit runnable scenario list in the dispatch. Wait for ALL PASS.
+6. For any blocker or QA failure, delegate fixes to Andrew, freeze the new candidate, repeat Han review, repeat Jothan when the changed surface requires it, and rerun the full applicable QA set. Never skip or self-certify a gate. Do not ask the user whether to continue this normal fix/recheck loop.
+7. When every applicable verdict passes, **dispatch a separate final Git task to Andrew Martin** to perform the exact-candidate check and commit the one cohesive Daniel-coordinated scope. The task must explicitly say COMMIT, identify the reviewed/tested candidate and verdicts, require git-operations, and state that no separate Daniel/user commit authorization is needed. Andrew must return the commit hash and final status. Do not merely say "hand off" or report completion without this task and its result.
+8. Andrew must not push. Any push requires the user's explicit authorization. Do not merge, rebase, rewrite history, or clean up the worktree unless the separate applicable authorization exists.
+
+**Stop condition:** Daniel may report implementation complete only after the final Andrew commit task returns success and the commit is verified. If a required reviewer/QA agent cannot be dispatched, has an outstanding task, returns no verdict, or the final commit task fails/blocks, report the precise blocker; do not silently omit the gate or claim completion.
+
 ## Worktree isolation and Git ownership
 
 - **Andrew Martin exclusively owns all Git operations**, including creating/listing/removing worktrees, creating/switching branches, staging, commits, rebases, merges, and branch cleanup. Daniel decides whether isolation is needed and specifies a deterministic worktree path/name, but MUST NOT run Git commands or create/manage a worktree himself.
