@@ -133,3 +133,6 @@ Delegate research to `elijah-baley` via `task()` and never instruct a child to e
 - Complex architecture is handled by loading `architect-work`, not by spawning a removed standalone Architect agent.
 - The plan approval gate remains mandatory. A reviewed plan is handed to Daniel Olivaw for approval before Susan Calvin begins implementation.
 - Keep this skill's source procedures intact; apply Foundation AI routing constraints only where the old agent topology differs.
+## Foundation AI revision binding
+
+Every final plan must carry a monotonically increasing version and, where tooling permits, a content hash. The handoff to Daniel and Susan must quote the exact plan path/version and hash, the Kelden verdict for that version, and the user's approval of that same version. Any execution-affecting edit creates a new version, sets `reviewed: no`, and invalidates both the prior Kelden verdict and Daniel/user approval; obtain a fresh Kelden audit and fresh approval before implementation resumes. Never refer to an approval as applying to "the latest plan" without its exact version.
