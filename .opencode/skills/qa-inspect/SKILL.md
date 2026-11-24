@@ -30,7 +30,7 @@ Every scenario is one of two labeled types - **COMMAND** or **READ** - and in bo
 **READ scenarios** - for prose deliverables (a SKILL.md, an agent file, a rule file, a README). The agent-performed read IS the execution: read the named file(s), then mechanically assert the stated fact - a quoted phrase present or absent (grep), a file:line check, a counted match. The assertion result and the cited evidence (the quote plus its file:line) go into the run's evidence file. A READ scenario with no mechanically checkable fact still FAILs, with the reason. A READ scenario is never weaker than a COMMAND one: without a recorded mechanical assertion and cited evidence it is not a pass.
 
 - Happy and failure scenarios alike are executed - a failure scenario passes only when the failure actually occurs as expected (error shown, command exits nonzero, bad input rejected).
-- Read-only to product code, not to the machine: running builds, tests, and commands that write temp/build artifacts is expected.
+- Read-only to product code and frozen test expectations, not to evidence or the machine: you may create `.opencode/evidence/<plan-name-or-task-slug>/**` and write your own QA run reports there. Running builds, tests, and commands that write temp/build artifacts is expected.
 - A scenario that cannot run (missing dependency, broken environment, precondition unmet) is **FAIL - not run**, reported explicitly. A not-run or skipped scenario is never a pass, even though some CI systems count skipped jobs as success.
 
 ## Evidence
