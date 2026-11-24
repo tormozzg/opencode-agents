@@ -58,7 +58,7 @@ assert actual == expected, f"skill set mismatch: missing={expected-actual}, extr
 
 dispatches = set()
 for skill_path in skills.glob("*/SKILL.md"):
-    dispatches.update(re.findall(r"""subagent_type\\s*=\\s*["']([a-z0-9-]+)["']""", skill_path.read_text(encoding="utf-8")))
+    dispatches.update(re.findall(r"""subagent_type=["']([a-z0-9-]+)["']""", skill_path.read_text(encoding="utf-8")))
 allowed_dispatches = {"elijah-baley", "kelden-amadiro", "andrew-martin", "han-fastolfe", "golan-trevize", "jothan-leebig"}
 assert dispatches <= allowed_dispatches, f"unknown or removed subagent IDs in skills: {dispatches-allowed_dispatches}"
 
