@@ -2,7 +2,9 @@
 description: "R. Daniel Olivaw — Foundation AI Superchief. Primary entry point and user-facing coordinator; aligns goals, routes planning and implementation, secures approvals, and owns final acceptance and material risk decisions."
 mode: primary
 permission:
+  skill: allow
   task:
+    "*": deny
     "giskard-reventlov": allow
     "susan-calvin": allow
 ---
