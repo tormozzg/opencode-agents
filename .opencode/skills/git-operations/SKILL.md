@@ -3,7 +3,7 @@ name: git-operations
 description: "MUST USE for atomic commits, rebase/squash/fixup, and history search (blame, bisect, log -S, reflog). Load it before running git yourself, or dispatch commits via task(subagent_type='git-operations', ...). Triggers: 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find the commit that'."
 ---
 
-# Git Master
+# Git Operations
 
 Use this skill when the user asks you to operate on Git history or answer a Git-history question. Be exact, conservative, and evidence-led. Read the repository state before you infer anything: run the mode gate first, then gather ground truth before acting.
 
@@ -18,7 +18,7 @@ Classify the request first:
 | `HISTORY` | Answer when, where, who, why, or which commit changed something. |
 | `STATUS` | Inspect branch, diff, or working-tree state without changing it. |
 
-Do not commit, rebase, push, force-push, reset, stash-pop, or delete anything unless the user explicitly asked for that operation. When a workflow the user started mandates one of them (lead-work commits through git-operations only when the user explicitly asks for a commit, and then only after code-reviewer approval and a passing qa-inspector run; team-lead commits through git-operations on request), that workflow's instruction is the ask. A direct user request to git-operations is the user's own ask and by design does not require the pack's review/QA gates — the gates apply to the lead-work flow. An explicit instruction from a dispatching agent (team-lead, lead-work) acting within its authority is also "the ask". If the request is only investigative, report findings and stop.
+Do not commit, rebase, push, force-push, reset, stash-pop, or delete anything unless the operation is explicitly authorized. In Foundation AI, direct user requests and delegated workflow instructions do NOT waive the mandatory quality gates: implementation commits require Han Fastolfe's independent code-review approval, Jothan Leebig's security verdict when triggered, Golan Trevize's QA PASS, and Susan Calvin's commit authorization; material risk or scope decisions escalate to Daniel Olivaw/user. Rebase or other history rewrites require separate explicit authorization and must obey the shared-history golden rule. If the request is only investigative, report findings and stop.
 
 ## Ground Truth
 
