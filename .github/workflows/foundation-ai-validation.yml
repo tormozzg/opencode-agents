@@ -3,13 +3,7 @@ name: Foundation AI validation
 on:
   push:
     branches:
-      - "scripts/**"
-      - "source-snapshot/**"
-      - "README.md"
-      - "OPENCODE_1_19_COMPATIBILITY.md"
-      - "SOURCE_*.md"
-      - "RELEASE_NOTES_*.md"
-      - "opencode.jsonc.fragment"
+      - "foundation-ai/**"
     paths:
       - ".opencode/**"
       - "opencode.jsonc"
@@ -21,7 +15,6 @@ on:
       - "RELEASE_NOTES_*.md"
       - "opencode.jsonc.fragment"
       - "AGENTS.md"
-      - "README.md"
       - "install.sh"
       - "uninstall.sh"
       - ".github/workflows/foundation-ai-validation.yml"
@@ -37,7 +30,6 @@ on:
       - "RELEASE_NOTES_*.md"
       - "opencode.jsonc.fragment"
       - "AGENTS.md"
-      - "README.md"
       - "install.sh"
       - "uninstall.sh"
       - ".github/workflows/foundation-ai-validation.yml"
