@@ -1,30 +1,30 @@
 # Foundation AI for OpenCode 1.19
 
-Foundation AI is a nine-agent, three-tier orchestration system built on OpenCode V1 agent nesting.
+Foundation AI is a ten-agent, three-tier orchestration system built on OpenCode V1 agent nesting.
 
 ## Architecture
 
 ```text
 TIER 0
-└── R. DANIEL OLIVAW — Superchief (default entry point)
+└── HARI SELDON — Grand Leader (default entry point)
+    ├── TIER 1: R. DANIEL OLIVAW — Technical Lead / COO
+    │   ├── ELIJAH BALEY — Shared Investigator
+    │   ├── ANDREW MARTIN — Implementer + Git
+    │   ├── HAN FASTOLFE — Independent Code Reviewer
+    │   ├── GOLAN TREVIZE — Independent QA
+    │   └── JOTHAN LEEBIG — Independent Security Engineer
     ├── TIER 1: R. GISKARD REVENTLOV — Planner
     │   ├── ELIJAH BALEY — Shared Investigator
     │   └── KELDEN AMADIRO — Independent Plan Reviewer
-    │
-    └── TIER 1: SUSAN CALVIN — Technical Lead
-        ├── ELIJAH BALEY — Shared Investigator
-        ├── ANDREW MARTIN — Implementer + Git
-        ├── HAN FASTOLFE — Independent Code Reviewer
-        ├── GOLAN TREVIZE — Independent QA
-        └── JOTHAN LEEBIG — Independent Security Engineer
+    └── TIER 1: DORS VENABILI — Security Assistant (read-only leaf)
 ```
 
-Daniel is the default entry point. Giskard and Susan are also directly selectable. Tier 2 agents are child-only and cannot dispatch further tasks.
+Hari is the default entry point. Daniel and Giskard are directly selectable. Dors is a read-only security advisor. Tier 2 agents are child-only and cannot dispatch further tasks.
 
 ## Included
 
-- **9 agents** in `.opencode/agents/`
-- **14 skills** in `.opencode/skills/` (13 migrated from the upstream pack plus the new `security-review`)
+- **10 agents** in `.opencode/agents/`
+- **15 skills** in `.opencode/skills/` (13 migrated from the upstream pack plus the new `security-review`)
 - **6 protocols** in `.opencode/protocols/`
 - OpenCode 1.19 project config: `opencode.jsonc`
 - Original upstream skills preserved verbatim under `source-snapshot/skills/`
@@ -40,7 +40,7 @@ If the target project already has an `opencode.jsonc`, merge these two root sett
 
 ```json
 {
-  "default_agent": "daniel-olivaw",
+  "default_agent": "hari-seldon",
   "subagent_depth": 2
 }
 ```
@@ -52,7 +52,7 @@ Restart OpenCode after installing or changing agent files.
 ## OpenCode 1.19 requirements
 
 This pack targets the OpenCode V1 configuration model:
-- `default_agent` is `daniel-olivaw`.
+- `default_agent` is `hari-seldon`.
 - `subagent_depth: 2` permits Tier 1 → Tier 2 nested delegation.
 - Agent frontmatter uses singular `permission:` and `permission.task` allowlists.
 - Tier 2 agents explicitly deny all task dispatch.
@@ -66,12 +66,12 @@ See [OpenCode 1.19 compatibility](OPENCODE_1_19_COMPATIBILITY.md). The V1 schema
 Giskard researches through Elijah, applies `architect-work` for complex designs, prepares a decision-complete plan, and sends it to Kelden for independent review. Daniel obtains explicit user approval before implementation begins.
 
 ### Implementation
-Susan decomposes the approved plan and delegates to Andrew. Han performs independent code review. Jothan performs risk-triggered security review. Golan executes frozen QA scenarios. Andrew fixes findings and independently reviewed gates are repeated. Susan authorizes Git commit only after all required gates pass.
+Daniel decomposes the approved plan and delegates to Andrew. Han performs independent code review. Jothan performs risk-triggered security review. Golan executes frozen QA scenarios. Andrew fixes findings and independently reviewed gates are repeated. Daniel authorizes Git commit only after all required gates pass.
 
 ### Security triggers
 Jothan must review changes involving authentication/authorization, secrets, sensitive data, public APIs, uploads, parsing/deserialization, injection sinks, user-controlled HTML, network boundaries, cryptography, dependencies/supply chain, permissions, or security configuration.
 
-Critical/High findings block. Medium requires remediation or explicit Daniel/user risk acceptance. Jothan is read-only and does not fix findings.
+Critical/High findings block. Medium requires remediation or explicit Hari/user risk acceptance. Jothan is read-only and does not fix findings.
 
 ## Skills
 
@@ -81,7 +81,7 @@ Critical/High findings block. Medium requires remediation or explicit Daniel/use
 | `architect-work` | Giskard's architecture capability |
 | `review-plan` | Kelden |
 | `research-topic` | Elijah |
-| `lead-work` | Susan |
+| `lead-work` | Daniel |
 | `execute-work` | Andrew |
 | `discuss-work` | Shared discussion mode; no separate agent |
 | `code-idiom` | Andrew, companion |
@@ -91,6 +91,7 @@ Critical/High findings block. Medium requires remediation or explicit Daniel/use
 | `qa-inspect` | Golan |
 | `git-operations` | Andrew |
 | `security-review` | Jothan |
+| `security-advisory` | Dors |
 
 ## Safety and release status
 
