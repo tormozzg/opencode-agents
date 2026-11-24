@@ -96,6 +96,8 @@ mkdir -p "$BACKUP_DIR/.state"
 
 declare -a DONE=()
 rollback() {
+  trap - ERR INT TERM
+  set +e
   local rel
   for ((i=${#DONE[@]}-1; i>=0; i--)); do
     rel="${DONE[$i]}"
