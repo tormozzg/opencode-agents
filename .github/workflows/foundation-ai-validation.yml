@@ -50,35 +50,20 @@ jobs:
           echo "$(dirname "$OPENCODE_BIN")" >> "$GITHUB_PATH"
       - name: Verify exact version and agent discovery
         run: |
-          opencode --version | tee "$RUNNER_TEMP/opencode-version.txt"
-          grep -Eq '^1\.19(\.0)?' "$RUNNER_TEMP/opencode-version.txt"
-          opencode --print-logs --log-level DEBUG agent list 2>&1 | tee "$RUNNER_TEMP/agents.txt"
-          grep -q '^daniel-olivaw (primary)
-      - name: Verify resolved V1 configuration
-        run: |
-          opencode debug config > "$RUNNER_TEMP/resolved-config.json"
-          jq -e '.default_agent == "daniel-olivaw" and .subagent_depth == 2' "$RUNNER_TEMP/resolved-config.json"
- "$RUNNER_TEMP/agents.txt"
-          grep -q '^giskard-reventlov (all)
-      - name: Verify resolved V1 configuration
-        run: |
-          opencode debug config > "$RUNNER_TEMP/resolved-config.json"
-          jq -e '.default_agent == "daniel-olivaw" and .subagent_depth == 2' "$RUNNER_TEMP/resolved-config.json"
- "$RUNNER_TEMP/agents.txt"
-          grep -q '^susan-calvin (all)
-      - name: Verify resolved V1 configuration
-        run: |
-          opencode debug config > "$RUNNER_TEMP/resolved-config.json"
-          jq -e '.default_agent == "daniel-olivaw" and .subagent_depth == 2' "$RUNNER_TEMP/resolved-config.json"
- "$RUNNER_TEMP/agents.txt"
+          VERSION="$(opencode --version)"
+          echo "$VERSION"
+          test "$VERSION" = "1.19.0"
+          opencode agent list | tee "$RUNNER_TEMP/agents.txt"
+          grep -q '^daniel-olivaw (primary)$' "$RUNNER_TEMP/agents.txt"
+          grep -q '^giskard-reventlov (all)$' "$RUNNER_TEMP/agents.txt"
+          grep -q '^susan-calvin (all)$' "$RUNNER_TEMP/agents.txt"
           for agent in elijah-baley kelden-amadiro andrew-martin han-fastolfe golan-trevize jothan-leebig; do
             grep -q "^$agent (subagent)$" "$RUNNER_TEMP/agents.txt" || { echo "Missing or wrong mode: $agent"; exit 1; }
           done
-      - name: Verify resolved V1 configuration
+      - name: Verify resolved project configuration
         run: |
           opencode debug config > "$RUNNER_TEMP/resolved-config.json"
           jq -e '.default_agent == "daniel-olivaw" and .subagent_depth == 2' "$RUNNER_TEMP/resolved-config.json"
-
       - name: Verify global installer and global agent discovery
         run: |
           GLOBAL_HOME="$RUNNER_TEMP/global-home"
