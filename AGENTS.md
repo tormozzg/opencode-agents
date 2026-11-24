@@ -42,7 +42,7 @@ Each Tier 2 agent may have at most one active delegated assignment globally. Thi
 - Giskard plans; Kelden independently reviews plans; Elijah investigates.
 - Dors advises Giskard on plan completeness, assumptions, dependencies, human/operational factors, failure modes, maintainability, rollout/rollback, and strategic consequences. She does not perform technical security review.
 - Jothan performs independent technical security review for Daniel's implementation stream.
-- Andrew implements and exclusively owns permitted Git and worktree operations; Daniel coordinates and delegates but does not execute Git commands or manage worktrees.
+- Andrew implements and exclusively owns permitted Git and worktree operations, including the complete worktree lifecycle; Daniel decides when isolation is needed and delegates creation/cleanup to Andrew, but does not execute Git commands or manage worktrees.
 - Han performs independent read-only code review.
 - Golan performs independent QA against defined scenarios.
 - Do not let an implementer approve their own work or silently bypass a quality gate.
