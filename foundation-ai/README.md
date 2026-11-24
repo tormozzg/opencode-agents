@@ -94,10 +94,10 @@ Critical/High findings block. Medium requires remediation or explicit Daniel/use
 
 ## Safety and release status
 
-The installer/uninstaller and validator still need to be completed and tested in disposable config directories. Do not treat this migration branch as a production release until:
-- OpenCode 1.19 runtime delegation tests pass;
-- installer/uninstaller collision, backup, rollback, repeat-install, and preservation tests pass;
-- all structural and quality-gate tests pass;
+The installer, uninstaller, structural validator, and disposable lifecycle tests are implemented. The latest Ubuntu CI leg passes structural validation plus collision, install, repeat-install, uninstall, and preservation tests. The macOS CI leg is still pending. Do not treat this migration branch as a production release until:
+- the Ubuntu and macOS lifecycle test matrix passes;
+- OpenCode 1.19 runtime delegation tests pass against the exact 1.19.x binary;
+- quality-gate, security-trigger, and end-to-end orchestration tests pass;
 - final audit and release approval are complete.
 
 ## Source traceability
