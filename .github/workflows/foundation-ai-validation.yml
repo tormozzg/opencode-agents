@@ -1,0 +1,31 @@
+name: Foundation AI validation
+
+on:
+  push:
+    branches:
+      - "foundation-ai/**"
+    paths:
+      - ".opencode/**"
+      - "opencode.jsonc"
+      - "foundation-ai/**"
+      - ".github/workflows/foundation-ai-validation.yml"
+  pull_request:
+    paths:
+      - ".opencode/**"
+      - "opencode.jsonc"
+      - "foundation-ai/**"
+      - ".github/workflows/foundation-ai-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  structural-and-installer-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Validate structure and OpenCode V1 permissions
+        run: bash foundation-ai/scripts/validate-pack.sh
+      - name: Test safe install, reinstall, and uninstall
+        run: bash foundation-ai/scripts/test-install.sh
