@@ -1,6 +1,6 @@
 # OpenCode 1.19 compatibility contract
 
-Status: schema/source review complete; runtime verification pending.
+Status: schema/source review and CLI smoke test complete; nested delegation end-to-end verification pending.
 Target: OpenCode 1.19.x (V1 configuration and Task tool, not OpenCode 2.x).
 
 ## Version-specific choices
@@ -43,7 +43,7 @@ The OpenCode V1 docs also describe `permission.task` allowlists and `mode` behav
 - https://opencode.ai/docs/agents/
 - https://opencode.ai/docs/config/
 
-This repository has not yet been executed inside an installed OpenCode 1.19 runtime. Before release, run the exact target version and verify:
+The pinned OpenCode 1.19.0 CLI has been executed in CI for agent discovery, permission parsing, and resolved configuration. Before release, run the remaining end-to-end checks against the exact target version:
 1. `opencode --version` reports 1.19.x.
 2. `opencode agent list` shows all nine agents and their expected modes.
 3. The default agent is Daniel Olivaw.
