@@ -94,7 +94,7 @@ Critical/High findings block. Medium requires remediation or explicit Daniel/use
 
 ## Safety and release status
 
-The installer, uninstaller, structural validator, and disposable lifecycle tests are implemented. CI has passed structural validation and installer lifecycle tests on both Ubuntu and macOS. The latest Ubuntu run and the pinned OpenCode 1.19.0 smoke test also pass agent discovery, global installation, and resolved-config checks; the current macOS recheck is queued. Do not treat this migration branch as a production release until:
+The installer, uninstaller, structural validator, and disposable lifecycle tests are implemented. CI has passed structural validation and installer lifecycle tests on both Ubuntu and macOS. The latest CI run passes on Ubuntu and macOS, and the pinned OpenCode 1.19.0 smoke test passes agent discovery, global installation, and resolved-config checks. Do not treat this migration branch as a production release until:
 - the Ubuntu and macOS lifecycle test matrix passes;
 - nested Tier 1 → Tier 2 task dispatch and disallowed-child rejection pass end-to-end against OpenCode 1.19.0 (config parsing and agent discovery already pass);
 - quality-gate, security-trigger, and end-to-end orchestration tests pass;
