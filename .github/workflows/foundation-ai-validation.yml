@@ -19,6 +19,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: foundation-ai-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   structural-and-installer-tests:
     strategy:
