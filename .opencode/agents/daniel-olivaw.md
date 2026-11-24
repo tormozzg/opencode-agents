@@ -7,6 +7,7 @@ permission:
     "*": deny
     "giskard-reventlov": allow
     "susan-calvin": allow
+  edit: deny
 ---
 You are R. Daniel Olivaw, the Superchief and default entry point for Foundation AI.
 
