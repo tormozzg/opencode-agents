@@ -23,11 +23,11 @@ skill_count="$(find "$SKILLS" -mindepth 2 -maxdepth 2 -type f -name 'SKILL.md' |
 protocol_count="$(find "$PROTOCOLS" -maxdepth 1 -type f -name '*.md' | wc -l | tr -d ' ')"
 snapshot_count="$(find "$SNAPSHOT" -mindepth 2 -maxdepth 2 -type f -name 'SKILL.md' | wc -l | tr -d ' ')"
 
-[[ "$agent_count" == "9" ]] || fail "expected 9 agents, found $agent_count"
-[[ "$skill_count" == "14" ]] || fail "expected 14 skills, found $skill_count"
+[[ "$agent_count" == "10" ]] || fail "expected 10 agents, found $agent_count"
+[[ "$skill_count" == "15" ]] || fail "expected 15 skills, found $skill_count"
 [[ "$protocol_count" == "6" ]] || fail "expected 6 protocols, found $protocol_count"
 [[ "$snapshot_count" == "13" ]] || fail "expected 13 upstream skill snapshots, found $snapshot_count"
-pass "counts: 9 agents, 14 skills, 6 protocols, 13 source snapshots"
+pass "counts: 10 agents, 15 skills, 6 protocols, 13 source snapshots"
 
 python3 - "$ROOT" <<'PY'
 import json, pathlib, re, sys
@@ -35,14 +35,14 @@ root = pathlib.Path(sys.argv[1])
 agents = root / ".opencode" / "agents"
 skills = root / ".opencode" / "skills"
 config = json.loads((root / "opencode.jsonc").read_text(encoding="utf-8"))
-assert config.get("default_agent") == "daniel-olivaw", "default_agent must be daniel-olivaw"
+assert config.get("default_agent") == "hari-seldon", "default_agent must be hari-seldon"
 assert config.get("subagent_depth") == 2, "subagent_depth must equal 2"
 
 expected = {
     "plan-work", "architect-work", "lead-work", "discuss-work",
     "research-topic", "review-plan", "execute-work", "code-idiom",
     "refactor-code", "slop-cleanup", "review-code", "qa-inspect",
-    "git-operations", "security-review",
+    "git-operations", "security-review", "security-advisory",
 }
 actual = set()
 for path in skills.glob("*/SKILL.md"):
@@ -69,9 +69,9 @@ def frontmatter(name):
 
 # Exact V1 Task allowlists; all other child IDs must be denied.
 rules = {
-    "daniel-olivaw": {"giskard-reventlov", "susan-calvin"},
+    "hari-seldon": {"daniel-olivaw", "giskard-reventlov", "dors-venabili"},
+    "daniel-olivaw": {"elijah-baley", "andrew-martin", "han-fastolfe", "golan-trevize", "jothan-leebig"},
     "giskard-reventlov": {"elijah-baley", "kelden-amadiro"},
-    "susan-calvin": {"elijah-baley", "andrew-martin", "han-fastolfe", "golan-trevize", "jothan-leebig"},
 }
 for agent, allowed in rules.items():
     fm = frontmatter(agent)
@@ -90,12 +90,14 @@ for agent in tier2 - {"andrew-martin"}:
     assert re.search(r"(?m)^\s+edit: deny$", fm), f"{agent}: read-only agent must deny edit"
 
 
-for agent, mode in {"daniel-olivaw": "primary", "giskard-reventlov": "all", "susan-calvin": "all"}.items():
+for agent, mode in {"hari-seldon": "primary", "daniel-olivaw": "all", "giskard-reventlov": "all"}.items():
     fm = frontmatter(agent)
     assert re.search(rf"(?m)^mode: {mode}$", fm), f"{agent}: expected mode {mode}"
-assert "edit: deny" in frontmatter("daniel-olivaw"), "Daniel must not edit files"
+assert "edit: deny" in frontmatter("hari-seldon"), "Hari must not edit files"
+assert "edit: deny" in frontmatter("dors-venabili"), "Dors must be read-only"
+assert not (agents / "susan-calvin.md").exists(), "Susan must be removed from active roster"
 assert 'edit:\n    "*": deny\n    ".opencode/plans/**": allow\n    ".opencode/evidence/**": allow' in frontmatter("giskard-reventlov"), "Giskard edit scope must be plans/evidence only"
-assert 'edit:\n    "*": deny\n    ".opencode/evidence/**": allow\n    ".opencode/notepads/**": allow\n    ".opencode/task-state/**": allow' in frontmatter("susan-calvin"), "Susan edit scope must be coordination artifacts only"
+assert 'edit:\n    "*": deny\n    ".opencode/evidence/**": allow\n    ".opencode/notepads/**": allow\n    ".opencode/task-state/**": allow' in frontmatter("daniel-olivaw"), "Susan edit scope must be coordination artifacts only"
 
 print("PASS: OpenCode V1 JSON config, skill frontmatter, task allowlists, modes, and write boundaries")
 PY
