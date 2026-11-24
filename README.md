@@ -28,7 +28,7 @@ Daniel is the default entry point. Giskard and Susan are also directly selectabl
 - **6 protocols** in `.opencode/protocols/`
 - OpenCode 1.19 project config: `opencode.jsonc`
 - Original upstream skills preserved verbatim under `source-snapshot/skills/`
-- Source manifest and audit under `foundation-ai/`
+- Source manifest and audit at repository root
 
 ## Install in a project
 
