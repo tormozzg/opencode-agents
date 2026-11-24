@@ -113,12 +113,12 @@ trap 'rollback; exit 1' ERR INT TERM
 
 for rel in "${RELS[@]}"; do
   target="$CONFIG_DIR/$rel"
-  DONE+=("$rel")
   mkdir -p "$(dirname "$target")"
   if [[ -e "$target" ]]; then
     mkdir -p "$(dirname "$BACKUP_DIR/$rel")"
     mv "$target" "$BACKUP_DIR/$rel"
   fi
+  DONE+=("$rel")
   mv "$STAGE_DIR/$rel" "$target"
 done
 
