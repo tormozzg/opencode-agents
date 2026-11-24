@@ -99,7 +99,7 @@ The upstream `main` branch remains untouched; all Foundation AI changes are conf
 - Hari Seldon is the Tier 0 Grand Leader and default primary agent.
 - Daniel Olivaw replaces Susan Calvin as Technical Lead / COO.
 - Giskard Reventlov remains Planner.
-- Dors Venabili is a read-only leadership-level Security Assistant; she does not replace Jothan Leebig's independent technical security review.
-- The active roster is ten agents and fifteen skills. Upstream source snapshots remain unchanged.
+- Dors Venabili is Giskard Reventlov's read-only Planning Advisor, providing substantive critique of assumptions, completeness, dependencies, human/operational factors, failure modes, maintainability, rollout/rollback, and strategic consequences. She does not replace Kelden's formal plan audit or Jothan Leebig's independent technical security review.
+- The active roster is ten agents and fifteen skills. Dors is Tier 2 under Giskard; Jothan remains a technical security reviewer under Daniel. Upstream source snapshots remain unchanged.
 - `default_agent` is `hari-seldon`; `subagent_depth: 2` is retained.
 - Prior nine-agent CI evidence does not validate this revision; a fresh run is required.

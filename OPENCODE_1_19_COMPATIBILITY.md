@@ -20,8 +20,8 @@ Do NOT silently convert this configuration to OpenCode 2.x syntax. In particular
 
 | Caller | Allowed Task children |
 |---|---|
-| Hari Seldon | Daniel Olivaw, Giskard Reventlov, Dors Venabili |
-| Giskard Reventlov | Elijah Baley, Kelden Amadiro |
+| Hari Seldon | Daniel Olivaw, Giskard Reventlov |
+| Giskard Reventlov | Elijah Baley, Dors Venabili, Kelden Amadiro |
 | Daniel Olivaw | Elijah Baley, Andrew Martin, Han Fastolfe, Golan Trevize, Jothan Leebig |
 | Dors Venabili and Tier 2 specialists | None |
 

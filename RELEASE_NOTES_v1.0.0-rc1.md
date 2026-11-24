@@ -8,8 +8,8 @@
 
 ## What is included
 
-- Ten coordinated agents across three tiers, with Hari Seldon as Grand Leader and default primary coordinator; Daniel Olivaw is Technical Lead / COO.
-- Fifteen skills: all thirteen upstream skills migrated, plus `security-review` and the new leadership-level `security-advisory` skill.
+- Ten coordinated agents across three tiers, with Hari Seldon as Grand Leader and default primary coordinator; Daniel Olivaw is Technical Lead / COO; Giskard Reventlov is Planner; Dors Venabili is Giskard's read-only Planning Advisor.
+- Fifteen skills: all thirteen upstream skills migrated, plus `security-review` and `security-advisory` for Dors's planning-advisory workflow.
 - Six operating protocols covering handoffs, task state, quality gates, escalation, Git safety, and security policy.
 - OpenCode 1.19 V1 configuration using `default_agent`, `subagent_depth: 2`, and explicit `permission.task` allowlists.
 - Original upstream skill bodies retained verbatim under `source-snapshot/skills/`, with source manifest and migration audit.
@@ -32,9 +32,9 @@ The runtime smoke test verifies exact CLI version, discovery of the previous nin
 
 The smoke test does not execute real model-driven task dispatch. Before production release, the following must be tested against OpenCode 1.19.0:
 
-1. Daniel dispatches to Giskard and Susan, and no other child.
-2. Giskard dispatches only to Elijah and Kelden.
-3. Susan dispatches only to the five approved specialists.
+1. Hari dispatches only to Daniel and Giskard.
+2. Giskard dispatches only to Elijah, Dors, and Kelden.
+3. Daniel dispatches only to Elijah and the five approved technical specialists.
 4. Tier 2 agents cannot dispatch further tasks.
 5. A real Tier 1 → Tier 2 nested task succeeds with `subagent_depth: 2`.
 6. Disallowed-child dispatch is rejected by the runtime.

@@ -15,16 +15,16 @@ TIER 0
     │   └── JOTHAN LEEBIG — Independent Security Engineer
     ├── TIER 1: R. GISKARD REVENTLOV — Planner
     │   ├── ELIJAH BALEY — Shared Investigator
+    │   ├── DORS VENABILI — Planning Advisor (read-only)
     │   └── KELDEN AMADIRO — Independent Plan Reviewer
-    └── TIER 1: DORS VENABILI — Security Assistant (read-only leaf)
 ```
 
-Hari is the default entry point. Daniel and Giskard are directly selectable. Dors is a read-only security advisor. Tier 2 agents are child-only and cannot dispatch further tasks.
+Hari is the default entry point. Daniel and Giskard are directly selectable. Dors is Giskard's read-only planning advisor; she is not a security assistant. Tier 2 agents are child-only and cannot dispatch further tasks.
 
 ## Included
 
 - **10 agents** in `.opencode/agents/`
-- **15 skills** in `.opencode/skills/` (13 migrated from the upstream pack plus `security-review` and `security-advisory`)
+- **15 skills** in `.opencode/skills/` (13 migrated from the upstream pack plus `security-review` and `security-advisory` for planning critique)
 - **6 protocols** in `.opencode/protocols/`
 - OpenCode 1.19 project config: `opencode.jsonc`
 - Original upstream skills preserved verbatim under `source-snapshot/skills/`
@@ -63,7 +63,7 @@ See [OpenCode 1.19 compatibility](OPENCODE_1_19_COMPATIBILITY.md). The V1 schema
 ## Workflow
 
 ### Planning
-Giskard researches through Elijah, applies `architect-work` for complex designs, prepares a decision-complete plan, and sends it to Kelden for independent review. Daniel obtains explicit user approval before implementation begins.
+Giskard researches through Elijah, consults Dors for substantive planning critique, applies `architect-work` for complex designs, prepares a decision-complete plan, and sends it to Kelden for independent formal review. Hari obtains explicit user approval of that exact reviewed plan before authorizing Daniel to begin implementation.
 
 ### Implementation
 Daniel decomposes the approved plan and delegates to Andrew. Han performs independent code review. Jothan performs risk-triggered security review. Golan executes frozen QA scenarios. Andrew fixes findings and independently reviewed gates are repeated. Daniel authorizes Git commit only after all required gates pass.
@@ -91,7 +91,7 @@ Critical/High findings block. Medium requires remediation or explicit Hari/user 
 | `qa-inspect` | Golan |
 | `git-operations` | Andrew |
 | `security-review` | Jothan |
-| `security-advisory` | Dors |
+| `security-advisory` | Dors — planning critique for Giskard |
 
 ## Safety and release status
 

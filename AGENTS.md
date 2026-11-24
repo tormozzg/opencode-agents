@@ -16,7 +16,8 @@ Read `README.md` and `OPENCODE_1_19_COMPATIBILITY.md` before changing the active
 Foundation AI has ten agents:
 
 - Tier 0: Hari Seldon — Grand Leader and default entry point.
-- Tier 1: Daniel Olivaw — Technical Lead / COO; Giskard Reventlov — Planner; Dors Venabili — read-only Security Assistant.
+- Tier 1: Daniel Olivaw — Technical Lead / COO; Giskard Reventlov — Planner.
+- Tier 2: Dors Venabili — Giskard's read-only Planning Advisor, alongside independent formal Plan Reviewer Kelden Amadiro and Daniel's technical specialists.
 - Tier 2: Elijah Baley, Kelden Amadiro, Andrew Martin, Han Fastolfe, Golan Trevize, and Jothan Leebig.
 
 Tier 2 agents are leaf agents. Preserve the explicit `permission.task` allowlists and deny rules in agent frontmatter. The intended nesting depth is 2. Do not widen delegation permissions casually.
@@ -26,7 +27,8 @@ Tier 2 agents are leaf agents. Preserve the explicit `permission.task` allowlist
 - Hari owns strategy, user-facing plan approval, and material risk decisions.
 - Daniel coordinates approved implementation; he does not implement.
 - Giskard plans; Kelden independently reviews plans; Elijah investigates.
-- Dors provides leadership-level security oversight; Jothan performs independent technical security review.
+- Dors advises Giskard on plan completeness, assumptions, dependencies, human/operational factors, failure modes, maintainability, rollout/rollback, and strategic consequences. She does not perform technical security review.
+- Jothan performs independent technical security review for Daniel's implementation stream.
 - Andrew implements and owns permitted Git operations.
 - Han performs independent read-only code review.
 - Golan performs independent QA against defined scenarios.
