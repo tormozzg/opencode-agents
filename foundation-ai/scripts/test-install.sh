@@ -35,6 +35,7 @@ cmp -s "$CONFIG/opencode.jsonc" "$TMP/config.before" || { echo "FAIL: active JSO
 
 # 3. Reinstall must be safe and preserve the original pre-install state.
 bash "$INSTALL" --yes --config-dir "$CONFIG"
+printf 'local-edit\n' > "$CONFIG/skills/security-review/USER.md"
 bash "$UNINSTALL" --yes --config-dir "$CONFIG"
 [[ ! -e "$CONFIG/agents/daniel-olivaw.md" ]] || { echo "FAIL: managed agent remained after uninstall" >&2; exit 1; }
 [[ ! -e "$CONFIG/skills/security-review" ]] || { echo "FAIL: managed skill remained after uninstall" >&2; exit 1; }
@@ -42,5 +43,6 @@ bash "$UNINSTALL" --yes --config-dir "$CONFIG"
 [[ "$(cat "$CONFIG/agents/my-agent.md")" == "my-agent" ]] || { echo "FAIL: user agent was not preserved" >&2; exit 1; }
 cmp -s "$CONFIG/opencode.jsonc" "$TMP/config.before" || { echo "FAIL: active JSONC config changed" >&2; exit 1; }
 [[ ! -f "$CONFIG/.foundation-ai-state/manifest.txt" ]] || { echo "FAIL: install manifest remained after uninstall" >&2; exit 1; }
+find "$CONFIG/.foundation-ai-state/uninstalled-current" -name USER.md -type f | grep -q . || { echo "FAIL: local edits inside managed content were not preserved" >&2; exit 1; }
 
 echo "PASS: installer collision safety, install, repeat install, uninstall, and user-data preservation"
