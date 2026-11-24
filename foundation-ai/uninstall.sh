@@ -75,7 +75,7 @@ rmdir "$CONFIG_DIR/foundation-ai/protocols" 2>/dev/null || true
 rmdir "$CONFIG_DIR/foundation-ai" 2>/dev/null || true
 
 # Remove ownership state; the origin backup is the pre-Foundation-AI state.
-rm -f "$MANIFEST" "$POINTER" "$ORIGIN" "$OWNER_MARKER"
+rm -f "$MANIFEST" "$POINTER" "$ORIGIN"
 
 echo "Foundation AI managed files removed/restored."
 echo "Original files restored from: $BACKUP_DIR"
