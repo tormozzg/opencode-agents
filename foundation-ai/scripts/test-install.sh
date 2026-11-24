@@ -22,7 +22,7 @@ fi
 # 2. A mid-install filesystem failure must roll back every file already installed.
 ROLLBACK="$TMP/rollback"
 mkdir -p "$ROLLBACK/foundation-ai"
-printf 'protected-parent-file\\n' > "$ROLLBACK/foundation-ai/protocols"
+printf 'protected-parent-file\n' > "$ROLLBACK/foundation-ai/protocols"
 if bash "$INSTALL" --yes --config-dir "$ROLLBACK" >/dev/null 2>&1; then
   echo "FAIL: installer unexpectedly succeeded with a blocking parent file" >&2; exit 1
 fi
@@ -58,4 +58,4 @@ cmp -s "$CONFIG/opencode.jsonc" "$TMP/config.before" || { echo "FAIL: active JSO
 [[ ! -f "$CONFIG/.foundation-ai-state/manifest.txt" ]] || { echo "FAIL: install manifest remained after uninstall" >&2; exit 1; }
 find "$CONFIG/.foundation-ai-state/uninstalled-current" -name USER.md -type f | grep -q . || { echo "FAIL: local edits inside managed content were not preserved" >&2; exit 1; }
 
-echo "PASS: installer collision safety, install, repeat install, uninstall, and user-data preservation"
+echo "PASS: installer collision safety, rollback, install, repeat install, uninstall, and user-data preservation"
