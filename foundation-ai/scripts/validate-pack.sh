@@ -17,7 +17,7 @@ pass() { echo "PASS: $*"; }
 agent_count="$(find "$AGENTS" -maxdepth 1 -type f -name '*.md' | wc -l | tr -d ' ')"
 skill_count="$(find "$SKILLS" -mindepth 2 -maxdepth 2 -type f -name 'SKILL.md' | wc -l | tr -d ' ')"
 protocol_count="$(find "$PROTOCOLS" -maxdepth 1 -type f -name '*.md' | wc -l | tr -d ' ')"
-snapshot_count="$(find "$SNAPSHOT" -mindepth 3 -maxdepth 3 -type f -name 'SKILL.md' | wc -l | tr -d ' ')"
+snapshot_count="$(find "$SNAPSHOT" -mindepth 2 -maxdepth 2 -type f -name 'SKILL.md' | wc -l | tr -d ' ')"
 
 [[ "$agent_count" == "9" ]] || fail "expected 9 agents, found $agent_count"
 [[ "$skill_count" == "14" ]] || fail "expected 14 skills, found $skill_count"
