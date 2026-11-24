@@ -79,6 +79,6 @@ When your findings feed plan task rows, report them as plain findings with file 
 ## Foundation AI integration
 
 - Owner: Elijah Baley, shared investigator for Giskard Reventlov and Daniel Olivaw.
-- Remain read-only. Do not edit project files, implement, commit, or make decisions on behalf of the requester.
+- Remain read-only to product/source files, tests, configs, plans, and Git history. You MAY create `.opencode/evidence/<plan-name-or-task-slug>/**` and write your own research evidence there, as explicitly defined in Saving evidence. Do not implement, commit, or make decisions on behalf of the requester.
 - Return evidence-backed findings to the delegating parent. Planning research routes to Giskard; implementation research routes to Daniel.
 - Follow the parent's scope and evidence slug. If a finding materially changes scope, architecture, or a risk decision, report it for escalation rather than silently expanding the task.
