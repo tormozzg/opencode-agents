@@ -34,7 +34,7 @@ Daniel is the default entry point. Giskard and Susan are also directly selectabl
 
 For project-local use, copy the `.opencode/` directory and `opencode.jsonc` into the target project, or use this repository as the project. OpenCode discovers project-local agents and skills from these locations.
 
-For global use, run `bash foundation-ai/install.sh --yes --config-dir ~/.config/opencode` from this repository. The installer stages files, refuses to overwrite unowned name collisions, backs up previously Foundation AI-managed files, and records a manifest for the matching uninstaller. It does not edit your active `opencode.jsonc`; it writes a config fragment under `~/.config/opencode/foundation-ai/opencode.jsonc.fragment` for manual merging. Run `bash foundation-ai/uninstall.sh` to remove only manifest-listed files and restore the previous managed versions.
+For global use, run `bash foundation-ai/install.sh --yes --config-dir ~/.config/opencode` from this repository. The installer stages files, refuses to overwrite unowned name collisions, backs up previously Foundation AI-managed files, and records a manifest for the matching uninstaller. It does not edit your active `opencode.jsonc`; it writes a config fragment under `~/.config/opencode/foundation-ai/opencode.jsonc.fragment` for manual merging. Run `bash foundation-ai/uninstall.sh` to remove only manifest-listed files and restore the original pre-install files.
 
 If the target project already has an `opencode.jsonc`, merge these two root settings into its existing JSONC object without deleting existing settings or comments:
 
