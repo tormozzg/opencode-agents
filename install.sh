@@ -78,7 +78,7 @@ for rel in "${RELS[@]}"; do
 done
 
 if [[ "$ASSUME_YES" -ne 1 ]]; then
-  echo "Install 9 agents, 14 skills, 6 protocols, and a config fragment into:"
+  echo "Install 10 agents, 15 skills, 6 protocols, and a config fragment into:"
   echo "  $CONFIG_DIR"
   echo "Existing Foundation AI-managed paths will be backed up to:"
   echo "  $STATE_DIR/backups/"
