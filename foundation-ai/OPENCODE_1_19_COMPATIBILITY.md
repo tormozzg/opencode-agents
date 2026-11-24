@@ -60,4 +60,13 @@ Do not mark OpenCode 1.19 compatibility as fully verified until this runtime che
 
 ## Runtime smoke-test status
 
-A pinned OpenCode 1.19.0 CLI smoke test is being run in GitHub Actions. It downloads the exact release binary, verifies its version, lists the configured agents, and inspects resolved configuration. The initial run confirmed the binary and version but failed during agent discovery; diagnostics are enabled in the next run. Do not claim runtime compatibility until that smoke test passes.
+<badge>Passed — OpenCode 1.19.0</badge>
+
+The GitHub Actions smoke test downloaded the pinned `v1.19.0` Linux CLI and verified:
+
+- The binary reports exactly `1.19.0`.
+- `opencode agent list` discovers all nine Foundation AI agents with their configured modes.
+- The CLI successfully parses and displays the agent permission maps, including task allowlists and edit boundaries.
+- `opencode debug config` resolves `default_agent = daniel-olivaw` and `subagent_depth = 2`.
+
+This verifies configuration parsing and agent discovery on the exact target release. It does **not** yet execute a real parent → child → grandchild `task()` dispatch, nor prove that every disallowed child dispatch is rejected during a live agent run. Those remain end-to-end runtime tests before release.
