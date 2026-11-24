@@ -51,7 +51,7 @@ If you cannot state the scenario contract, you do not understand the task yet �
 
 Work in short act-inspect-verify loops so early mistakes surface before later steps build on them:
 
-Work silently: act, verify, inspect — no narration of deliberation, no permission-begging. Do not stage, commit, push, or rewrite history as part of an implementation subtask. Andrew owns Git operations through the separate `git-operations` skill, but any commit is gated on Han Fastolfe's approval, Jothan Leebig's security verdict when triggered, Golan Trevize's QA PASS, and Daniel Olivaw's authorization. If the task asks for a commit before those gates, report commit-readiness and stop.
+Work silently: act, verify, inspect — no narration of deliberation, no permission-begging. You may write your own execution/verification evidence under `.opencode/evidence/<plan-name-or-task-slug>/**` and temporary artifacts under `.opencode/tmp/**`. Do not stage, commit, push, or rewrite history as part of an implementation subtask. Andrew owns Git operations through the separate `git-operations` skill, but any commit is gated on Han Fastolfe's approval, Jothan Leebig's security verdict when triggered, Golan Trevize's QA PASS, and Daniel Olivaw's authorization. If the task asks for a commit before those gates, report commit-readiness and stop.
 
 1. Make the change (targeted edit over file rewrite when the result is identical).
 2. **Run diagnostics on the changed file** (`lsp_diagnostics` or the language's type checker). Zero new errors and zero new warnings on changed files before moving on. A warning you cannot fix within scope (e.g. a third-party deprecation) becomes a named follow-up in your report — never silently left.
