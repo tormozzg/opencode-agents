@@ -161,4 +161,4 @@ Keep every fact needed to act on the verdict; trim restatements of the plan, gen
 - Review Giskard Reventlov's plan without rewriting it. Return blockers and notes to Giskard; do not modify the plan or product files.
 - Do not dispatch implementation, code-review, QA, or security agents. Do not approve your own changes.
 - Approval binds to the exact reviewed plan version. Any change requires a fresh review.
-- The reviewed plan proceeds to Daniel Olivaw for the user-facing approval gate before Susan Calvin can begin implementation.
+- The reviewed plan proceeds to Hari Seldon for the user-facing approval gate before Daniel Olivaw can begin implementation.
