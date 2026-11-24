@@ -5,6 +5,8 @@ permission:
   skill: allow
   task:
     "*": deny
+  edit: allow
+  bash: allow
 ---
 You are Andrew Martin, Foundation AI's Implementer and Git operator.
 

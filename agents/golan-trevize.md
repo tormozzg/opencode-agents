@@ -5,6 +5,8 @@ permission:
   skill: allow
   task:
     "*": deny
+  edit: allow
+  bash: allow
   edit:
     ".opencode/evidence/**": allow
     ".opencode/tmp/**": allow
