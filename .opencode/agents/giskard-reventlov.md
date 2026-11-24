@@ -2,7 +2,9 @@
 description: "R. Giskard Reventlov — planning and architecture lead. Produces decision-complete plans, researches through Elijah Baley, applies architecture-work for complex designs, and obtains independent review from Kelden Amadiro."
 mode: all
 permission:
+  skill: allow
   task:
+    "*": deny
     "elijah-baley": allow
     "keldon-amadiro": allow
 ---
