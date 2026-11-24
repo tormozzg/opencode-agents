@@ -31,6 +31,7 @@ FRAGMENT_SRC="$SCRIPT_DIR/opencode.jsonc.fragment"
 STATE_DIR="$CONFIG_DIR/foundation-ai"
 MANIFEST="$STATE_DIR/manifest.txt"
 POINTER="$STATE_DIR/last-backup"
+ORIGIN="$STATE_DIR/original-backup"
 
 [[ -d "$AGENT_SRC" && -d "$SKILL_SRC" && -d "$PROTOCOL_SRC" && -f "$FRAGMENT_SRC" ]] || {
   echo "ERROR: Foundation AI source files are incomplete." >&2; exit 1;
@@ -83,6 +84,7 @@ fi
 mkdir -p "$BACKUP_DIR/.state"
 [[ ! -f "$MANIFEST" ]] || cp "$MANIFEST" "$BACKUP_DIR/.state/manifest.txt"
 [[ ! -f "$POINTER" ]] || cp "$POINTER" "$BACKUP_DIR/.state/last-backup"
+[[ ! -f "$ORIGIN" ]] || cp "$ORIGIN" "$BACKUP_DIR/.state/original-backup"
 
 declare -a DONE=()
 rollback() {
@@ -105,6 +107,11 @@ rollback() {
   else
     rm -f "$POINTER"
   fi
+  if [[ -f "$BACKUP_DIR/.state/original-backup" ]]; then
+    cp "$BACKUP_DIR/.state/original-backup" "$ORIGIN"
+  else
+    rm -f "$ORIGIN"
+  fi
   rm -rf "$STAGE_DIR"
 }
 trap 'rollback; exit 1' ERR INT TERM
@@ -124,6 +131,7 @@ printf '%s\n' "${RELS[@]}" > "$STAGE_DIR/manifest.txt"
 printf '%s\n' "$BACKUP_DIR" > "$STAGE_DIR/last-backup"
 mv "$STAGE_DIR/manifest.txt" "$MANIFEST"
 mv "$STAGE_DIR/last-backup" "$POINTER"
+if [[ ! -f "$ORIGIN" ]]; then printf '%s\n' "$BACKUP_DIR" > "$STAGE_DIR/original-backup"; mv "$STAGE_DIR/original-backup" "$ORIGIN"; fi
 rm -rf "$STAGE_DIR"
 trap - ERR INT TERM
 
