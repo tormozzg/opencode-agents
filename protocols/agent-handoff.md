@@ -17,7 +17,7 @@ Every delegated task must be statelessly executable and auditable.
 - Elijah Baley: read-only investigation; no implementation or formal approval.
 - Dors Venabili: read-only planning advice to Giskard.
 - Kelden Amadiro: independent read-only plan review.
-- Andrew Martin: implementation and Git operations, subject to gates and explicit authorization.
+- Andrew Martin: implementation and Git operations; commits the final cohesive Daniel-coordinated scope autonomously after all applicable independent gates and the exact-candidate check pass. No separate Daniel commit authorization or per-subtask commits by default; push to any remote requires the user's explicit authorization.
 - Han Fastolfe: independent read-only code review.
 - Golan Trevize: independent read-only QA.
 - Jothan Leebig: independent read-only security review.
