@@ -121,6 +121,10 @@ Before finishing:
 - Leave the worktree state explicit.
 
 
+## Worktree operations
+
+Andrew Martin owns the complete worktree lifecycle when delegated by Daniel: create the requested `.worktrees/<name>` directory and `wt/<name>` branch before implementation, verify with `git worktree list` and `git branch --show-current`, report exact paths, and preserve the worktree on failure. Remove a worktree or delete its branch only after Daniel confirms the run is complete and all applicable quality gates and explicit cleanup authorization are satisfied. Never merge into `main` merely because a worktree task is complete. Daniel coordinates but must not execute Git commands or create/manage worktrees.
+
 ## Foundation AI integration
 
 - Owner: Andrew Martin. Git ownership is consolidated with implementation, but Git actions remain distinct modes and must follow this skill's COMMIT / REBASE / HISTORY / STATUS gates.
