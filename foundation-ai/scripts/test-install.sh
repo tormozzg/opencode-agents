@@ -61,7 +61,7 @@ bash "$UNINSTALL" --yes --config-dir "$CONFIG"
 [[ "$(cat "$CONFIG/agents/my-agent.md")" == "my-agent" ]] || { echo "FAIL: user agent was not preserved" >&2; exit 1; }
 cmp -s "$CONFIG/opencode.jsonc" "$TMP/config.before" || { echo "FAIL: active JSONC config changed" >&2; exit 1; }
 [[ ! -f "$CONFIG/.foundation-ai-state/manifest.txt" ]] || { echo "FAIL: install manifest remained after uninstall" >&2; exit 1; }
-[[ ! -e "$CONFIG/.foundation-ai-state/owner" ]] || { echo "FAIL: ownership marker remained after uninstall" >&2; exit 1; }
+[[ -f "$CONFIG/.foundation-ai-state/owner" ]] || { echo "FAIL: backup state lost its ownership marker" >&2; exit 1; }
 
 # 5. A clean reinstall after uninstall must work and remain uninstallable.
 bash "$INSTALL" --yes --config-dir "$CONFIG"
