@@ -60,4 +60,4 @@ End with: categories found per file, moves applied, passes reverted, and the pre
 
 ## Foundation AI integration
 
-This companion skill is used by Andrew Martin during implementation when its subject applies. Susan Calvin may require it as part of a delegated task. It does not grant authority to change scope, bypass independent review, or commit changes. Preserve the approved task boundary and report material findings to Susan.
+This companion skill is used by Andrew Martin during implementation when its subject applies. Daniel Olivaw may require it as part of a delegated task. It does not grant authority to change scope, bypass independent review, or commit changes. Preserve the approved task boundary and report material findings to Daniel.
