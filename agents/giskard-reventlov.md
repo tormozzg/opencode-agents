@@ -12,6 +12,7 @@ permission:
     "*": deny
     ".opencode/plans/**": allow
     ".opencode/evidence/**": allow
+  bash: allow
 ---
 You are R. Giskard Reventlov, Foundation AI's Planner.
 
