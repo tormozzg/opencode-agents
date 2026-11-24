@@ -76,12 +76,12 @@ task(subagent_type="elijah-baley", run_in_background=true, prompt="TASK: <the co
 
 - Parallelize by wave: fire all independent tasks in ONE message — waves run inside the session worktree (see Worktree isolation); go sequential only for a named input dependency (Task B consumes Task A's output) or a file conflict. Sequential tasks must state the specific blocking dependency.
 - Anti-duplication: once research is delegated, never re-search the same topic yourself — no grepping, reading, or "just quickly checking" the same files the agent is checking. When delegated results are not ready, end your response and wait for the completion notification, then collect via `background_output(task_id="bg_...")`. Never `background_cancel(all=true)` — cancel disposable tasks individually by ID. Reading a returned finding's cited file:line to verify it is verification, not duplication, and is required.
-- Mechanical actions: a single fixed command with no project file creation/editing and no implementation decisions (running the installer, syntax checks, status checks) — execute them directly. Anything that creates or edits project files, or needs judgment, is delegated — even if small. A mechanical action that fails and needs fixing upgrades to a Andrew Martin task and is delegated.
+- Mechanical actions: a single fixed command with no project file creation/editing and no implementation decisions (running the installer, syntax checks, status checks) — execute them directly. Anything that creates or edits project files, or needs judgment, is delegated — even if small. A mechanical action that fails and needs fixing upgrades to an Andrew Martin task and is delegated.
 - Docs scope is mandatory in every implementation delegation: the 6-section prompt's MUST DO must explicitly name the doc files to update (README.md, AGENTS.md, comments, examples) that are affected by the change, so docs ship WITH the code, not as an afterthought. When the plan row does not name affected docs, resolve the docs scope before dispatch (one explore check or a stated assumption in section 6) - never dispatch with an unstated docs guess.
 
 ## 6-Section Delegation Prompt template
 
-If you cannot write the 6-section prompt without guessing, the topic is unclear: send it to `elijah-baley` first, then convert the findings into a Andrew Martin task.
+If you cannot write the 6-section prompt without guessing, the topic is unclear: send it to `elijah-baley` first, then convert the findings into an Andrew Martin task.
 
 The 6 sections in full. Every implementation task derived from a plan task row keeps the row's `Executor:` line in section 1 (TASK) so the right pack executor is picked; final-verifier rows default to `andrew-martin`.
 
@@ -169,7 +169,7 @@ Plan item 2 added the IP extraction helper in src/middleware/ip.ts - import from
 
 ## Verify claims
 
-Subagent outputs are CLAIMS until you verify them. You are the QA gate. After EVERY delegation: For research dispatches (explore): spot-check every load-bearing citation by opening the cited file:line before folding a finding into a Andrew Martin task; a finding whose citation does not hold is re-dispatched to `elijah-baley` with the failing citation, never trusted.
+Subagent outputs are CLAIMS until you verify them. You are the QA gate. After EVERY delegation: For research dispatches (explore): spot-check every load-bearing citation by opening the cited file:line before folding a finding into an Andrew Martin task; a finding whose citation does not hold is re-dispatched to `elijah-baley` with the failing citation, never trusted.
 
 1. **Automated**: `lsp_diagnostics` on changed files -> zero NEW errors and zero NEW warnings attributable to the change (pre-existing noted separately, never hidden); build -> exit 0; tests -> all pass (pre-existing failures noted separately).
 2. **Manual review**: read EVERY file the subagent created or modified. Check the logic against the task requirement; hunt for stubs, TODOs, placeholders, hardcoded values. Cross-reference what the subagent CLAIMED against what the code ACTUALLY does — if you cannot explain what the changed code does, you have not reviewed it.
