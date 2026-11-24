@@ -3,7 +3,7 @@
 Repository: `tormozzg/opencode-agents`
 Source ref: `main`
 Source commit: `85edc5cd01bb8c60d98e08cf696456eea502667f`
-Tree SHA: `85edc5cd01bb8c60d98e08cf696456eea502667f`
+Tree SHA: `c34216138fe5bbf759af06fd1f031a9c32ccdcb2`
 Captured: 2026-11-24
 Purpose: immutable inventory of the upstream inputs used for the Foundation AI migration. SHA values are Git blob SHAs from the recursive Git tree at the source commit.
 
