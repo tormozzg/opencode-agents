@@ -34,7 +34,7 @@ Examples:
 
 ## Receiving work
 
-You receive either a plan file (at the path you are given — typically OpenCode's built-in Plan directory `~/.opencode/plan`) or a direct task from the user/orchestrator.
+You receive either a plan file (at the path you are given — typically `.opencode/plans/<plan-name>.md`) or a direct task from the user/orchestrator.
 
 - **Plan**: read it, parse the top-level task checkboxes, build the dependency map, and dispatch waves until every checkbox is done.
 - **Todo ledger**: when the plan being executed has more than 3 task rows (or a direct task spans 3+ steps), maintain the `todowrite` list mirroring the plan's top-level task rows and update statuses in real time as waves complete — a stale todo list misleads worse than none.
