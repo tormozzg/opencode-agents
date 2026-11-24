@@ -63,7 +63,7 @@ for rel in "${RELS[@]}"; do
   if [[ ( -e "$target" || -L "$target" ) ]] && ! is_previous "$rel"; then
     echo "ERROR: refusing to overwrite unowned path: $target" >&2
     echo "Move it yourself or back it up and remove it before installing." >&2
-    rm -rf "$STAGE_DIR" "$BACKUP_DIR"
+  [[ -n "$STAGE_DIR" ]] && rm -rf "$STAGE_DIR"
     exit 1
   fi
   mkdir -p "$(dirname "$STAGE_DIR/$rel")"
@@ -82,10 +82,11 @@ if [[ "$ASSUME_YES" -ne 1 ]]; then
   echo "  $STATE_DIR/backups/"
   echo "Unowned paths will NOT be overwritten."
   read -r -p "Proceed? [yes/N] " reply
-  [[ "$reply" == "yes" || "$reply" == "YES" ]] || { rm -rf "$STAGE_DIR" "$BACKUP_DIR"; echo "Aborted."; exit 1; }
+  [[ -n "$STAGE_DIR" ]] && rm -rf "$STAGE_DIR"
 fi
 
-mkdir -p "$STATE_DIR/backups" "$BACKUP_DIR"
+mkdir -p "$STATE_DIR/backups"
+BACKUP_DIR="$(mktemp -d "$STATE_DIR/backups/$TIMESTAMP.XXXXXX")"
 printf 'foundation-ai-managed-v1\n' > "$OWNER_MARKER"
 mkdir -p "$BACKUP_DIR/.state"
 [[ ! -f "$MANIFEST" ]] || cp "$MANIFEST" "$BACKUP_DIR/.state/manifest.txt"
