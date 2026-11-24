@@ -37,7 +37,7 @@ Refactoring is changing the internal structure of code to make it easier to unde
 
 - **Revert, then shrink.** After a revert, retry with a smaller step. A step too big to land is information about the size, not about the tests.
 - **Run the whole relevant suite, not just the touched test.** A shared helper moved can break a distant caller; the point of small steps is that a failure names the step that caused it.
-- **Verification checkpoints, not commits.** Each step is fixed by running the tests — a green run is the checkpoint; never let unverified structure accumulate. Andrew does not stage or commit as part of a refactoring subtask. Git operations are handled separately through `git-operations` and remain blocked until independent review, required security review, QA, and Susan Calvin's authorization.
+- **Verification checkpoints, not commits.** Each step is fixed by running the tests — a green run is the checkpoint; never let unverified structure accumulate. Andrew does not stage or commit as part of a refactoring subtask. Git operations are handled separately through `git-operations` and remain blocked until independent review, required security review, QA, and Daniel Olivaw's authorization.
 
 ## No improvised refactoring
 
@@ -62,4 +62,4 @@ Quote the verification trail for each pass — pre-lock test output, post-step t
 
 ## Foundation AI integration
 
-This companion skill is used by Andrew Martin during implementation when its subject applies. Susan Calvin may require it as part of a delegated task. It does not grant authority to change scope, bypass independent review, or commit changes. Preserve the approved task boundary and report material findings to Susan.
+This companion skill is used by Andrew Martin during implementation when its subject applies. Daniel Olivaw may require it as part of a delegated task. It does not grant authority to change scope, bypass independent review, or commit changes. Preserve the approved task boundary and report material findings to Daniel.
