@@ -24,9 +24,9 @@ if [[ "$CONFIG_DIR" == "~" || "$CONFIG_DIR" == "~/"* ]]; then
   if [[ "$CONFIG_DIR" == "~" ]]; then CONFIG_DIR="$HOME"; else CONFIG_DIR="$HOME/${CONFIG_DIR:2}"; fi
 fi
 
-AGENT_SRC="$ROOT/.opencode/agents"
-SKILL_SRC="$ROOT/.opencode/skills"
-PROTOCOL_SRC="$ROOT/.opencode/protocols"
+AGENT_SRC="$ROOT/agents"
+SKILL_SRC="$ROOT/skills"
+PROTOCOL_SRC="$ROOT/protocols"
 FRAGMENT_SRC="$ROOT/opencode.jsonc.fragment"
 STATE_DIR="$CONFIG_DIR/.foundation-ai-state"
 OWNER_MARKER="$STATE_DIR/owner"

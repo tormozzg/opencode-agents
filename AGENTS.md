@@ -2,7 +2,7 @@
 
 ## Project layout
 
-- Active Foundation AI agents, skills, and protocols: `.opencode/`.
+- Active Foundation AI source definitions: `agents/`, `skills/`, and `protocols/`. The installer deploys them into the target project’s `.opencode/` directory.
 - OpenCode project configuration: `opencode.jsonc`.
 - Installer and uninstaller: `install.sh`, `uninstall.sh`.
 - Validation scripts: `scripts/`.
@@ -53,7 +53,7 @@ Follow the detailed workflows in the relevant skill and protocol files; do not c
 ## Change discipline
 
 1. Preserve the approved architecture and user-approved plan. Escalate changes to goals, architecture, scope, or material risk.
-2. Keep source snapshots byte-for-byte unchanged. Make adaptations only in `.opencode/skills/`.
+2. Keep source snapshots byte-for-byte unchanged. Make adaptations only in `skills/`; keep `.opencode/` reserved for local runtime state and installed project configuration.
 3. Keep agent names, skill frontmatter names, dispatch IDs, task allowlists, installer manifests, documentation, and tests consistent.
 4. Keep reviewers and QA independent and read-only. Record evidence for verification claims.
 5. Git commits are gated on required code review, security review when triggered, and QA. Never commit directly to `main` during migration work.

@@ -23,16 +23,16 @@ Hari is the default entry point. Daniel and Giskard are directly selectable. Dor
 
 ## Included
 
-- **10 agents** in `.opencode/agents/`
-- **15 skills** in `.opencode/skills/` (13 migrated from the upstream pack plus `security-review` and `security-advisory` for planning critique)
-- **6 protocols** in `.opencode/protocols/`
+- **10 agents** in `agents/`
+- **15 skills** in `skills/` (13 migrated from the upstream pack plus `security-review` and `security-advisory` for planning critique)
+- **6 protocols** in `protocols/`
 - OpenCode 1.19 project config: `opencode.jsonc`
 - Original upstream skills preserved verbatim under `source-snapshot/skills/`
 - Source manifest and audit at repository root
 
 ## Install in a project
 
-For project-local use, copy the `.opencode/` directory and `opencode.jsonc` into the target project, or use this repository as the project. OpenCode discovers project-local agents and skills from these locations.
+For project-local use, run `bash ./install.sh --yes --config-dir <project>/.opencode` from this repository. The installer copies root-level source definitions into the target project’s `.opencode/agents/`, `.opencode/skills/`, and `.opencode/foundation-ai/protocols/` directories. Merge the settings shown below into the target project’s existing `opencode.jsonc`.
 
 For global use, run `bash ./install.sh --yes --config-dir ~/.config/opencode` from this repository. The installer stages files, refuses to overwrite unowned name collisions, backs up previously Foundation AI-managed files, and records a manifest for the matching uninstaller. It does not edit your active `opencode.jsonc`; it writes a config fragment under `~/.config/opencode/foundation-ai/opencode.jsonc.fragment` for manual merging. Run `bash ./uninstall.sh` to remove only manifest-listed files and restore the original pre-install files.
 
@@ -107,4 +107,4 @@ Upstream repository: https://github.com/tormozzg/opencode-agents
 
 Pinned source commit: `85edc5cd01bb8c60d98e08cf696456eea502667f`
 
-The exact original 13 skill bodies are retained in `source-snapshot/skills/`. Migration changes are in the active `.opencode/skills/` tree.
+The exact original 13 skill bodies are retained in `source-snapshot/skills/`. Migration changes are in the active `skills/` tree.

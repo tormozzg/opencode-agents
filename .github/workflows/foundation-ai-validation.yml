@@ -5,7 +5,9 @@ on:
     branches:
       - "foundation-ai/**"
     paths:
-      - ".opencode/**"
+      - "agents/**"
+      - "skills/**"
+      - "protocols/**"
       - "opencode.jsonc"
       - "scripts/**"
       - "source-snapshot/**"
@@ -20,7 +22,9 @@ on:
       - ".github/workflows/foundation-ai-validation.yml"
   pull_request:
     paths:
-      - ".opencode/**"
+      - "agents/**"
+      - "skills/**"
+      - "protocols/**"
       - "opencode.jsonc"
       - "scripts/**"
       - "source-snapshot/**"

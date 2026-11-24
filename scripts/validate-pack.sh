@@ -2,9 +2,9 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-AGENTS="${ROOT}/.opencode/agents"
-SKILLS="${ROOT}/.opencode/skills"
-PROTOCOLS="${ROOT}/.opencode/protocols"
+AGENTS="${ROOT}/agents"
+SKILLS="${ROOT}/skills"
+PROTOCOLS="${ROOT}/protocols"
 SNAPSHOT="${ROOT}/source-snapshot/skills"
 
 fail() { echo "FAIL: $*" >&2; exit 1; }
@@ -32,8 +32,8 @@ pass "counts: 10 agents, 15 skills, 6 protocols, 13 source snapshots"
 python3 - "$ROOT" <<'PY'
 import json, pathlib, re, sys
 root = pathlib.Path(sys.argv[1])
-agents = root / ".opencode" / "agents"
-skills = root / ".opencode" / "skills"
+agents = root / "agents"
+skills = root / "skills"
 config = json.loads((root / "opencode.jsonc").read_text(encoding="utf-8"))
 assert config.get("default_agent") == "hari-seldon", "default_agent must be hari-seldon"
 assert config.get("subagent_depth") == 2, "subagent_depth must equal 2"

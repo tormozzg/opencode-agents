@@ -1,18 +1,6 @@
-# Agent tooling runtime artifacts stay local; Foundation AI pack definitions are tracked.
+# Local OpenCode runtime state and developer tooling
 .omo/
-.opencode/*
-!.opencode/
-!.opencode/agents/
-!.opencode/skills/
-!.opencode/protocols/
-.opencode/agents/*
-!.opencode/agents/*.md
-.opencode/skills/*
-!.opencode/skills/*/
-.opencode/skills/*/*
-!.opencode/skills/*/SKILL.md
-.opencode/protocols/*
-!.opencode/protocols/*.md
+.opencode/
 .openidea/
 .worktrees/
-.idea/*
+.idea/
