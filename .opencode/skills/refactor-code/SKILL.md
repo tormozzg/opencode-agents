@@ -1,6 +1,6 @@
 ---
 name: refactor-code
-description: "Safe-refactor protocol for the worker: behavior-preserving definition, lock behavior with a passing test before touching structure, small steps with the system kept fully working after each one, tests after every step, immediate rollback on failure, no improvised refactoring, and preparatory refactoring (make the change easy, then make the easy change). Load before any structural change."
+description: "Safe-refactor protocol for Andrew Martin: behavior-preserving definition, lock behavior with a passing test before touching structure, small steps with the system kept fully working after each one, tests after every step, immediate rollback on failure, no improvised refactoring, and preparatory refactoring (make the change easy, then make the easy change). Load before any structural change."
 ---
 
 # Refactor Code
@@ -57,7 +57,7 @@ Refactoring is changing the internal structure of code to make it easier to unde
 
 ## Evidence
 
-Quote the verification trail for each pass — pre-lock test output, post-step test runs, and the final green run — inline in the final report; write no evidence files (those belong to `explore` and `qa-inspector`).
+Quote the verification trail for each pass — pre-lock test output, post-step test runs, and the final green run — inline in the final report; write no evidence files (those belong to Elijah Baley and `golan-trevize`).
 
 
 ## Foundation AI integration
