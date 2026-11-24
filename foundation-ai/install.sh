@@ -82,7 +82,7 @@ if [[ "$ASSUME_YES" -ne 1 ]]; then
   echo "  $STATE_DIR/backups/"
   echo "Unowned paths will NOT be overwritten."
   read -r -p "Proceed? [yes/N] " reply
-  [[ -n "$STAGE_DIR" ]] && rm -rf "$STAGE_DIR"
+  [[ "$reply" == "yes" || "$reply" == "YES" ]] || { rm -rf "$STAGE_DIR"; echo "Aborted."; exit 1; }
 fi
 
 mkdir -p "$STATE_DIR/backups"
