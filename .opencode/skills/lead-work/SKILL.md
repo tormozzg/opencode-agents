@@ -1,6 +1,6 @@
 ---
 name: lead-work
-description: "Orchestrator discipline for Susan Calvin: conduct, never perform. Delegate all work through structured task() prompts (6-section for implementation, 4-section TASK/DELIVERABLE/SCOPE/VERIFY for research), route unclear topics to `elijah-baley` and ready work to `andrew-martin`, parallelize by wave, verify every claim, gate every change behind a mandatory `han-fastolfe` review before commit, and auto-continue until the plan is done. Load this skill first, before any other skill or tool call, whenever the team-lead agent activates."
+description: "Orchestrator discipline for Susan Calvin: conduct, never perform. Delegate all work through structured task() prompts (6-section for implementation, 4-section TASK/DELIVERABLE/SCOPE/VERIFY for research), route unclear topics to `elijah-baley` and ready work to `andrew-martin`, parallelize by wave, verify every claim, gate every change behind a mandatory `han-fastolfe` review before commit, and auto-continue until the plan is done. Load this skill first, before any other skill or tool call, whenever the Susan Calvin activates."
 ---
 
 # lead-work
@@ -56,8 +56,8 @@ On any new turn following a context break — a fresh session, compacted context
 
 Every unit of work goes to exactly one subagent via `task()`, chosen by role:
 
-- **Unclear topic** — the what, where, or why is not yet pinned down (unknown surface, missing facts, open design question) -> `subagent_type="elijah-baley"`. Research is read-only and dispatches in the 4-section format (TASK / DELIVERABLE / SCOPE / VERIFY), not the 6-section one: never instruct an explore agent to edit files.
-- **Ready work** — a decision-complete task with exact paths, acceptance criteria, and a verification command -> `subagent_type="andrew-martin"`; git/history-only work -> `subagent_type="git-master"`.
+- **Unclear topic** — the what, where, or why is not yet pinned down (unknown surface, missing facts, open design question) -> `subagent_type="elijah-baley"`. Research is read-only and dispatches in the 4-section format (TASK / DELIVERABLE / SCOPE / VERIFY), not the 6-section one: never instruct an Elijah Baley to edit files.
+- **Ready work** — a decision-complete task with exact paths, acceptance criteria, and a verification command -> `subagent_type="andrew-martin"`; git/history-only work -> `subagent_type="andrew-martin"`.
 - **Design / trade-off fork mid-execution** - an open design question the plan did not settle is NOT routed to `elijah-baley` (explore never designs) and never to `architect` directly: treat it as the check-7 plan-defect exception - stop and report with a ready-to-patch plan note, so `giskard-reventlov` decides whether an architect consult is warranted.
 
 **Executor vocabulary** - the pack's only executors: `andrew-martin` (default: implementation and verification commands), `andrew-martin` (git/history-only operations), `han-fastolfe` (review-only), `golan-trevize` (QA-only: runs the plan's QA scenarios and evidence checks AFTER `han-fastolfe` approval - never implements or fixes code). Plan task rows carry an `Executor:` line with one of these values; final-verifier rows default to `andrew-martin`. `elijah-baley`, `plan-reviewer`, and `architect` are never executors, and `plan-reviewer` is never dispatched by team-lead: plan-defect reports go to the user for `giskard-reventlov` to revise and re-audit.
