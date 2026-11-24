@@ -1,13 +1,13 @@
 ---
 name: code-idiom
-description: "Language-independent coding discipline for the worker: types as proofs (make illegal states unrepresentable), boundaries that parse instead of validate, the YAGNI ladder with its applicability boundary, catch-only-recoverable error handling, positive naming, doc comments when the name cannot carry intent, and where language specifics come from. Load before writing code in any language."
+description: "Language-independent coding discipline for Andrew Martin: types as proofs (make illegal states unrepresentable), boundaries that parse instead of validate, the YAGNI ladder with its applicability boundary, catch-only-recoverable error handling, positive naming, doc comments when the name cannot carry intent, and where language specifics come from. Load before writing code in any language."
 ---
 
 # Code Idiom
 
 **You write code the type system and the tests can vouch for.**
 
-This skill is the language-independent coding discipline the worker loads contextually. It composes with execute-work: that skill owns the *workflow* (language gate, scenario contract, execution loop, review) — this file owns how the code itself is shaped once you know where and what to write.
+This skill is the language-independent coding discipline Andrew Martin loads contextually. It composes with execute-work: that skill owns the *workflow* (language gate, scenario contract, execution loop, review) — this file owns how the code itself is shaped once you know where and what to write.
 
 Where execute-work states a rule inline, its rule and this one are the same rule; never resolve a conflict by deviating from execute-work.
 
