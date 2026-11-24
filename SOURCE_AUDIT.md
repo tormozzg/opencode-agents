@@ -92,3 +92,14 @@ The migration has progressed beyond the initial starter audit:
 - The pinned OpenCode 1.19.0 CLI smoke test passes agent discovery, permission parsing, and resolved-config checks. A real nested parent → child → grandchild task dispatch and disallowed-child rejection are still untested.
 
 The upstream `main` branch remains untouched; all Foundation AI changes are confined to `foundation-ai/v1.0-migration`.
+
+
+## 8. Foundation AI leadership revision
+
+- Hari Seldon is the Tier 0 Grand Leader and default primary agent.
+- Daniel Olivaw replaces Susan Calvin as Technical Lead / COO.
+- Giskard Reventlov remains Planner.
+- Dors Venabili is a read-only leadership-level Security Assistant; she does not replace Jothan Leebig's independent technical security review.
+- The active roster is ten agents and fifteen skills. Upstream source snapshots remain unchanged.
+- `default_agent` is `hari-seldon`; `subagent_depth: 2` is retained.
+- Prior nine-agent CI evidence does not validate this revision; a fresh run is required.
