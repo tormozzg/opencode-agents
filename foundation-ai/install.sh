@@ -120,11 +120,7 @@ rollback() {
   else
     rm -f "$ORIGIN"
   fi
-  if [[ -f "$BACKUP_DIR/.state/owner" ]]; then
-    cp "$BACKUP_DIR/.state/owner" "$OWNER_MARKER"
-  else
-    rm -f "$OWNER_MARKER"
-  fi
+  [[ ! -f "$BACKUP_DIR/.state/owner" ]] || cp "$BACKUP_DIR/.state/owner" "$OWNER_MARKER"
   rm -rf "$STAGE_DIR"
 }
 trap 'rollback; exit 1' ERR INT TERM
