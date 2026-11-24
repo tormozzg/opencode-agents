@@ -44,6 +44,8 @@ fi
 mkdir -p "$CONFIG_DIR"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
 BACKUP_DIR=""
+STATE_DIR_EXISTED=0
+[[ ! -e "$STATE_DIR" ]] || STATE_DIR_EXISTED=1
 STAGE_DIR="$(mktemp -d "$CONFIG_DIR/.foundation-ai-stage-$TIMESTAMP.XXXXXX")"
 
 declare -a RELS=()
@@ -122,8 +124,17 @@ rollback() {
   else
     rm -f "$ORIGIN"
   fi
-  [[ ! -f "$BACKUP_DIR/.state/owner" ]] || cp "$BACKUP_DIR/.state/owner" "$OWNER_MARKER"
+  if [[ -f "$BACKUP_DIR/.state/owner" ]]; then
+    cp "$BACKUP_DIR/.state/owner" "$OWNER_MARKER"
+  else
+    rm -f "$OWNER_MARKER"
+  fi
   rm -rf "$STAGE_DIR"
+  if [[ "$STATE_DIR_EXISTED" -eq 1 ]]; then
+    rm -rf "$BACKUP_DIR"
+  else
+    rm -rf "$STATE_DIR"
+  fi
 }
 trap 'rollback; exit 1' ERR INT TERM
 
