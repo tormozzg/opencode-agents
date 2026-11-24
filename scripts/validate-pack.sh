@@ -69,7 +69,7 @@ def frontmatter(name):
 
 # Exact V1 Task allowlists; all other child IDs must be denied.
 rules = {
-    "hari-seldon": {"daniel-olivaw", "giskard-reventlov"},
+    "hari-seldon": {"daniel-olivaw", "giskard-reventlov", "elijah-baley"},
     "daniel-olivaw": {"elijah-baley", "andrew-martin", "han-fastolfe", "golan-trevize", "jothan-leebig"},
     "giskard-reventlov": {"elijah-baley", "dors-venabili", "kelden-amadiro"},
 }
@@ -87,14 +87,16 @@ for agent in tier2:
 
 for agent in tier2 - {"andrew-martin"}:
     fm = frontmatter(agent)
-    assert re.search(r"(?m)^\s+edit: deny$", fm), f"{agent}: read-only agent must deny edit"
+    assert "edit:" in fm and '"*": deny' in fm, f"{agent}: read-only agent must deny unrestricted edit"
+    assert '".opencode/evidence/**": allow' in fm, f"{agent}: evidence write scope missing"
+    assert '".opencode/tmp/**": allow' in fm, f"{agent}: temporary verification write scope missing"
 
 
 for agent, mode in {"hari-seldon": "primary", "daniel-olivaw": "all", "giskard-reventlov": "all"}.items():
     fm = frontmatter(agent)
     assert re.search(rf"(?m)^mode: {mode}$", fm), f"{agent}: expected mode {mode}"
 assert "edit: deny" in frontmatter("hari-seldon"), "Hari must not edit files"
-assert "edit: deny" in frontmatter("dors-venabili"), "Dors must be read-only"
+assert '"*": deny' in frontmatter("dors-venabili"), "Dors must deny unrestricted edits"
 assert not (agents / "susan-calvin.md").exists(), "Susan must be removed from active roster"
 assert 'edit:\n    "*": deny\n    ".opencode/plans/**": allow\n    ".opencode/evidence/**": allow' in frontmatter("giskard-reventlov"), "Giskard edit scope must be plans/evidence only"
 assert 'edit:\n    "*": deny\n    ".opencode/evidence/**": allow\n    ".opencode/notepads/**": allow\n    ".opencode/task-state/**": allow' in frontmatter("daniel-olivaw"), "Susan edit scope must be coordination artifacts only"

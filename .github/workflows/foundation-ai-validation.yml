@@ -74,6 +74,8 @@ jobs:
           test -n "$OPENCODE_BIN"
           chmod +x "$OPENCODE_BIN"
           echo "$(dirname "$OPENCODE_BIN")" >> "$GITHUB_PATH"
+      - name: Install project-local agent definitions
+        run: bash install.sh --yes --config-dir "$GITHUB_WORKSPACE/.opencode"
       - name: Verify exact version and agent discovery
         run: |
           VERSION="$(opencode --version)"
