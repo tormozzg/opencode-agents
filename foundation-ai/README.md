@@ -96,7 +96,7 @@ Critical/High findings block. Medium requires remediation or explicit Daniel/use
 
 The installer, uninstaller, structural validator, and disposable lifecycle tests are implemented. The latest Ubuntu CI leg passes structural validation plus collision, install, repeat-install, uninstall, and preservation tests. The macOS CI leg is still pending. Do not treat this migration branch as a production release until:
 - the Ubuntu and macOS lifecycle test matrix passes;
-- OpenCode 1.19 runtime delegation tests pass against the exact 1.19.x binary;
+- nested Tier 1 → Tier 2 task dispatch and disallowed-child rejection pass end-to-end against OpenCode 1.19.0 (config parsing and agent discovery already pass);
 - quality-gate, security-trigger, and end-to-end orchestration tests pass;
 - final audit and release approval are complete.
 
