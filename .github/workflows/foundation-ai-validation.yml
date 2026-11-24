@@ -78,3 +78,18 @@ jobs:
         run: |
           opencode debug config > "$RUNNER_TEMP/resolved-config.json"
           jq -e '.default_agent == "daniel-olivaw" and .subagent_depth == 2' "$RUNNER_TEMP/resolved-config.json"
+
+      - name: Verify global installer and global agent discovery
+        run: |
+          GLOBAL_HOME="$RUNNER_TEMP/global-home"
+          mkdir -p "$GLOBAL_HOME"
+          HOME="$GLOBAL_HOME" bash foundation-ai/install.sh --yes
+          cp "$GLOBAL_HOME/.config/opencode/foundation-ai/opencode.jsonc.fragment" "$GLOBAL_HOME/.config/opencode/opencode.jsonc"
+          cd "$RUNNER_TEMP"
+          HOME="$GLOBAL_HOME" XDG_CONFIG_HOME="$GLOBAL_HOME/.config" opencode agent list | tee "$RUNNER_TEMP/global-agents.txt"
+          grep -q '^daniel-olivaw (primary)$' "$RUNNER_TEMP/global-agents.txt"
+          grep -q '^giskard-reventlov (all)$' "$RUNNER_TEMP/global-agents.txt"
+          grep -q '^susan-calvin (all)$' "$RUNNER_TEMP/global-agents.txt"
+          HOME="$GLOBAL_HOME" XDG_CONFIG_HOME="$GLOBAL_HOME/.config" opencode debug config > "$RUNNER_TEMP/global-config.json"
+          jq -e '.default_agent == "daniel-olivaw" and .subagent_depth == 2' "$RUNNER_TEMP/global-config.json"
+          HOME="$GLOBAL_HOME" bash "$GITHUB_WORKSPACE/foundation-ai/uninstall.sh" --yes
