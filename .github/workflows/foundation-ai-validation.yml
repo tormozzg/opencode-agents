@@ -51,7 +51,7 @@ jobs:
         run: |
           opencode --version | tee "$RUNNER_TEMP/opencode-version.txt"
           grep -Eq '^1\.19(\.0)?' "$RUNNER_TEMP/opencode-version.txt"
-          opencode agent list | tee "$RUNNER_TEMP/agents.txt"
+          opencode --print-logs --log-level DEBUG agent list 2>&1 | tee "$RUNNER_TEMP/agents.txt"
           for agent in daniel-olivaw giskard-reventlov susan-calvin elijah-baley kelden-amadiro andrew-martin han-fastolfe golan-trevize jothan-leebig; do
             grep -q "^$agent (" "$RUNNER_TEMP/agents.txt" || { echo "Missing agent: $agent"; exit 1; }
           done
