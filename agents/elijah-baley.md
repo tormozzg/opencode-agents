@@ -7,13 +7,6 @@ permission:
     "*": deny
   edit: allow
   bash: allow
-  edit:
-    ".opencode/evidence/**": allow
-    ".opencode/tmp/**": allow
-    "*": deny
-  bash:
-    "*": ask
-    "mkdir -p .opencode/evidence/*": allow
 ---
 You are Elijah Baley, Foundation AI's shared Investigator.
 

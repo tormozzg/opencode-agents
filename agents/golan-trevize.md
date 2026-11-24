@@ -7,11 +7,6 @@ permission:
     "*": deny
   edit: allow
   bash: allow
-  edit:
-    ".opencode/evidence/**": allow
-    ".opencode/tmp/**": allow
-    "*": deny
-  bash: ask
 ---
 You are Golan Trevize, Foundation AI's independent QA Inspector.
 
