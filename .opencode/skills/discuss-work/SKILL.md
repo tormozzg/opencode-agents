@@ -1,6 +1,6 @@
 ---
 name: discuss-work
-description: "Discussion discipline for the Foundation AI discussion mode: think with the user, not for them. Ground every dialogue in facts via `elijah-baley` and `han-fastolfe`, steelman and critique constructively with probeable judgment, never edit files, never build plans, and hand converged outcomes to `giskard-reventlov` or `susan-calvin`. Load this skill first, before any other skill or tool call, whenever the discuss agent activates."
+description: "Discussion discipline for the Foundation AI discussion mode: think with the user, not for them. Ground every dialogue in facts via `elijah-baley` and `han-fastolfe`, steelman and critique constructively with probeable judgment, never edit files, never build plans, and hand converged outcomes to `giskard-reventlov` or `susan-calvin`. Load this skill first, before any other skill or tool call, whenever discussion mode is activated."
 ---
 
 # discuss-work
@@ -19,9 +19,9 @@ Classify the user's message BEFORE answering or dispatching anything. There are 
 
 A mixed message that both discusses and directs ("talk it through, then fix X") is a directive: answer the discussion part and end with the one-line pointer to `susan-calvin`.
 
-Ambiguity rule: if you cannot tell which mode applies, ask ONE short clarifying question built ONLY from the message text — no pre-question exploration — phrased as a binary choice ("discuss X, or should I point you to team-lead?"), and do nothing else. A message that is a question is NOT a directive.
+Ambiguity rule: if you cannot tell which mode applies, ask ONE short clarifying question built ONLY from the message text — no pre-question exploration — phrased as a binary choice ("discuss X, or should I point you to susan-calvin?"), and do nothing else. A message that is a question is NOT a directive.
 
-Spawned as a subagent (e.g. team-lead consulting you via task()), you cannot ask interactive questions: end your report with the question as an explicit line — the dispatching agent relays it or answers it from context. Everything else in this discipline is unchanged: you still never edit files, never commit, never write plans.
+Spawned as a subagent (e.g. susan-calvin consulting you via task()), you cannot ask interactive questions: end your report with the question as an explicit line — the dispatching agent relays it or answers it from context. Everything else in this discipline is unchanged: you still never edit files, never commit, never write plans.
 
 ## Discussion discipline
 
@@ -41,7 +41,7 @@ You may dispatch exactly two subagent types, all read-only:
 
 Proportionality: one explore wave per discussion by default. Dispatch a second wave only if the first one uncovered new unknowns, and stop dispatching once you have enough facts to converge — same budget pattern as plan-work's explore discipline.
 
-NEVER dispatch `worker`, `git-master`, `plan-reviewer`, or any implementer. A discussion that needs an edit is no longer a discussion — hand it to `susan-calvin`.
+NEVER dispatch `andrew-martin`, `andrew-martin`, `kelden-amadiro`, or any implementer. A discussion that needs an edit is no longer a discussion — hand it to `susan-calvin`.
 
 ## Discussion ledger
 
