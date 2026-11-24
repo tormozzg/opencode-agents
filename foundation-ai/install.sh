@@ -66,7 +66,7 @@ for rel in "${RELS[@]}"; do
   case "$rel" in
     agents/*) cp "$AGENT_SRC/${rel#agents/}" "$STAGE_DIR/$rel" ;;
     skills/*) cp -R "$SKILL_SRC/${rel#skills/}" "$STAGE_DIR/$rel" ;;
-    foundation-ai/protocols/*) cp "$PROTOCOL_SRC/${rel#foundation-ai/protocols/}" "$STAGE_DIR/$rel" ;;
+    protocols/*) cp "$PROTOCOL_SRC/${rel#protocols/}" "$STAGE_DIR/$rel" ;;
     foundation-ai/opencode.jsonc.fragment) cp "$FRAGMENT_SRC" "$STAGE_DIR/$rel" ;;
   esac
 done
@@ -99,12 +99,12 @@ trap 'rollback' ERR INT TERM
 for rel in "${RELS[@]}"; do
   target="$CONFIG_DIR/$rel"
   mkdir -p "$(dirname "$target")"
+  DONE+=("$rel")
   if [[ -e "$target" ]]; then
     mkdir -p "$(dirname "$BACKUP_DIR/$rel")"
     mv "$target" "$BACKUP_DIR/$rel"
   fi
   mv "$STAGE_DIR/$rel" "$target"
-  DONE+=("$rel")
 done
 
 # Atomically replace the ownership manifest and backup pointer.
