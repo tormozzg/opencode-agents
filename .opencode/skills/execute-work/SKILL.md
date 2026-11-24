@@ -1,6 +1,6 @@
 ---
 name: execute-work
-description: "Worker discipline for delegated implementation tasks: ownership, pre-write language gate, scenario contract before coding, diagnostics/build/tests, the mandatory post-write review loop, real-surface manual QA, and declaring done only with evidence. Load before writing or editing any code."
+description: "Andrew Martin's implementation discipline for delegated tasks: ownership, pre-write language gate, scenario contract before coding, diagnostics/build/tests, the mandatory post-write review loop, real-surface manual QA, and declaring done only with evidence. Load before writing or editing any code."
 ---
 
 # Execute Work
@@ -122,7 +122,7 @@ Tests and builds prove the internals; the user experiences the real surface. Bef
 
 ## TEMPORARY FILES
 
-- Create temporary/scratch verification files (throwaway repro scripts, one-off test scripts, temp fixtures) ONLY under the MAIN checkout's `.opencode/tmp/<task-id>/` by absolute path (a per-task subdir under the main checkout's gitignored `.opencode/`, so parallel workers never collide) — it is gitignored, so the repo stays clean even if cleanup is skipped.
+- Create temporary/scratch verification files (throwaway repro scripts, one-off test scripts, temp fixtures) ONLY under the MAIN checkout's `.opencode/tmp/<task-id>/` by absolute path (a per-task subdir under the main checkout's gitignored `.opencode/`, so parallel implementation tasks never collide) — it is gitignored, so the repo stays clean even if cleanup is skipped.
 - The task's working directory may be a lead-created worktree, but all `.opencode/` paths (scratch, notepads, evidence) remain MAIN-checkout absolute paths.
 - Files placed in the repository are ONLY permanent tests with real regression value, in the repo's standard test location, landing together with the change through the pack's git flow.
 - Before declaring done: remove every temporary file created outside the MAIN checkout's `.opencode/` (absolute path); leave nothing scratch-like in the working tree.
