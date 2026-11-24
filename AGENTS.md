@@ -1,15 +1,15 @@
-# Repository instructions — Foundation AI migration
+# Repository instructions — Foundation AI
 
 ## Project layout
 
-This repository contains two distinct packs:
+- Active Foundation AI agents, skills, and protocols: `.opencode/`.
+- OpenCode project configuration: `opencode.jsonc`.
+- Installer and uninstaller: `install.sh`, `uninstall.sh`.
+- Validation scripts: `scripts/`.
+- Upstream source snapshots: `source-snapshot/agents/` and `source-snapshot/skills/`.
+- Compatibility contract, source manifest, source audit, and release notes are maintained at repository root.
 
-- **Foundation AI (active migration target):** `.opencode/agents/`, `.opencode/skills/`, `.opencode/protocols/`, and `opencode.jsonc`.
-- **Upstream source snapshots:** `source-snapshot/agents/` and `source-snapshot/skills/`; the pinned source manifest records the original installer and config snippet hashes.
-
-Do not install or modify the original pack when working on Foundation AI. The root `install.sh` and `uninstall.sh` are the canonical Foundation AI installer and uninstaller.
-
-Read `foundation-ai/README.md` and `foundation-ai/OPENCODE_1_19_COMPATIBILITY.md` before changing the active pack. The source commit, file manifest, and migration audit are recorded under `foundation-ai/`; exact upstream skill snapshots are under `foundation-ai/source-snapshot/skills/`.
+Read `README.md` and `OPENCODE_1_19_COMPATIBILITY.md` before changing the active pack. Do not install or modify upstream source snapshots.
 
 ## Active architecture
 
@@ -48,12 +48,12 @@ Follow the detailed workflows in the relevant skill and protocol files; do not c
 Run these from the repository root:
 
 ```bash
-bash -n install.sh uninstall.sh foundation-ai/install.sh foundation-ai/uninstall.sh
-bash foundation-ai/scripts/validate-pack.sh
-bash foundation-ai/scripts/test-install.sh
+bash -n install.sh uninstall.sh
+bash scripts/validate-pack.sh
+bash scripts/test-install.sh
 ```
 
-The GitHub Actions workflow also validates Ubuntu/macOS installer lifecycle behavior and performs a pinned OpenCode 1.19.0 runtime smoke test. Passing structural checks does not by itself prove every nested orchestration route; report runtime coverage accurately.
+The GitHub Actions workflow validates Ubuntu/macOS installer lifecycle behavior and runs a pinned OpenCode 1.19.0 CLI smoke test. Passing structural checks does not by itself prove every nested orchestration route; report runtime coverage accurately.
 
 ## Release discipline
 
