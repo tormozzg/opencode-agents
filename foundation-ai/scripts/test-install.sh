@@ -23,12 +23,17 @@ fi
 ROLLBACK="$TMP/rollback"
 mkdir -p "$ROLLBACK/foundation-ai"
 printf 'protected-parent-file\n' > "$ROLLBACK/foundation-ai/protocols"
-if bash "$INSTALL" --yes --config-dir "$ROLLBACK" >/dev/null 2>&1; then
+if bash "$INSTALL" --yes --config-dir "$ROLLBACK" > "$TMP/rollback.log" 2>&1; then
   echo "FAIL: installer unexpectedly succeeded with a blocking parent file" >&2; exit 1
 fi
 [[ ! -e "$ROLLBACK/agents/daniel-olivaw.md" ]] || { echo "FAIL: rollback left an agent behind" >&2; exit 1; }
 [[ ! -e "$ROLLBACK/skills/plan-work" ]] || { echo "FAIL: rollback left a skill behind" >&2; exit 1; }
-[[ "$(cat "$ROLLBACK/foundation-ai/protocols")" == "protected-parent-file" ]] || { echo "FAIL: rollback changed the blocking user file" >&2; exit 1; }
+actual="$(cat "$ROLLBACK/foundation-ai/protocols")"
+if [[ "$actual" != "protected-parent-file" ]]; then
+  printf "FAIL: rollback changed blocking file; actual=%q\\n" "$actual" >&2
+  cat "$TMP/rollback.log" >&2
+  exit 1
+fi
 [[ ! -f "$ROLLBACK/.foundation-ai-state/manifest.txt" ]] || { echo "FAIL: rollback left an install manifest" >&2; exit 1; }
 
 # 3. Install into a disposable config containing unrelated user data and JSONC.
