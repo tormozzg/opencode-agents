@@ -78,3 +78,17 @@ The starter files were not present in the current execution workspace at audit t
 ## 6. Stage A conclusion
 
 Source inventory and upstream behavior audit are complete. No upstream files were modified. The manifest and this audit are being committed only to the migration branch. Proceed to skill migration only with the full source contents retained and traceable; do not describe the current starter scaffold as production-ready or as a complete migration.
+
+
+## 7. Implementation follow-up (2026-11-24)
+
+The migration has progressed beyond the initial starter audit:
+
+- All 13 upstream skill bodies are preserved verbatim under `foundation-ai/source-snapshot/skills/`. Their Git blob SHAs were compared against the pinned source tree; all 13 are exact matches.
+- All 13 source skills now have Foundation AI counterparts under `.opencode/skills/`; the new `security-review` makes 14 total. A heading-level audit found no dropped source sections. The plan-work architecture consult is intentionally converted into Giskard loading `architect-work`, and the Git Master heading is renamed for Andrew Martin's `git-operations` skill.
+- Nine agent definitions, six protocols, the V1 config, and explicit task/edit permission scopes are present.
+- The repository `.gitignore` now tracks only the pack-definition paths under `.opencode/` while keeping runtime artifacts ignored.
+- Safe installer/uninstaller, structural validator, lifecycle tests, and a GitHub Actions matrix were added. The latest Ubuntu CI leg passes. The macOS leg is still queued/pending.
+- No OpenCode 1.19 binary runtime test has been completed. Compatibility remains source-reviewed, not runtime-certified.
+
+The upstream `main` branch remains untouched; all Foundation AI changes are confined to `foundation-ai/v1.0-migration`.
