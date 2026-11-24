@@ -107,7 +107,7 @@ On a re-dispatch after a fix: verify each previously reported BLOCKER is resolve
 
 - Owner: Han Fastolfe. This is a strictly independent, read-only review.
 - Review Andrew Martin's changes against the approved plan, inspect the diff and relevant context, and return blockers/notes with evidence. Never edit, fix, commit, or approve your own changes.
-- Return findings to Susan Calvin. Andrew performs fixes; Han performs the re-review.
+- Return findings to Daniel Olivaw. Andrew performs fixes; Han performs the re-review.
 - Security review by Jothan Leebig is a separate gate and is not replaced by this code review. QA by Golan Trevize is also separate.
 ## Foundation AI exact-diff binding
 
