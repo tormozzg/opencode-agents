@@ -42,6 +42,7 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/opencode"
           curl -fsSL "https://github.com/anomalyco/opencode/releases/download/v1.19.0/opencode-linux-x64.tar.gz" -o "$RUNNER_TEMP/opencode.tar.gz"
+          echo "7bb9e61ad6feacf2e89c10a6a2c1840e3de4220bb50ba1fc7110f31806076aec  $RUNNER_TEMP/opencode.tar.gz" | sha256sum -c -
           tar -xzf "$RUNNER_TEMP/opencode.tar.gz" -C "$RUNNER_TEMP/opencode"
           OPENCODE_BIN="$(find "$RUNNER_TEMP/opencode" -type f -name opencode | head -n 1)"
           test -n "$OPENCODE_BIN"
