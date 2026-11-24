@@ -38,9 +38,8 @@ POINTER="$STATE_DIR/last-backup"
 
 mkdir -p "$CONFIG_DIR" "$STATE_DIR/backups"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
-BACKUP_DIR="$STATE_DIR/backups/$TIMESTAMP"
-STAGE_DIR="$CONFIG_DIR/.foundation-ai-stage-$TIMESTAMP"
-mkdir -p "$BACKUP_DIR" "$STAGE_DIR"
+BACKUP_DIR="$(mktemp -d "$STATE_DIR/backups/$TIMESTAMP.XXXXXX")"
+STAGE_DIR="$(mktemp -d "$CONFIG_DIR/.foundation-ai-stage-$TIMESTAMP.XXXXXX")"
 
 declare -a RELS=()
 shopt -s nullglob
@@ -49,15 +48,14 @@ for d in "$SKILL_SRC"/*; do [[ -d "$d" ]] && RELS+=("skills/$(basename "$d")"); 
 for f in "$PROTOCOL_SRC"/*.md; do [[ -f "$f" ]] && RELS+=("foundation-ai/protocols/$(basename "$f")"); done
 RELS+=("foundation-ai/opencode.jsonc.fragment")
 
-declare -A PREVIOUS=()
-if [[ -f "$MANIFEST" ]]; then
-  while IFS= read -r rel; do [[ -n "$rel" ]] && PREVIOUS["$rel"]=1; done < "$MANIFEST"
-fi
+is_previous() {
+  [[ -f "$MANIFEST" ]] && grep -Fqx "$1" "$MANIFEST"
+}
 
 # Preflight all collisions and stage every source before changing installed files.
 for rel in "${RELS[@]}"; do
   target="$CONFIG_DIR/$rel"
-  if [[ ( -e "$target" || -L "$target" ) && -z "${PREVIOUS[$rel]+x}" ]]; then
+  if [[ ( -e "$target" || -L "$target" ) ]] && ! is_previous "$rel"; then
     echo "ERROR: refusing to overwrite unowned path: $target" >&2
     echo "Move it yourself or back it up and remove it before installing." >&2
     rm -rf "$STAGE_DIR" "$BACKUP_DIR"
