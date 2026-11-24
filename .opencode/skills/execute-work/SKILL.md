@@ -7,7 +7,7 @@ description: "Worker discipline for delegated implementation tasks: ownership, p
 
 **You own the code you are given.** What it is for and how it is built are your call, so change it the way its owner would: fit new behavior into the structure that is there, build on the code that already does the job, and leave no duplicate or dead code behind. A defect in the code you are changing is yours to fix now, at its root cause — never excuse it as pre-existing, someone else's, or the tool's fault. One defect elsewhere goes in your summary as a follow-up.
 
-This skill is the worker agent's operating loop. It composes with the `code-idiom` skill - part of this pack and always installed: load it before writing code (Phase 0 step 2). The YAGNI ladder and the type-driven design rules live THERE and only there; this file does not duplicate them. This file owns the *workflow* around the code.
+This skill is Andrew Martin's implementation operating loop. It composes with the `code-idiom` skill - part of this pack and always installed: load it before writing code (Phase 0 step 2). The YAGNI ladder and the type-driven design rules live THERE and only there; this file does not duplicate them. This file owns the *workflow* around the code.
 
 ---
 
@@ -51,7 +51,7 @@ If you cannot state the scenario contract, you do not understand the task yet �
 
 Work in short act-inspect-verify loops so early mistakes surface before later steps build on them:
 
-Work silently: act, verify, inspect — no narration of deliberation, no permission-begging. Never stage, commit, push, or otherwise modify git history - commits belong to the pack's git flow (git-master, after code-reviewer approval); if the task asks for the change to be committed, report commit-readiness and let the lead route it.
+Work silently: act, verify, inspect — no narration of deliberation, no permission-begging. Do not stage, commit, push, or rewrite history as part of an implementation subtask. Andrew owns Git operations through the separate `git-operations` skill, but any commit is gated on Han Fastolfe's approval, Jothan Leebig's security verdict when triggered, Golan Trevize's QA PASS, and Susan Calvin's authorization. If the task asks for a commit before those gates, report commit-readiness and stop.
 
 1. Make the change (targeted edit over file rewrite when the result is identical).
 2. **Run diagnostics on the changed file** (`lsp_diagnostics` or the language's type checker). Zero new errors and zero new warnings on changed files before moving on. A warning you cannot fix within scope (e.g. a third-party deprecation) becomes a named follow-up in your report — never silently left.
@@ -116,7 +116,7 @@ Tests and builds prove the internals; the user experiences the real surface. Bef
 - Verify the behavior you changed **and** the adjacent behavior your change could have disturbed.
 - For UI work: where theming applies, check both light and dark; where layout is responsive, check a narrow and a wide viewport.
 - Capture the evidence (command output, screenshot, response body) — "it should work" is not evidence.
-- Report the proof inline in the final report — quote the command output, screenshot description or path as reported, response body; write NO evidence files: evidence files belong to `explore` (citable findings) and `golan-trevize` (gate verdicts), not to the worker.
+- Report the proof inline in the final report — quote the command output, screenshot description or path as reported, response body; write NO evidence files: evidence files belong to Elijah Baley (citable findings) and Golan Trevize (gate verdicts), not to Andrew's implementation report.
 
 ---
 
@@ -151,7 +151,7 @@ When the task prompt names a notepad (e.g. `.opencode/notepads/<plan-name>/`), A
 
 ## Handoff
 
-If your report hands off follow-up work, describe it in plain prose with paths; team-lead decides the routing and executor.
+If your report hands off follow-up work, describe it in plain prose with paths; Susan Calvin decides the routing and executor.
 
 
 ## Foundation AI integration
