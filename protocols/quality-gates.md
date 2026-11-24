@@ -10,19 +10,20 @@ Quality gates are independent, version-bound, and evidence-based.
 5. Daniel Olivaw presents that exact reviewed version for user approval. Record the approved plan version and approval decision. No implementation begins before approval.
 6. Any later change to scope, acceptance criteria, dependencies, or execution-affecting plan content returns to review and approval before affected work proceeds.
 
-## Implementation gate
-1. Susan Calvin decomposes the approved plan version and delegates bounded tasks.
-2. Andrew Martin implements and verifies; he does not approve his own work.
-3. Han Fastolfe independently reviews the complete proposed change set (read-only).
-4. Jothan Leebig independently reviews security-sensitive work when risk triggers apply.
-5. Golan Trevize executes the frozen QA scenario set (read-only).
-6. Andrew fixes findings. Each reviewer independently retests their own findings; QA reruns the full frozen scenario set for the affected task scope after a fix.
-7. Before commit, Susan confirms that the current diff still matches the exact reviewed state. Any post-review change invalidates affected approvals; rerun the relevant review, security, and QA gates against the new state.
-8. Susan authorizes the commit workflow only after all required gates pass. Daniel/user approves material risk acceptance and the final result.
+## Implementation and commit gate
+This sequence applies to every implementation scope, whether plan-based or a direct task.
+1. Daniel coordinates implementation; Andrew Martin implements and verifies. Andrew does not approve his own work and does not commit implementation subtasks.
+2. After implementation is complete, Daniel dispatches Han Fastolfe to independently review the complete candidate (read-only) and waits for the verdict.
+3. Daniel dispatches Jothan Leebig for independent security review when risk triggers apply and waits for the verdict. Critical/High block; Medium requires remediation or explicit risk acceptance by Hari/user.
+4. After Han approval and the applicable security gate, Daniel dispatches Golan Trevize to execute the frozen QA scenario set (read-only) and waits for ALL PASS. Direct tasks must include an explicit runnable scenario list.
+5. Andrew fixes findings. Daniel sends the new candidate through fresh Han review, applicable Jothan review, and a full rerun of the frozen QA scenarios as required. No gate may be skipped or self-certified.
+6. Daniel dispatches Andrew a separate final Git task to exact-candidate-check and commit the single cohesive Daniel-coordinated scope only after all applicable gates pass. Andrew verifies the staged candidate matches the reviewed/tested candidate, commits, and returns the commit hash and status. No separate Daniel/Hari/user commit authorization is required. Do not commit each subtask by default.
+7. Push to any remote requires explicit user authorization. Merge, rebase, history rewrite, and cleanup operations retain their separate authorization requirements.
 
 ## Blocking rules
 - Critical/High security findings block.
-- Medium security findings require remediation or explicit Daniel/user risk acceptance with rationale and compensating controls.
+- Medium security findings require remediation or explicit Hari/user risk acceptance with rationale and compensating controls.
 - Code-review blockers and QA FAIL block.
 - Every verdict identifies the exact plan version or diff/commit SHA it covers.
 - No self-review, fabricated evidence, stale approval, or waived gate by convenience.
+- Daniel must not report implementation complete until the final Andrew commit task succeeds and the commit is verified. If a required dispatch or commit is blocked, report the blocker rather than silently skipping it.
