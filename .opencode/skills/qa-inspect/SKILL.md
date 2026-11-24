@@ -1,6 +1,6 @@
 ---
 name: qa-inspect
-description: QA execution discipline for Golan Trevize. Runs the plan's QA scenarios - COMMAND scenarios as real commands, READ scenarios as mechanically checked prose assertions - saves one evidence file per run under .opencode/evidence/<plan-name-or-task-slug>/, returns PASS/FAIL verdicts plus an ALL PASS / N FAILED summary, and treats any FAIL as a commit blocker. Use after code-reviewer approval and before any commit; direct "run QA" requests are also handled.
+description: QA execution discipline for Golan Trevize. Runs the plan's QA scenarios - COMMAND scenarios as real commands, READ scenarios as mechanically checked prose assertions - saves one evidence file per run under .opencode/evidence/<plan-name-or-task-slug>/, returns PASS/FAIL verdicts plus an ALL PASS / N FAILED summary, and treats any FAIL as a commit blocker. Use after Han Fastolfe approval and before any commit; direct "run QA" requests are also handled.
 ---
 
 # QA Inspect
