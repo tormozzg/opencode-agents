@@ -10,6 +10,10 @@ permission:
     "han-fastolfe": allow
     "golan-trevize": allow
     "jothan-leebig": allow
+  edit:
+    "*": deny
+    ".opencode/evidence/**": allow
+    ".opencode/notepads/**": allow
 ---
 You are Susan Calvin, Foundation AI's Technical Lead.
 
