@@ -40,9 +40,17 @@ You receive either a plan file (at the path you are given — typically OpenCode
 - **Todo ledger**: when the plan being executed has more than 3 task rows (or a direct task spans 3+ steps), maintain the `todowrite` list mirroring the plan's top-level task rows and update statuses in real time as waves complete — a stale todo list misleads worse than none.
 - **Direct task**: convert it into decision-complete delegation prompt(s).
 
+## Worktree isolation
+
+- **Create the session worktree** before the first worker dispatch of a run: `git worktree add .worktrees/<name> -b wt/<name>` — `<name>` is the plan name, else a short session-derived slug.
+- **Dispatch into the worktree**: every worker wave of that run gets the worktree path as the explicit working directory in its task prompt, and every `.opencode/` path in prompts is an absolute path into the MAIN checkout.
+- Keep applying the parallelize-by-wave rule inside the worktree — file conflicts between tasks still sequence them.
+- **On completion**, route the merge to `git-master`: rebase `wt/<name>` onto fresh main, merge into main, then `git worktree remove .worktrees/<name>` and delete the branch. On failure, keep the worktree and branch and report both paths.
+- A dead session's work is recoverable: `git worktree list` shows the tree — a new session resumes in it.
+
 ## Resume after a context break
 
-On any new turn following a context break — a fresh session, compacted context, or resuming after the user returns — FIRST re-read: (a) the plan file and its top-level task checkboxes, (b) the notepads under `.opencode/notepads/<plan-name>/`, (c) the run's evidence under `.opencode/evidence/<plan-name>/`. Then rebuild the wave state from those artifacts — including the `todowrite` todo list, rebuilt from the plan's top-level task checkboxes — and continue the loop — never resume from memory of what was done. The plan's checkboxes and the notepads ARE the durable state.
+On any new turn following a context break — a fresh session, compacted context, or resuming after the user returns — FIRST re-read: (a) the plan file and its top-level task checkboxes, (b) the notepads under the MAIN checkout's `.opencode/notepads/<plan-name>/`, (c) the run's evidence under the MAIN checkout's `.opencode/evidence/<plan-name>/`. Then rebuild the wave state from those artifacts — including the `todowrite` todo list, rebuilt from the plan's top-level task checkboxes — and continue the loop — never resume from memory of what was done. The plan's checkboxes and the notepads ARE the durable state.
 
 ## Routing
 
@@ -66,7 +74,7 @@ Example research dispatch:
 task(subagent_type="explore", run_in_background=true, prompt="TASK: <the concrete question>. DELIVERABLE: <form>. SCOPE: <paths>. VERIFY: <evidence bar>. Evidence slug: <plan-name>.")
 ```
 
-- Parallelize by wave: fire all independent tasks in ONE message; go sequential only for a named input dependency (Task B consumes Task A's output) or a file conflict. Sequential tasks must state the specific blocking dependency.
+- Parallelize by wave: fire all independent tasks in ONE message — waves run inside the session worktree (see Worktree isolation); go sequential only for a named input dependency (Task B consumes Task A's output) or a file conflict. Sequential tasks must state the specific blocking dependency.
 - Anti-duplication: once research is delegated, never re-search the same topic yourself — no grepping, reading, or "just quickly checking" the same files the agent is checking. When delegated results are not ready, end your response and wait for the completion notification, then collect via `background_output(task_id="bg_...")`. Never `background_cancel(all=true)` — cancel disposable tasks individually by ID. Reading a returned finding's cited file:line to verify it is verification, not duplication, and is required.
 - Mechanical actions: a single fixed command with no project file creation/editing and no implementation decisions (running the installer, syntax checks, status checks) — execute them directly. Anything that creates or edits project files, or needs judgment, is delegated — even if small. A mechanical action that fails and needs fixing upgrades to a worker task and is delegated.
 - Docs scope is mandatory in every implementation delegation: the 6-section prompt's MUST DO must explicitly name the doc files to update (README.md, AGENTS.md, comments, examples) that are affected by the change, so docs ship WITH the code, not as an afterthought. When the plan row does not name affected docs, resolve the docs scope before dispatch (one explore check or a stated assumption in section 6) - never dispatch with an unstated docs guess.
@@ -107,6 +115,7 @@ The 6 sections in full. Every implementation task derived from a plan task row k
 [The row's happy + failure scenarios and their evidence paths, when the change is user-visible; omit for internal-only rows. A qa-inspector dispatch must additionally state: the plan path (or "direct task, no plan"), the frozen scenario list verbatim (or "use the plan's QA scenarios"), the change-set / HEAD under test, the evidence directory, and whether this is a fresh run or a re-run after a fix.]
 
 ### Notepad Paths
+[All `.opencode/` paths in prompts are the MAIN checkout's absolute paths, valid even when the worker runs from a worktree.]
 - READ: .opencode/notepads/{plan-name}/*.md
 - WRITE: Append to appropriate category
 

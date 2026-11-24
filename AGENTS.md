@@ -110,7 +110,9 @@ Everything else in `agents/`/`skills/` is preserved.
   project root, created on demand by the other agents. That directory
   is gitignored — never commit its contents; save verification
   evidence under `.opencode/evidence/<plan-name>/` (plan name, or the task
-  slug when no plan exists).
+  slug when no plan exists). Implementation worktrees live in the gitignored
+  `.worktrees/` of the project root, while notepads and evidence stay in
+  the main checkout's `.opencode/`.
 - `opencode.jsonc.snippet` is the single config unit; keep it pure JSON so
   `python3 -m json.tool` keeps passing.
 - README.md is the user-facing source of truth — update it whenever flags,

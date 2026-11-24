@@ -176,7 +176,7 @@ session that debates the approach and converges on a design before planning):
 
 1. `plan` writes a decision-complete plan and runs the mandatory `plan-reviewer` audit before handoff. For complex work (a new subsystem or feature with many moving parts, a project from zero, or server/infrastructure changes) `plan` first consults `architect`, and the plan references the architecture doc `architect` wrote under `.opencode/evidence/`.
 2. `plan-reviewer` audits the plan and returns blockers or approval; `plan` resolves every blocker before handoff, and re-runs the audit after every plan revision - approval binds to the reviewed version.
-3. `team-lead` picks up the approved plan and coordinates the waves.
+3. `team-lead` picks up the approved plan and coordinates the waves; each run's implementation happens in a git worktree under `.worktrees/<name>` (branch `wt/<name>`), merged back into main by `git-master` on completion — see `team-lead`'s skill (`skills/lead-work/SKILL.md`) for the isolation rules.
 4. `explore` answers the open questions the plan flagged.
 5. `worker` implements the delegated steps and verifies each one.
 6. `code-reviewer` checks the resulting diff for correctness and plan fidelity.
@@ -235,6 +235,10 @@ config directory), and partly in OpenCode's global Plan directory:
 - `.opencode/notepads/` — per-plan learnings, issues, and decisions recorded during execution
 - `.opencode/evidence/<plan-name-or-task-slug>/` — design and verification evidence saved by `explore`, `architect`, and `qa-inspector` (one file per run: citable findings, architecture docs, and gate verdicts); `discuss` saves discussion ledgers under `.opencode/evidence/discuss/`; `worker` quotes its proof inline in the final report
 - `.opencode/tmp/` — temporary/scratch verification files (throwaway repro scripts, one-off test scripts, temp fixtures) created by `worker` and `qa-inspector`; anything temporary created outside `.opencode/` is removed before the work is declared done
+
+Notepads and evidence always live in the MAIN checkout's `.opencode/`, even
+while `team-lead` runs the implementation in a git worktree — dispatch prompts
+reference them by absolute paths into the main checkout.
 
 The agents and skills themselves still install globally to `~/.config/opencode/`;
 run-time artifacts live in the project (`.opencode/`) and in OpenCode's global

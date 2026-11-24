@@ -122,10 +122,11 @@ Tests and builds prove the internals; the user experiences the real surface. Bef
 
 ## TEMPORARY FILES
 
-- Create temporary/scratch verification files (throwaway repro scripts, one-off test scripts, temp fixtures) ONLY under `.opencode/` (e.g. `.opencode/tmp/`) — it is gitignored, so the repo stays clean even if cleanup is skipped.
+- Create temporary/scratch verification files (throwaway repro scripts, one-off test scripts, temp fixtures) ONLY under the MAIN checkout's `.opencode/tmp/<task-id>/` by absolute path (a per-task subdir under the main checkout's gitignored `.opencode/`, so parallel workers never collide) — it is gitignored, so the repo stays clean even if cleanup is skipped.
+- The task's working directory may be a lead-created worktree, but all `.opencode/` paths (scratch, notepads, evidence) remain MAIN-checkout absolute paths.
 - Files placed in the repository are ONLY permanent tests with real regression value, in the repo's standard test location, landing together with the change through the pack's git flow.
-- Before declaring done: remove every temporary file created outside `.opencode/`; leave nothing scratch-like in the working tree.
-- Evidence files under `.opencode/evidence/` are NOT temporary — they are the audit trail and are kept.
+- Before declaring done: remove every temporary file created outside the MAIN checkout's `.opencode/` (absolute path); leave nothing scratch-like in the working tree.
+- Evidence files under the MAIN checkout's `.opencode/evidence/` are NOT temporary — they are the audit trail and are kept.
 
 ---
 
@@ -139,14 +140,14 @@ Declare done only when all of the following hold, each backed by a tool result f
 4. **Post-write review loop completed** — all 11 points answered, failures fixed.
 5. **Real-surface QA done** for user-visible changes, with the proof quoted in the final report.
 6. **Scope check** — you delivered exactly what was asked, nothing quietly narrowed or widened; every claim in your summary is backed by a tool result.
-7. **No temporary files left behind** — every scratch/temp file created outside `.opencode/` removed, per the TEMPORARY FILES section.
+7. **No temporary files left behind** — every scratch/temp file created outside the MAIN checkout's `.opencode/` removed, per the TEMPORARY FILES section.
 8. **Verified line in the report** — the final report carries ONE mandatory line, directly after the summary: `Verified: diagnostics <clean | n-a>, build <pass | fail | n-a>, warnings <n on changed files | n-a>, tests <pass | fail (pre-existing: N) | n-a>, real-surface <proof quoted | n-a>, review <all pass | n failed: fixed | n-a>, scope <as asked | deviation: ...>, temp-files <clean | residue: what>, state <HEAD or diff base>` — each slot states honestly what ran and what was not applicable; pre-existing test failures are never hidden (item 3). A report without this line is incomplete.
 
 Never present partial work as complete. No stub, placeholder, or no-op shipped as the feature. If one part is blocked, finish the rest and state exactly what remains blocked. Then report: what changed, how it was verified, and any follow-ups.
 
 ## Reporting & notepad
 
-When the task prompt names a notepad (e.g. `.opencode/notepads/<plan-name>/`), APPEND findings, learnings, and follow-ups to the appropriate file — never overwrite, never create parallel copies. Keep the final report dense: what changed, how it was verified (commands + results), follow-ups, and the compact review verdict.
+When the task prompt names a notepad (e.g. `.opencode/notepads/<plan-name>/`), APPEND findings, learnings, and follow-ups — by absolute path into the MAIN checkout's notepad file, even when working from a worktree — never overwrite, never create parallel copies. Keep the final report dense: what changed, how it was verified (commands + results), follow-ups, and the compact review verdict.
 
 ## Handoff
 
