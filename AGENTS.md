@@ -22,6 +22,9 @@ Foundation AI has ten agents:
 
 Tier 2 agents are leaf agents. Preserve the explicit `permission.task` allowlists and deny rules in agent frontmatter. The intended nesting depth is 2. Do not widen delegation permissions casually.
 
+## Tier 2 evidence artifact permissions
+All Tier 2 agents may create directories and write their own task/run evidence under `.opencode/evidence/<plan-name-or-task-slug>/**`; temporary verification artifacts may go under `.opencode/tmp/**`. This is a narrow exception to read-only duties: read-only applies to product/source files, tests, configuration, plans owned by another agent, and Git history—not to the agent's own evidence deliverables. Reviewer and advisor agents must not modify the artifacts they assess. Evidence permissions do not authorize implementation or commits. Each agent must follow its skill's evidence naming/one-file-per-run convention and verify the artifact exists and is non-empty before reporting it.
+
 ## Tier 2 concurrency policy
 Each Tier 2 agent may have at most one active delegated assignment globally. This is a per-agent limit shared across all Tier 1 callers: Elijah's slot is shared by Daniel and Giskard. Different Tier 2 agents may work in parallel when their assignments are independent. Tier 1 callers must consolidate related requests, track outstanding assignments, and wait for a Tier 2 agent's result before dispatching another task to that same agent. Tier 2 agents remain leaf agents and must not spawn or fork additional work. This is an instruction-level coordination rule, not a runtime-enforced mutex.
 
