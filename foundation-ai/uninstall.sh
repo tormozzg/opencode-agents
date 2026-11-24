@@ -21,11 +21,12 @@ if [[ "$CONFIG_DIR" == "~" || "$CONFIG_DIR" == "~/"* ]]; then
   if [[ "$CONFIG_DIR" == "~" ]]; then CONFIG_DIR="$HOME"; else CONFIG_DIR="$HOME/${CONFIG_DIR:2}"; fi
 fi
 
-STATE_DIR="$CONFIG_DIR/foundation-ai"
+STATE_DIR="$CONFIG_DIR/.foundation-ai-state"
+OWNER_MARKER="$STATE_DIR/owner"
 MANIFEST="$STATE_DIR/manifest.txt"
 POINTER="$STATE_DIR/last-backup"
 ORIGIN="$STATE_DIR/original-backup"
-[[ -f "$MANIFEST" && -f "$ORIGIN" ]] || { echo "ERROR: no Foundation AI install manifest found in $STATE_DIR" >&2; exit 1; }
+[[ -f "$OWNER_MARKER" && "$(cat "$OWNER_MARKER")" == "foundation-ai-managed-v1" && -f "$MANIFEST" && -f "$ORIGIN" ]] || { echo "ERROR: no Foundation AI install manifest found in $STATE_DIR" >&2; exit 1; }
 
 BACKUP_DIR="$(cat "$ORIGIN")"
 case "$BACKUP_DIR" in
