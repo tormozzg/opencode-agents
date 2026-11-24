@@ -34,7 +34,7 @@ Purpose: immutable inventory of the upstream inputs used for the Foundation AI m
 | `skills/qa-inspect/SKILL.md` | `bd76928781170b2fd842fcdc423c5900caf604ac` | 9360 |
 | `skills/refactor-code/SKILL.md` | `3fc03300dd6d3267b999ab66fbd9ff19d81dca22` | 4981 |
 | `skills/research-topic/SKILL.md` | `c94a1c83987484c7083857409bdc0086c7f222a4` | 7159 |
-| `skills/review-code/SKILL.md` | `88f1ca399ce30a9492c8937c58d2ae4393558d4` | 12260 |
+| `skills/review-code/SKILL.md` | `88f1ca399ce30a9492c893c7d58d2ae4393558d4` | 12260 |
 | `skills/review-plan/SKILL.md` | `51675383657e57a99fbc345d3ce9a02f77091e80` | 11254 |
 | `skills/slop-cleanup/SKILL.md` | `4c8ace4178df19b8f144fa56c43beba9805f01f5` | 6438 |
 | `uninstall.sh` | `830af90784513023db9bfc69d1c2cd2baf01a252` | 6106 |
