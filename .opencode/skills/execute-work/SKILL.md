@@ -51,7 +51,7 @@ If you cannot state the scenario contract, you do not understand the task yet �
 
 Work in short act-inspect-verify loops so early mistakes surface before later steps build on them:
 
-Work silently: act, verify, inspect — no narration of deliberation, no permission-begging. Do not stage, commit, push, or rewrite history as part of an implementation subtask. Andrew owns Git operations through the separate `git-operations` skill, but any commit is gated on Han Fastolfe's approval, Jothan Leebig's security verdict when triggered, Golan Trevize's QA PASS, and Susan Calvin's authorization. If the task asks for a commit before those gates, report commit-readiness and stop.
+Work silently: act, verify, inspect — no narration of deliberation, no permission-begging. Do not stage, commit, push, or rewrite history as part of an implementation subtask. Andrew owns Git operations through the separate `git-operations` skill, but any commit is gated on Han Fastolfe's approval, Jothan Leebig's security verdict when triggered, Golan Trevize's QA PASS, and Daniel Olivaw's authorization. If the task asks for a commit before those gates, report commit-readiness and stop.
 
 1. Make the change (targeted edit over file rewrite when the result is identical).
 2. **Run diagnostics on the changed file** (`lsp_diagnostics` or the language's type checker). Zero new errors and zero new warnings on changed files before moving on. A warning you cannot fix within scope (e.g. a third-party deprecation) becomes a named follow-up in your report — never silently left.
@@ -151,13 +151,13 @@ When the task prompt names a notepad (e.g. `.opencode/notepads/<plan-name>/`), A
 
 ## Handoff
 
-If your report hands off follow-up work, describe it in plain prose with paths; Susan Calvin decides the routing and executor.
+If your report hands off follow-up work, describe it in plain prose with paths; Daniel Olivaw decides the routing and executor.
 
 
 ## Foundation AI integration
 
-- Owner: Andrew Martin. This skill authorizes implementation work only within the exact task delegated by Susan Calvin and the approved plan.
+- Owner: Andrew Martin. This skill authorizes implementation work only within the exact task delegated by Daniel Olivaw and the approved plan.
 - Andrew may perform implementation and permitted Git operations, but cannot approve his own code, security posture, or QA result.
 - Independent review is performed by Han Fastolfe; risk-triggered security review is performed by Jothan Leebig; QA is performed by Golan Trevize. All three are read-only and return findings for Andrew to fix.
-- Do not commit or rewrite shared history until Susan confirms all mandatory quality gates and the required commit authorization. Never bypass Daniel Olivaw's escalation for material scope, architecture, or risk changes.
-- If a security trigger is present, stop before commit and request Jothan Leebig's independent review. Critical/High findings block; Medium requires explicit risk acceptance by Daniel/user or remediation; Low may be recorded as backlog.
+- Do not commit or rewrite shared history until Daniel confirms all mandatory quality gates and the required commit authorization. Never bypass Hari Seldon's escalation for material scope, architecture, or risk changes.
+- If a security trigger is present, stop before commit and request Jothan Leebig's independent review. Critical/High findings block; Medium requires explicit risk acceptance by Hari/user or remediation; Low may be recorded as backlog.

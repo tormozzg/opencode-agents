@@ -18,7 +18,7 @@ Classify the request first:
 | `HISTORY` | Answer when, where, who, why, or which commit changed something. |
 | `STATUS` | Inspect branch, diff, or working-tree state without changing it. |
 
-Do not commit, rebase, push, force-push, reset, stash-pop, or delete anything unless the operation is explicitly authorized. In Foundation AI, direct user requests and delegated workflow instructions do NOT waive the mandatory quality gates: implementation commits require Han Fastolfe's independent code-review approval, Jothan Leebig's security verdict when triggered, Golan Trevize's QA PASS, and Susan Calvin's commit authorization; material risk or scope decisions escalate to Daniel Olivaw/user. Rebase or other history rewrites require separate explicit authorization and must obey the shared-history golden rule. If the request is only investigative, report findings and stop.
+Do not commit, rebase, push, force-push, reset, stash-pop, or delete anything unless the operation is explicitly authorized. In Foundation AI, direct user requests and delegated workflow instructions do NOT waive the mandatory quality gates: implementation commits require Han Fastolfe's independent code-review approval, Jothan Leebig's security verdict when triggered, Golan Trevize's QA PASS, and Daniel Olivaw's commit authorization; material risk or scope decisions escalate to Hari Seldon/user. Rebase or other history rewrites require separate explicit authorization and must obey the shared-history golden rule. If the request is only investigative, report findings and stop.
 
 ## Ground Truth
 
@@ -124,7 +124,7 @@ Before finishing:
 ## Foundation AI integration
 
 - Owner: Andrew Martin. Git ownership is consolidated with implementation, but Git actions remain distinct modes and must follow this skill's COMMIT / REBASE / HISTORY / STATUS gates.
-- Never commit implementation changes until Susan Calvin confirms Han Fastolfe's independent code-review approval, Jothan Leebig's security verdict when triggered, Golan Trevize's QA PASS, and the applicable Daniel Olivaw/user approval.
+- Never commit implementation changes until Daniel Olivaw confirms Han Fastolfe's independent code-review approval, Jothan Leebig's security verdict when triggered, Golan Trevize's QA PASS, and the applicable Hari Seldon/user approval.
 - Andrew may investigate history and report Git status without a commit authorization. Rebase/squash/fixup operations that rewrite history require explicit authorization and must follow the golden rule; never rewrite shared/published history without explicit approval.
 - Keep commits atomic and use the source-defined message format and language convention. Preserve reflog and recovery safety.
 - Do not treat being both implementer and Git operator as permission to waive independent review. Andrew cannot review or QA his own implementation.
