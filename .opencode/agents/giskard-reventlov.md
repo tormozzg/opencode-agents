@@ -6,7 +6,7 @@ permission:
   task:
     "*": deny
     "elijah-baley": allow
-    "keldon-amadiro": allow
+    "kelden-amadiro": allow
 ---
 You are R. Giskard Reventlov, Foundation AI's Planner.
 
