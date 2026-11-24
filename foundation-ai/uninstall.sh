@@ -24,9 +24,10 @@ fi
 STATE_DIR="$CONFIG_DIR/foundation-ai"
 MANIFEST="$STATE_DIR/manifest.txt"
 POINTER="$STATE_DIR/last-backup"
-[[ -f "$MANIFEST" && -f "$POINTER" ]] || { echo "ERROR: no Foundation AI install manifest found in $STATE_DIR" >&2; exit 1; }
+ORIGIN="$STATE_DIR/original-backup"
+[[ -f "$MANIFEST" && -f "$ORIGIN" ]] || { echo "ERROR: no Foundation AI install manifest found in $STATE_DIR" >&2; exit 1; }
 
-BACKUP_DIR="$(cat "$POINTER")"
+BACKUP_DIR="$(cat "$ORIGIN")"
 case "$BACKUP_DIR" in
   "$STATE_DIR"/backups/*) ;;
   *) echo "ERROR: invalid backup pointer; refusing to remove files" >&2; exit 1 ;;
@@ -62,17 +63,8 @@ for ((i=${#RELS[@]}-1; i>=0; i--)); do
   fi
 done
 
-# Restore the previous ownership state if this was an upgrade/reinstall.
-if [[ -f "$BACKUP_DIR/.state/manifest.txt" ]]; then
-  cp "$BACKUP_DIR/.state/manifest.txt" "$MANIFEST"
-else
-  rm -f "$MANIFEST"
-fi
-if [[ -f "$BACKUP_DIR/.state/last-backup" ]]; then
-  cp "$BACKUP_DIR/.state/last-backup" "$POINTER"
-else
-  rm -f "$POINTER"
-fi
+# Remove ownership state; the origin backup is the pre-Foundation-AI state.
+rm -f "$MANIFEST" "$POINTER" "$ORIGIN"
 
 echo "Foundation AI managed files removed/restored."
 echo "Backups retained at: $BACKUP_DIR"
