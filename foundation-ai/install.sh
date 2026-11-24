@@ -19,10 +19,10 @@ while [[ $# -gt 0 ]]; do
 done
 
 [[ -n "$CONFIG_DIR" ]] || { echo "ERROR: empty config directory" >&2; exit 2; }
-case "$CONFIG_DIR" in
-  "~") [[ -n "${HOME:-}" ]] || { echo "ERROR: HOME required to expand ~" >&2; exit 1; }; CONFIG_DIR="$HOME" ;;
-  "~/"*) [[ -n "${HOME:-}" ]] || { echo "ERROR: HOME required to expand ~" >&2; exit 1; }; CONFIG_DIR="$HOME/${CONFIG_DIR#~/}" ;;
-esac
+if [[ "$CONFIG_DIR" == "~" || "$CONFIG_DIR" == "~/"* ]]; then
+  [[ -n "${HOME:-}" ]] || { echo "ERROR: HOME required to expand ~" >&2; exit 1; }
+  if [[ "$CONFIG_DIR" == "~" ]]; then CONFIG_DIR="$HOME"; else CONFIG_DIR="$HOME/${CONFIG_DIR:2}"; fi
+fi
 
 AGENT_SRC="$ROOT/.opencode/agents"
 SKILL_SRC="$ROOT/.opencode/skills"
@@ -36,16 +36,17 @@ POINTER="$STATE_DIR/last-backup"
   echo "ERROR: Foundation AI source files are incomplete." >&2; exit 1;
 }
 
-mkdir -p "$CONFIG_DIR"
+mkdir -p "$CONFIG_DIR" "$STATE_DIR/backups"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
 BACKUP_DIR="$STATE_DIR/backups/$TIMESTAMP"
 STAGE_DIR="$CONFIG_DIR/.foundation-ai-stage-$TIMESTAMP"
 mkdir -p "$BACKUP_DIR" "$STAGE_DIR"
 
 declare -a RELS=()
-while IFS= read -r f; do RELS+=("agents/$f"); done < <(find "$AGENT_SRC" -maxdepth 1 -type f -name '*.md' -printf '%f\n' | sort)
-while IFS= read -r d; do RELS+=("skills/$d"); done < <(find "$SKILL_SRC" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort)
-while IFS= read -r f; do RELS+=("foundation-ai/protocols/$f"); done < <(find "$PROTOCOL_SRC" -maxdepth 1 -type f -name '*.md' -printf '%f\n' | sort)
+shopt -s nullglob
+for f in "$AGENT_SRC"/*.md; do [[ -f "$f" ]] && RELS+=("agents/$(basename "$f")"); done
+for d in "$SKILL_SRC"/*; do [[ -d "$d" ]] && RELS+=("skills/$(basename "$d")"); done
+for f in "$PROTOCOL_SRC"/*.md; do [[ -f "$f" ]] && RELS+=("foundation-ai/protocols/$(basename "$f")"); done
 RELS+=("foundation-ai/opencode.jsonc.fragment")
 
 declare -A PREVIOUS=()
@@ -53,7 +54,7 @@ if [[ -f "$MANIFEST" ]]; then
   while IFS= read -r rel; do [[ -n "$rel" ]] && PREVIOUS["$rel"]=1; done < "$MANIFEST"
 fi
 
-# Stage all payloads before touching the destination.
+# Preflight all collisions and stage every source before changing installed files.
 for rel in "${RELS[@]}"; do
   target="$CONFIG_DIR/$rel"
   if [[ -e "$target" && -z "${PREVIOUS[$rel]+x}" ]]; then
@@ -66,7 +67,7 @@ for rel in "${RELS[@]}"; do
   case "$rel" in
     agents/*) cp "$AGENT_SRC/${rel#agents/}" "$STAGE_DIR/$rel" ;;
     skills/*) cp -R "$SKILL_SRC/${rel#skills/}" "$STAGE_DIR/$rel" ;;
-    protocols/*) cp "$PROTOCOL_SRC/${rel#protocols/}" "$STAGE_DIR/$rel" ;;
+    foundation-ai/protocols/*) cp "$PROTOCOL_SRC/${rel#foundation-ai/protocols/}" "$STAGE_DIR/$rel" ;;
     foundation-ai/opencode.jsonc.fragment) cp "$FRAGMENT_SRC" "$STAGE_DIR/$rel" ;;
   esac
 done
@@ -76,10 +77,14 @@ if [[ "$ASSUME_YES" -ne 1 ]]; then
   echo "  $CONFIG_DIR"
   echo "Existing Foundation AI-managed paths will be backed up to:"
   echo "  $BACKUP_DIR"
-  echo "Existing paths not recorded as Foundation AI-managed will NOT be overwritten."
+  echo "Unowned paths will NOT be overwritten."
   read -r -p "Proceed? [yes/N] " reply
   [[ "$reply" == "yes" || "$reply" == "YES" ]] || { rm -rf "$STAGE_DIR" "$BACKUP_DIR"; echo "Aborted."; exit 1; }
 fi
+
+mkdir -p "$BACKUP_DIR/.state"
+[[ ! -f "$MANIFEST" ]] || cp "$MANIFEST" "$BACKUP_DIR/.state/manifest.txt"
+[[ ! -f "$POINTER" ]] || cp "$POINTER" "$BACKUP_DIR/.state/last-backup"
 
 declare -a DONE=()
 rollback() {
@@ -92,14 +97,24 @@ rollback() {
       mv "$BACKUP_DIR/$rel" "$CONFIG_DIR/$rel"
     fi
   done
+  if [[ -f "$BACKUP_DIR/.state/manifest.txt" ]]; then
+    cp "$BACKUP_DIR/.state/manifest.txt" "$MANIFEST"
+  else
+    rm -f "$MANIFEST"
+  fi
+  if [[ -f "$BACKUP_DIR/.state/last-backup" ]]; then
+    cp "$BACKUP_DIR/.state/last-backup" "$POINTER"
+  else
+    rm -f "$POINTER"
+  fi
   rm -rf "$STAGE_DIR"
 }
-trap 'rollback' ERR INT TERM
+trap 'rollback; exit 1' ERR INT TERM
 
 for rel in "${RELS[@]}"; do
   target="$CONFIG_DIR/$rel"
-  mkdir -p "$(dirname "$target")"
   DONE+=("$rel")
+  mkdir -p "$(dirname "$target")"
   if [[ -e "$target" ]]; then
     mkdir -p "$(dirname "$BACKUP_DIR/$rel")"
     mv "$target" "$BACKUP_DIR/$rel"
@@ -107,8 +122,6 @@ for rel in "${RELS[@]}"; do
   mv "$STAGE_DIR/$rel" "$target"
 done
 
-# Atomically replace the ownership manifest and backup pointer.
-mkdir -p "$STATE_DIR"
 printf '%s\n' "${RELS[@]}" > "$STAGE_DIR/manifest.txt"
 printf '%s\n' "$BACKUP_DIR" > "$STAGE_DIR/last-backup"
 mv "$STAGE_DIR/manifest.txt" "$MANIFEST"
