@@ -82,7 +82,15 @@ for agent in tier2 - {"andrew-martin"}:
     fm = frontmatter(agent)
     assert re.search(r"(?m)^\s+edit: deny$", fm), f"{agent}: read-only agent must deny edit"
 
-print("PASS: OpenCode V1 JSON config, skill frontmatter, task allowlists, and read-only boundaries")
+
+for agent, mode in {"daniel-olivaw": "primary", "giskard-reventlov": "all", "susan-calvin": "all"}.items():
+    fm = frontmatter(agent)
+    assert re.search(rf"(?m)^mode: {mode}$", fm), f"{agent}: expected mode {mode}"
+assert "edit: deny" in frontmatter("daniel-olivaw"), "Daniel must not edit files"
+assert 'edit:\n    "*": deny\n    ".opencode/plans/**": allow\n    ".opencode/evidence/**": allow' in frontmatter("giskard-reventlov"), "Giskard edit scope must be plans/evidence only"
+assert 'edit:\n    "*": deny\n    ".opencode/evidence/**": allow\n    ".opencode/notepads/**": allow\n    ".opencode/task-state/**": allow' in frontmatter("susan-calvin"), "Susan edit scope must be coordination artifacts only"
+
+print("PASS: OpenCode V1 JSON config, skill frontmatter, task allowlists, modes, and write boundaries")
 PY
 
 pass "Foundation AI structural validation complete"
