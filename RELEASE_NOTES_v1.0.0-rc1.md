@@ -8,8 +8,8 @@
 
 ## What is included
 
-- Nine coordinated agents across three tiers, with Daniel Olivaw as the default primary coordinator.
-- Fourteen skills: all thirteen upstream skills migrated, plus the new independent `security-review` skill.
+- Ten coordinated agents across three tiers, with Hari Seldon as Grand Leader and default primary coordinator; Daniel Olivaw is Technical Lead / COO.
+- Fifteen skills: all thirteen upstream skills migrated, plus `security-review` and the new leadership-level `security-advisory` skill.
 - Six operating protocols covering handoffs, task state, quality gates, escalation, Git safety, and security policy.
 - OpenCode 1.19 V1 configuration using `default_agent`, `subagent_depth: 2`, and explicit `permission.task` allowlists.
 - Original upstream skill bodies retained verbatim under `source-snapshot/skills/`, with source manifest and migration audit.
@@ -18,7 +18,7 @@
 
 ## Validation evidence
 
-The latest CI run on candidate baseline `063ae15187a0a72fd0cbdc3c8d872fa0e77d08bd` completed successfully:
+The previous CI run on candidate baseline `063ae15187a0a72fd0cbdc3c8d872fa0e77d08bd` completed successfully:
 
 - Ubuntu structural and installer lifecycle tests — PASS
 - macOS structural and installer lifecycle tests — PASS
@@ -26,7 +26,7 @@ The latest CI run on candidate baseline `063ae15187a0a72fd0cbdc3c8d872fa0e77d08b
 
 Run: https://github.com/tormozzg/opencode-agents/actions/runs/45455955322
 
-The runtime smoke test verifies exact CLI version, discovery of all nine agents and their modes, permission parsing, resolved project configuration, and global installation/discovery.
+The runtime smoke test verifies exact CLI version, discovery of the previous nine-agent roster and their modes, permission parsing, resolved project configuration, and global installation/discovery.
 
 ## Remaining release blockers
 
