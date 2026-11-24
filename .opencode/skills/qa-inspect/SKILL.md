@@ -70,9 +70,9 @@ Summary line: `ALL PASS` or `N FAILED (of M scenarios)`. "Ran and passed" is the
 ## Foundation AI integration
 
 - Owner: Golan Trevize. QA is independent and read-only to product code.
-- Execute the frozen scenarios and report evidence-backed PASS/FAIL to Susan Calvin. Never repair product code or modify expected scenarios to obtain a pass.
+- Execute the frozen scenarios and report evidence-backed PASS/FAIL to Daniel Olivaw. Never repair product code or modify expected scenarios to obtain a pass.
 - Andrew Martin fixes failures; Golan reruns the affected scenarios and preserves the evidence trail.
 - QA is distinct from Han Fastolfe's code review and Jothan Leebig's security review. Do not substitute one verdict for another.
 ## Foundation AI baseline binding
 
-At run start, record the exact approved plan version and immutable QA scenario-set identity (version/content hash when available); copy the scenario set into the evidence record or otherwise preserve a verbatim reference. Bind the verdict to the exact implementation candidate (commit SHA or reproducible diff snapshot) and changed-path set. Execute the frozen set without changing commands or expected results. If a scenario or acceptance criterion appears wrong, stop and report the plan defect to Susan/Daniel; only a revised, re-reviewed, re-approved plan can define a replacement scenario set. After implementation fixes, rerun the full frozen scenario set for the affected task scope. A partial retest is supplemental and cannot replace the required full-run verdict.
+At run start, record the exact approved plan version and immutable QA scenario-set identity (version/content hash when available); copy the scenario set into the evidence record or otherwise preserve a verbatim reference. Bind the verdict to the exact implementation candidate (commit SHA or reproducible diff snapshot) and changed-path set. Execute the frozen set without changing commands or expected results. If a scenario or acceptance criterion appears wrong, stop and report the plan defect to Daniel/Hari; only a revised, re-reviewed, re-approved plan can define a replacement scenario set. After implementation fixes, rerun the full frozen scenario set for the affected task scope. A partial retest is supplemental and cannot replace the required full-run verdict.
