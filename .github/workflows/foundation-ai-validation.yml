@@ -85,7 +85,7 @@ jobs:
           grep -q '^hari-seldon (primary)$' "$RUNNER_TEMP/agents.txt"
           grep -q '^giskard-reventlov (all)$' "$RUNNER_TEMP/agents.txt"
           grep -q '^daniel-olivaw (all)$' "$RUNNER_TEMP/agents.txt"
-          for agent in elijah-baley kelden-amadiro andrew-martin han-fastolfe golan-trevize jothan-leebig dors-venabili; do
+          for agent in elijah-baley kelden-amadiro hugo-amaryl han-fastolfe golan-trevize jothan-leebig dors-venabili; do
             grep -q "^$agent (subagent)$" "$RUNNER_TEMP/agents.txt" || { echo "Missing or wrong mode: $agent"; exit 1; }
           done
       - name: Verify resolved project configuration
