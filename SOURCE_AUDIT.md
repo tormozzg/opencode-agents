@@ -36,7 +36,7 @@ Working branch: `foundation-ai/v1.0-migration`
 ### Git behavior
 - `git-master` has explicit COMMIT / REBASE / HISTORY / STATUS mode gates.
 - Preserve atomic commit grouping and message convention, history search (including blame/bisect/log -S/reflog), rebase golden rule, shared-history protection, and safety checks.
-- Foundation AI maps Git ownership to Andrew Martin, but must retain approval and quality gates; implementation completion alone is not commit authorization.
+- Foundation AI maps Git ownership to Hugo Amaryl, but must retain approval and quality gates; implementation completion alone is not commit authorization.
 
 ## 3. Concrete upstream installer risks
 
@@ -85,7 +85,7 @@ Source inventory and upstream behavior audit are complete. No upstream files wer
 The migration has progressed beyond the initial starter audit:
 
 - All 13 upstream skill bodies are preserved verbatim under `source-snapshot/skills/`. Their Git blob SHAs were compared against the pinned source tree; all 13 are exact matches.
-- All 13 source skills now have Foundation AI counterparts under `skills/`; the new `security-review` makes 14 total. A heading-level audit found no dropped source sections. The plan-work architecture consult is intentionally converted into Giskard loading `architect-work`, and the Git Master heading is renamed for Andrew Martin's `git-operations` skill.
+- All 13 source skills now have Foundation AI counterparts under `skills/`; the new `security-review` makes 14 total. A heading-level audit found no dropped source sections. The plan-work architecture consult is intentionally converted into Giskard loading `architect-work`, and the Git Master heading is renamed for Hugo Amaryl's `git-operations` skill.
 - Nine agent definitions, six protocols, the V1 config, and explicit task/edit permission scopes are present.
 - The repository `.gitignore` now tracks only the pack-definition paths in root-level `agents/`, `skills/`, and `protocols/` while keeping runtime artifacts ignored.
 - Safe installer/uninstaller, structural validator, lifecycle tests, and a GitHub Actions matrix were added. CI has passed the structural and installer lifecycle tests on both Ubuntu and macOS; the latest Ubuntu and macOS lifecycle jobs both pass, and the pinned OpenCode 1.19.0 runtime smoke job passes.
