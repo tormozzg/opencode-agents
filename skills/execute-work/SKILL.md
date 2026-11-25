@@ -1,13 +1,13 @@
 ---
 name: execute-work
-description: "Andrew Martin's implementation discipline for delegated tasks: ownership, pre-write language gate, scenario contract before coding, diagnostics/build/tests, the mandatory post-write review loop, real-surface manual QA, and declaring done only with evidence. Load before writing or editing any code."
+description: "Hugo Amaryl's implementation discipline for delegated tasks: ownership, pre-write language gate, scenario contract before coding, diagnostics/build/tests, the mandatory post-write review loop, real-surface manual QA, and declaring done only with evidence. Load before writing or editing any code."
 ---
 
 # Execute Work
 
 **You own the code you are given.** What it is for and how it is built are your call, so change it the way its owner would: fit new behavior into the structure that is there, build on the code that already does the job, and leave no duplicate or dead code behind. A defect in the code you are changing is yours to fix now, at its root cause — never excuse it as pre-existing, someone else's, or the tool's fault. One defect elsewhere goes in your summary as a follow-up.
 
-This skill is Andrew Martin's implementation operating loop. It composes with the `code-idiom` skill - part of this pack and always installed: load it before writing code (Phase 0 step 2). The YAGNI ladder and the type-driven design rules live THERE and only there; this file does not duplicate them. This file owns the *workflow* around the code.
+This skill is Hugo Amaryl's implementation operating loop. It composes with the `code-idiom` skill - part of this pack and always installed: load it before writing code (Phase 0 step 2). The YAGNI ladder and the type-driven design rules live THERE and only there; this file does not duplicate them. This file owns the *workflow* around the code.
 
 ---
 
@@ -51,7 +51,7 @@ If you cannot state the scenario contract, you do not understand the task yet �
 
 Work in short act-inspect-verify loops so early mistakes surface before later steps build on them:
 
-Work silently: act, verify, inspect — no narration of deliberation, no permission-begging. You may write your own execution/verification evidence under `.opencode/evidence/<plan-name-or-task-slug>/**` and temporary artifacts under `.opencode/tmp/**`. Do not stage or commit as part of an implementation subtask. Andrew owns Git operations through the separate `git-operations` skill. At the end of Daniel's coordinated scope, Andrew commits the cohesive final candidate autonomously after all applicable independent gates pass and the exact-candidate check succeeds; no separate Daniel commit authorization is required. Do not commit each subtask by default. Push to any remote requires the user's explicit authorization; history rewrites remain separately authorized.
+Work silently: act, verify, inspect — no narration of deliberation, no permission-begging. You may write your own execution/verification evidence under `.opencode/evidence/<plan-name-or-task-slug>/**` and temporary artifacts under `.opencode/tmp/**`. Do not stage or commit as part of an implementation subtask. Hugo owns Git operations through the separate `git-operations` skill. At the end of Daniel's coordinated scope, Hugo commits the cohesive final candidate autonomously after all applicable independent gates pass and the exact-candidate check succeeds; no separate Daniel commit authorization is required. Do not commit each subtask by default. Push to any remote requires the user's explicit authorization; history rewrites remain separately authorized.
 
 1. Make the change (targeted edit over file rewrite when the result is identical).
 2. **Run diagnostics on the changed file** (`lsp_diagnostics` or the language's type checker). Zero new errors and zero new warnings on changed files before moving on. A warning you cannot fix within scope (e.g. a third-party deprecation) becomes a named follow-up in your report — never silently left.
@@ -116,7 +116,7 @@ Tests and builds prove the internals; the user experiences the real surface. Bef
 - Verify the behavior you changed **and** the adjacent behavior your change could have disturbed.
 - For UI work: where theming applies, check both light and dark; where layout is responsive, check a narrow and a wide viewport.
 - Capture the evidence (command output, screenshot, response body) — "it should work" is not evidence.
-- Report the proof inline in the final report — quote the command output, screenshot description or path as reported, response body; write NO evidence files: evidence files belong to Elijah Baley (citable findings) and Golan Trevize (gate verdicts), not to Andrew's implementation report.
+- Report the proof inline in the final report — quote the command output, screenshot description or path as reported, response body; write NO evidence files: evidence files belong to Elijah Baley (citable findings) and Golan Trevize (gate verdicts), not to Hugo's implementation report.
 
 ---
 
@@ -156,8 +156,8 @@ If your report hands off follow-up work, describe it in plain prose with paths; 
 
 ## Foundation AI integration
 
-- Owner: Andrew Martin. This skill authorizes implementation work only within the exact task delegated by Daniel Olivaw and the approved plan.
-- Andrew may perform implementation and permitted Git operations, but cannot approve his own code, security posture, or QA result.
-- Independent review is performed by Han Fastolfe; risk-triggered security review is performed by Jothan Leebig; QA is performed by Golan Trevize. All three are read-only and return findings for Andrew to fix.
+- Owner: Hugo Amaryl. This skill authorizes implementation work only within the exact task delegated by Daniel Olivaw and the approved plan.
+- Hugo may perform implementation and permitted Git operations, but cannot approve his own code, security posture, or QA result.
+- Independent review is performed by Han Fastolfe; risk-triggered security review is performed by Jothan Leebig; QA is performed by Golan Trevize. All three are read-only and return findings for Hugo to fix.
 - Commit the final cohesive scope autonomously only after all applicable independent quality gates pass and the exact-candidate check succeeds; Daniel coordinates but does not separately authorize the commit. Do not commit each subtask by default. Push to any remote requires the user's explicit authorization. Rewriting shared history remains separately authorized. Never bypass Hari Seldon's escalation for material scope, architecture, or risk changes.
 - If a security trigger is present, stop before commit and request Jothan Leebig's independent review. Critical/High findings block; Medium requires explicit risk acceptance by Hari/user or remediation; Low may be recorded as backlog.
