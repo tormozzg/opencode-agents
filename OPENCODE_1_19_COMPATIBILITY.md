@@ -22,7 +22,7 @@ Do NOT silently convert this configuration to OpenCode 2.x syntax. In particular
 |---|---|
 | Hari Seldon | Daniel Olivaw, Giskard Reventlov |
 | Giskard Reventlov | Elijah Baley, Dors Venabili, Kelden Amadiro |
-| Daniel Olivaw | Elijah Baley, Andrew Martin, Han Fastolfe, Golan Trevize, Jothan Leebig |
+| Daniel Olivaw | Elijah Baley, Hugo Amaryl, Han Fastolfe, Golan Trevize, Jothan Leebig |
 | Dors Venabili and Tier 2 specialists | None |
 
 Every caller's V1 permission map starts with `"*": "deny"`, then adds exact allowed child IDs. Tier 2 agents explicitly deny all `task` dispatch. This is important because `subagent_depth` controls maximum nesting but does not define which child agent a parent may call.
@@ -49,7 +49,7 @@ The pinned OpenCode 1.19.0 CLI was executed in CI on the prior nine-agent roster
 3. The default agent is Hari Seldon.
 4. Hari can dispatch only Daniel, Giskard, and Dors.
 5. Giskard can dispatch only Elijah and Kelden.
-6. Daniel can dispatch only Elijah, Andrew, Han, Golan, and Jothan.
+6. Daniel can dispatch only Elijah, Hugo, Han, Golan, and Jothan.
 7. Dors and Tier 2 agents have no Task children.
 8. Nested Tier 1 → Tier 2 dispatch succeeds at `subagent_depth: 2`.
 9. All 14 skills are discoverable and load by exact name.
