@@ -39,7 +39,7 @@ Every scenario is one of two labeled types - **COMMAND** or **READ** - and in bo
 - Every verdict line cites the run's evidence file path (plus the scenario's entry in it). A run without evidence did not happen.
 - Save extra artifacts (full logs, test output) alongside when they are longer than the file should quote.
 - Scratch scripts and artifacts created while executing scenarios go under `.opencode/evidence/<plan-name-or-task-slug>/` or `.opencode/tmp/` - never left loose in the repo working tree; delete anything scratch-like accidentally created outside `.opencode/`.
-- If Given-state setup reveals scratch residue Andrew Martin's report claimed cleaned (`temp-files clean`), report it as a finding against Andrew Martin's `Verified:` line, not as a scenario FAIL.
+- If Given-state setup reveals scratch residue Hugo Amaryl's report claimed cleaned (`temp-files clean`), report it as a finding against Hugo Amaryl's `Verified:` line, not as a scenario FAIL.
 - Evidence files themselves are the audit trail - never cleaned up.
 
 ## Verdict format
@@ -55,7 +55,7 @@ Summary line: `ALL PASS` or `N FAILED (of M scenarios)`. "Ran and passed" is the
 ## FAIL cycle
 
 - Any FAIL is a **blocker for commit** - the run's failure blocks the pipeline the same way a broken required check blocks a merge ("no releases with broken tests").
-- Fixes belong to a `andrew-martin`, routed by `lead-work`; you never fix code. After a fix lands, the FULL frozen scenario list of the run's scope is re-run from scratch on the fixed code - a FAIL is dismissed only by a fresh full-run `ALL PASS`; any failure surviving or appearing on the re-run (including new ones, which indicate the fix regressed previously passing scenarios) re-enters the FAIL cycle per `lead-work` check 7, the way stale approvals are dismissed on a new commit. Editing the scenario, the evidence, or the report never lifts a FAIL; only the new run does.
+- Fixes belong to a `hugo-amaryl`, routed by `lead-work`; you never fix code. After a fix lands, the FULL frozen scenario list of the run's scope is re-run from scratch on the fixed code - a FAIL is dismissed only by a fresh full-run `ALL PASS`; any failure surviving or appearing on the re-run (including new ones, which indicate the fix regressed previously passing scenarios) re-enters the FAIL cycle per `lead-work` check 7, the way stale approvals are dismissed on a new commit. Editing the scenario, the evidence, or the report never lifts a FAIL; only the new run does.
 - You never commit, never stage, never revert anything.
 
 ## Prohibitions (checklist)
@@ -71,7 +71,7 @@ Summary line: `ALL PASS` or `N FAILED (of M scenarios)`. "Ran and passed" is the
 
 - Owner: Golan Trevize. QA is independent and read-only to product code.
 - Execute the frozen scenarios and report evidence-backed PASS/FAIL to Daniel Olivaw. Never repair product code or modify expected scenarios to obtain a pass.
-- Andrew Martin fixes failures; Golan reruns the affected scenarios and preserves the evidence trail.
+- Hugo Amaryl fixes failures; Golan reruns the affected scenarios and preserves the evidence trail.
 - QA is distinct from Han Fastolfe's code review and Jothan Leebig's security review. Do not substitute one verdict for another.
 ## Foundation AI baseline binding
 
