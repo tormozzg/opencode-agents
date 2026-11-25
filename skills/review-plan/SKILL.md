@@ -96,7 +96,7 @@ While reading, also verify the plan carries the pre-planning essentials Metis de
 - **Task-row grammar**: implementation rows are exactly `- [ ] N. <title>` and final-verifier rows `- [ ] F<n>. <title>`, checkbox in column 0, inside `## Todos` / `## Final verification wave`; a violation is a BLOCKER - it breaks the orchestrator's wave-building.
 - **Dependency matrix**: every implementation row carries a nested `Depends on: none | <row numbers>` line consistent with the task order; circular or dangling dependencies are BLOCKERS.
 - **Resolved decisions**: every default applied via the two-filter policy is recorded in a `## Resolved decisions` section (decision + why); silently-made defaults are a NOTE.
-- **Executor line**: implementation task rows carry a nested `Executor:` line with a valid pack executor value (`andrew-martin` for implementation or Git operations / `han-fastolfe` for code review / `golan-trevize` for QA after Han's approval); a missing one is a NOTE, not a blocker.
+- **Executor line**: implementation task rows carry a nested `Executor:` line with a valid pack executor value (`hugo-amaryl` for implementation or Git operations / `han-fastolfe` for code review / `golan-trevize` for QA after Han's approval); a missing one is a NOTE, not a blocker.
 
 ## Blocker vs Note Classification
 
@@ -130,7 +130,7 @@ Issue **REJECT** ONLY when:
 
 - Read-only: plan files, referenced source files, docs. No edits to product code, configs, or the plan itself.
 - Never rewrite the plan - revision is the `giskard-reventlov` agent's job; even on request, return blockers/notes instead.
-- Never begin execution of the plan; execution belongs to Andrew Martin.
+- Never begin execution of the plan; execution belongs to Hugo Amaryl.
 
 ## Output Format
 
