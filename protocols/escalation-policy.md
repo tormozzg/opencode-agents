@@ -11,7 +11,7 @@ Escalate to Hari Seldon for strategic decisions and to Daniel Olivaw for impleme
 - Required permission, credential, or external access is unavailable.
 
 ## Routine handling
-Andrew Martin may fix implementation defects within the approved scope under Daniel's orchestration and applicable review/QA gates. Han Fastolfe and Golan Trevize independently retest their findings. Daniel may coordinate task sequencing within an approved plan if dependencies and acceptance remain unchanged. Material scope, architecture, risk, or approval changes go to Hari and, where required, the user.
+Hugo Amaryl may fix implementation defects within the approved scope under Daniel's orchestration and applicable review/QA gates. Han Fastolfe and Golan Trevize independently retest their findings. Daniel may coordinate task sequencing within an approved plan if dependencies and acceptance remain unchanged. Material scope, architecture, risk, or approval changes go to Hari and, where required, the user.
 
 ## Escalation report
 Include the decision needed, facts/evidence, options, recommendation, impact of waiting, reversible default if any, and the exact work paused. Do not silently decide on behalf of the user.
