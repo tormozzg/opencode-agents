@@ -1,6 +1,6 @@
 ---
 name: git-operations
-description: "MUST USE for atomic commits, rebase/squash/fixup, and history search (blame, bisect, log -S, reflog). Load this skill before running any Git operation. It is Andrew Martin's own skill, not a separately registered agent. Triggers: 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find the commit that'."
+description: "MUST USE for atomic commits, rebase/squash/fixup, and history search (blame, bisect, log -S, reflog). Load this skill before running any Git operation. It is Hugo Amaryl's own skill, not a separately registered agent. Triggers: 'commit', 'rebase', 'squash', 'who wrote', 'when was X added', 'find the commit that'."
 ---
 
 # Git Operations
@@ -18,7 +18,7 @@ Classify the request first:
 | `HISTORY` | Answer when, where, who, why, or which commit changed something. |
 | `STATUS` | Inspect branch, diff, or working-tree state without changing it. |
 
-Do not perform a Git write operation unless this skill's applicable gate permits it. In Foundation AI, Andrew commits the final cohesive implementation scope autonomously after Han Fastolfe's independent code-review approval, Jothan Leebig's security verdict when triggered, Golan Trevize's QA PASS, and confirmation that the staged candidate exactly matches the reviewed and tested candidate. Daniel coordinates the full scope and gates but does not separately authorize the commit. Do not commit each implementation subtask by default; commit at the end of the coordinated scope. Push to any remote, including tags and force-pushes, requires the user's explicit authorization. Rebase or other history rewrites require separate explicit authorization and must obey the shared-history golden rule. Reset, stash-pop, and deletion remain subject to their applicable safety/authorization requirements. Material risk or scope decisions escalate to Hari Seldon/user. If the request is only investigative, report findings and stop.
+Do not perform a Git write operation unless this skill's applicable gate permits it. In Foundation AI, Hugo commits the final cohesive implementation scope autonomously after Han Fastolfe's independent code-review approval, Jothan Leebig's security verdict when triggered, Golan Trevize's QA PASS, and confirmation that the staged candidate exactly matches the reviewed and tested candidate. Daniel coordinates the full scope and gates but does not separately authorize the commit. Do not commit each implementation subtask by default; commit at the end of the coordinated scope. Push to any remote, including tags and force-pushes, requires the user's explicit authorization. Rebase or other history rewrites require separate explicit authorization and must obey the shared-history golden rule. Reset, stash-pop, and deletion remain subject to their applicable safety/authorization requirements. Material risk or scope decisions escalate to Hari Seldon/user. If the request is only investigative, report findings and stop.
 
 ## Ground Truth
 
@@ -123,15 +123,15 @@ Before finishing:
 
 ## Worktree operations
 
-Andrew Martin owns the complete worktree lifecycle when delegated by Daniel: create the requested `.worktrees/<name>` directory and `wt/<name>` branch before implementation, verify with `git worktree list` and `git branch --show-current`, report exact paths, and preserve the worktree on failure. Remove a worktree or delete its branch only after Daniel confirms the run is complete and all applicable quality gates and explicit cleanup authorization are satisfied. Never merge into `main` merely because a worktree task is complete. Daniel coordinates but must not execute Git commands or create/manage worktrees.
+Hugo Amaryl owns the complete worktree lifecycle when delegated by Daniel: create the requested `.worktrees/<name>` directory and `wt/<name>` branch before implementation, verify with `git worktree list` and `git branch --show-current`, report exact paths, and preserve the worktree on failure. Remove a worktree or delete its branch only after Daniel confirms the run is complete and all applicable quality gates and explicit cleanup authorization are satisfied. Never merge into `main` merely because a worktree task is complete. Daniel coordinates but must not execute Git commands or create/manage worktrees.
 
 ## Foundation AI integration
 
-- Owner: Andrew Martin. Git ownership is consolidated with implementation, but Git actions remain distinct modes and must follow this skill's COMMIT / REBASE / HISTORY / STATUS gates.
+- Owner: Hugo Amaryl. Git ownership is consolidated with implementation, but Git actions remain distinct modes and must follow this skill's COMMIT / REBASE / HISTORY / STATUS gates.
 - Commit the final cohesive implementation scope autonomously only after Han Fastolfe's independent approval, Jothan Leebig's security verdict when triggered, Golan Trevize's QA PASS, and the exact-candidate check below. Daniel coordinates the gates but does not separately authorize the commit. No per-subtask commits by default. Push to any remote requires the user's explicit authorization.
-- Andrew may investigate history and report Git status without a commit. Rebase/squash/fixup operations that rewrite history require separate explicit authorization and must follow the golden rule; never rewrite shared/published history without explicit approval.
+- Hugo may investigate history and report Git status without a commit. Rebase/squash/fixup operations that rewrite history require separate explicit authorization and must follow the golden rule; never rewrite shared/published history without explicit approval.
 - Keep commits atomic and use the source-defined message format and language convention. Preserve reflog and recovery safety.
-- Do not treat being both implementer and Git operator as permission to waive independent review. Andrew cannot review or QA his own implementation.
+- Do not treat being both implementer and Git operator as permission to waive independent review. Hugo cannot review or QA his own implementation.
 ## Foundation AI exact-candidate commit check
 
 Before COMMIT, identify the exact approved plan version and the candidate diff reviewed by Han (and Jothan when triggered) and tested by Golan. Inspect staged, unstaged, and untracked changes; ensure no path or content/mode change has appeared since those verdicts. The staged commit content must match the reviewed candidate exactly. If the index differs, do not commit: route the new complete candidate for affected independent review and QA/security retest. Never treat a review of only the incremental patch as approval of the final staged tree. Record the candidate identity and reviewer verdict references in the commit handoff. Do not stage unrelated or unrecognized user changes.
