@@ -9,7 +9,7 @@ TIER 0
 └── HARI SELDON — Grand Leader (default entry point)
     ├── TIER 1: R. DANIEL OLIVAW — Technical Lead / COO
     │   ├── ELIJAH BALEY — Shared Investigator
-    │   ├── ANDREW MARTIN — Implementer + Git
+    │   ├── HUGO AMARYL — Implementer + Git
     │   ├── HAN FASTOLFE — Independent Code Reviewer
     │   ├── GOLAN TREVIZE — Independent QA
     │   └── JOTHAN LEEBIG — Independent Security Engineer
@@ -66,7 +66,7 @@ See [OpenCode 1.19 compatibility](OPENCODE_1_19_COMPATIBILITY.md). The V1 schema
 Giskard researches through Elijah, consults Dors for substantive planning critique, applies `architect-work` for complex designs, prepares a decision-complete plan, and sends it to Kelden for independent formal review. Hari obtains explicit user approval of that exact reviewed plan before authorizing Daniel to begin implementation.
 
 ### Implementation
-Daniel decomposes the approved plan and delegates to Andrew. Han performs independent code review. Jothan performs risk-triggered security review. Golan executes frozen QA scenarios. Andrew fixes findings and independently reviewed gates are repeated. Daniel authorizes Git commit only after all required gates pass.
+Daniel decomposes the approved plan and delegates to Hugo. Han performs independent code review. Jothan performs risk-triggered security review. Golan executes frozen QA scenarios. Hugo fixes findings and independently reviewed gates are repeated. Daniel authorizes Git commit only after all required gates pass.
 
 ### Security triggers
 Jothan must review changes involving authentication/authorization, secrets, sensitive data, public APIs, uploads, parsing/deserialization, injection sinks, user-controlled HTML, network boundaries, cryptography, dependencies/supply chain, permissions, or security configuration.
@@ -82,14 +82,14 @@ Critical/High findings block. Medium requires remediation or explicit Hari/user 
 | `review-plan` | Kelden |
 | `research-topic` | Elijah |
 | `lead-work` | Daniel |
-| `execute-work` | Andrew |
+| `execute-work` | Hugo |
 | `discuss-work` | Shared discussion mode; no separate agent |
-| `code-idiom` | Andrew, companion |
-| `refactor-code` | Andrew, companion |
-| `slop-cleanup` | Andrew, companion |
+| `code-idiom` | Hugo, companion |
+| `refactor-code` | Hugo, companion |
+| `slop-cleanup` | Hugo, companion |
 | `review-code` | Han |
 | `qa-inspect` | Golan |
-| `git-operations` | Andrew |
+| `git-operations` | Hugo |
 | `security-review` | Jothan |
 | `security-advisory` | Dors — planning critique for Giskard |
 
