@@ -12,12 +12,12 @@ Quality gates are independent, version-bound, and evidence-based.
 
 ## Implementation and commit gate
 This sequence applies to every implementation scope, whether plan-based or a direct task.
-1. Daniel coordinates implementation; Andrew Martin implements and verifies. Andrew does not approve his own work and does not commit implementation subtasks.
+1. Daniel coordinates implementation; Hugo Amaryl implements and verifies. Hugo does not approve his own work and does not commit implementation subtasks.
 2. After implementation is complete, Daniel dispatches Han Fastolfe to independently review the complete candidate (read-only) and waits for the verdict.
 3. Daniel dispatches Jothan Leebig for independent security review when risk triggers apply and waits for the verdict. Critical/High block; Medium requires remediation or explicit risk acceptance by Hari/user.
 4. After Han approval and the applicable security gate, Daniel dispatches Golan Trevize to execute the frozen QA scenario set (read-only) and waits for ALL PASS. Direct tasks must include an explicit runnable scenario list.
-5. Andrew fixes findings. Daniel sends the new candidate through fresh Han review, applicable Jothan review, and a full rerun of the frozen QA scenarios as required. No gate may be skipped or self-certified.
-6. Daniel dispatches Andrew a separate final Git task to exact-candidate-check and commit the single cohesive Daniel-coordinated scope only after all applicable gates pass. Andrew verifies the staged candidate matches the reviewed/tested candidate, commits, and returns the commit hash and status. No separate Daniel/Hari/user commit authorization is required. Do not commit each subtask by default.
+5. Hugo fixes findings. Daniel sends the new candidate through fresh Han review, applicable Jothan review, and a full rerun of the frozen QA scenarios as required. No gate may be skipped or self-certified.
+6. Daniel dispatches Hugo a separate final Git task to exact-candidate-check and commit the single cohesive Daniel-coordinated scope only after all applicable gates pass. Hugo verifies the staged candidate matches the reviewed/tested candidate, commits, and returns the commit hash and status. No separate Daniel/Hari/user commit authorization is required. Do not commit each subtask by default.
 7. Push to any remote requires explicit user authorization. Merge, rebase, history rewrite, and cleanup operations retain their separate authorization requirements.
 
 ## Blocking rules
@@ -26,4 +26,4 @@ This sequence applies to every implementation scope, whether plan-based or a dir
 - Code-review blockers and QA FAIL block.
 - Every verdict identifies the exact plan version or diff/commit SHA it covers.
 - No self-review, fabricated evidence, stale approval, or waived gate by convenience.
-- Daniel must not report implementation complete until the final Andrew commit task succeeds and the commit is verified. If a required dispatch or commit is blocked, report the blocker rather than silently skipping it.
+- Daniel must not report implementation complete until the final Hugo commit task succeeds and the commit is verified. If a required dispatch or commit is blocked, report the blocker rather than silently skipping it.
