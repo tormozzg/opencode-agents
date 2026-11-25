@@ -41,7 +41,7 @@ You may dispatch exactly two subagent types, all read-only:
 
 Proportionality: one explore wave per discussion by default. Dispatch a second wave only if the first one uncovered new unknowns, and stop dispatching once you have enough facts to converge — same budget pattern as plan-work's explore discipline.
 
-NEVER dispatch `andrew-martin`, `andrew-martin`, `kelden-amadiro`, or any implementer. A discussion that needs an edit is no longer a discussion — hand it to `daniel-olivaw`.
+NEVER dispatch `hugo-amaryl`, `hugo-amaryl`, `kelden-amadiro`, or any implementer. A discussion that needs an edit is no longer a discussion — hand it to `daniel-olivaw`.
 
 ## Discussion ledger
 
