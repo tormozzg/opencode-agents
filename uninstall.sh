@@ -21,7 +21,7 @@ if [[ "$CONFIG_DIR" == "~" || "$CONFIG_DIR" == "~/"* ]]; then
   if [[ "$CONFIG_DIR" == "~" ]]; then CONFIG_DIR="$HOME"; else CONFIG_DIR="$HOME/${CONFIG_DIR:2}"; fi
 fi
 
-mkdir -p "$CONFIG_DIR"
+[[ -d "$CONFIG_DIR" ]] || { echo "ERROR: config directory does not exist: $CONFIG_DIR" >&2; exit 1; }
 CONFIG_DIR="$(cd "$CONFIG_DIR" && pwd -P)"
 STATE_DIR="$CONFIG_DIR/.foundation-ai-state"
 OWNER_MARKER="$STATE_DIR/owner"
@@ -81,15 +81,15 @@ rollback_uninstall() {
   trap - ERR INT TERM
   set +e
   local rel
-  for ((i=\${#ORIGINAL_MOVED[@]}-1; i>=0; i--)); do
-    rel="\${ORIGINAL_MOVED[$i]}"
+  for ((i=${#ORIGINAL_MOVED[@]}-1; i>=0; i--)); do
+    rel="${ORIGINAL_MOVED[$i]}"
     if [[ -e "$CONFIG_DIR/$rel" || -L "$CONFIG_DIR/$rel" ]]; then
       mkdir -p "$(dirname "$BACKUP_DIR/$rel")"
       mv "$CONFIG_DIR/$rel" "$BACKUP_DIR/$rel"
     fi
   done
-  for ((i=\${#CURRENT_MOVED[@]}-1; i>=0; i--)); do
-    rel="\${CURRENT_MOVED[$i]}"
+  for ((i=${#CURRENT_MOVED[@]}-1; i>=0; i--)); do
+    rel="${CURRENT_MOVED[$i]}"
     if [[ -e "$UNINSTALL_DIR/$rel" || -L "$UNINSTALL_DIR/$rel" ]]; then
       mkdir -p "$(dirname "$CONFIG_DIR/$rel")"
       mv "$UNINSTALL_DIR/$rel" "$CONFIG_DIR/$rel"
@@ -100,8 +100,8 @@ rollback_uninstall() {
 }
 trap rollback_uninstall ERR INT TERM
 
-for ((i=\${#RELS[@]}-1; i>=0; i--)); do
-  rel="\${RELS[$i]}"
+for ((i=${#RELS[@]}-1; i>=0; i--)); do
+  rel="${RELS[$i]}"
   assert_safe_parents "$rel"
   target="$CONFIG_DIR/$rel"
   if [[ -e "$target" || -L "$target" ]]; then
