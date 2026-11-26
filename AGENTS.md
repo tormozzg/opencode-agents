@@ -13,12 +13,12 @@ Read `README.md` and `OPENCODE_1_19_COMPATIBILITY.md` before changing the active
 
 ## Active architecture
 
-Foundation AI has ten agents:
+Foundation AI has eleven agents:
 
 - Tier 0: Hari Seldon — Grand Leader and default entry point.
 - Tier 1: Daniel Olivaw — Technical Lead / COO; Giskard Reventlov — Planner.
-- Tier 2: Dors Venabili — Giskard's read-only Planning Advisor, alongside independent formal Plan Reviewer Kelden Amadiro and Daniel's technical specialists.
-- Tier 2: Elijah Baley, Kelden Amadiro, Hugo Amaryl, Han Fastolfe, Golan Trevize, and Jothan Leebig.
+- Tier 2: Dors Venabili — Giskard's read-only Planning Advisor; Kelden Amadiro — independent formal Plan Reviewer; Vasiliya Aliena — architecture consultant to Giskard.
+- Tier 2: Elijah Baley, Dors Venabili, Kelden Amadiro, Vasiliya Aliena, Hugo Amaryl, Han Fastolfe, Golan Trevize, and Jothan Leebig.
 
 Tier 2 agents are leaf agents. Preserve explicit `permission.task` allowlists and deny rules. Tier 2 agents have broad `edit` and `bash` tool access to avoid unreliable interactive permission prompts during nested delegation. These technical permissions do not override role contracts or separation of duties. The intended nesting depth is 2.
 
@@ -44,7 +44,7 @@ Before routing a change, Hari assesses whether material facts about the current 
 
 - Hari owns strategy, user-facing plan approval, and material risk decisions.
 - Daniel coordinates approved implementation; he does not implement.
-- Giskard plans; Kelden independently reviews plans; Elijah investigates.
+- Giskard owns requirements synthesis and the unified plan; Vasiliya provides architecture recommendations for complex system/backend/data-design work, but does not author plans, dispatch implementers, or begin execution. Kelden independently reviews plans; Elijah investigates.
 - Dors advises Giskard on plan completeness, assumptions, dependencies, human/operational factors, failure modes, maintainability, rollout/rollback, and strategic consequences. She does not perform technical security review.
 - Jothan performs independent technical security review for Daniel's implementation stream.
 - Hugo implements and exclusively owns permitted Git and worktree operations, including the complete worktree lifecycle; Daniel decides when isolation is needed and delegates creation/cleanup to Hugo, but does not execute Git commands or manage worktrees.
