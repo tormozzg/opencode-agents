@@ -103,3 +103,11 @@ The upstream `main` branch remains untouched; all Foundation AI changes are conf
 - The active roster is ten agents and fifteen skills. Dors is Tier 2 under Giskard; Jothan remains a technical security reviewer under Daniel. Upstream source snapshots remain unchanged.
 - `default_agent` is `hari-seldon`; `subagent_depth: 2` is retained.
 - Prior nine-agent CI evidence does not validate this revision; a fresh run is required.
+
+
+## 9. Architecture consultant addition (2026-11-26)
+
+- Vasiliya Aliena is now documented as Giskard's architecture consultant in the active agent roster and planning workflow.
+- `architect-work` is owned by Vasiliya as her architecture consultation skill; Giskard loads it for complex design work and retains unified plan ownership and final planning decisions.
+- Vasiliya returns architecture evidence only. She does not author plans, dispatch implementers, approve plans, or begin implementation.
+- The active roster is eleven agents; this addition does not change the upstream source snapshots.
