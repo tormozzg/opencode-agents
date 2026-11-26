@@ -87,6 +87,7 @@ declare -a CURRENT_MOVED=() ORIGINAL_MOVED=()
 
 rollback_uninstall() {
   local status=$?
+  echo "ERROR: uninstall failed at command: $BASH_COMMAND; attempting rollback" >&2
   trap - ERR INT TERM
   set +e
   local rel
