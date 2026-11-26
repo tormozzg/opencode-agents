@@ -21,11 +21,14 @@ if [[ "$CONFIG_DIR" == "~" || "$CONFIG_DIR" == "~/"* ]]; then
   if [[ "$CONFIG_DIR" == "~" ]]; then CONFIG_DIR="$HOME"; else CONFIG_DIR="$HOME/${CONFIG_DIR:2}"; fi
 fi
 
+mkdir -p "$CONFIG_DIR"
+CONFIG_DIR="$(cd "$CONFIG_DIR" && pwd -P)"
 STATE_DIR="$CONFIG_DIR/.foundation-ai-state"
 OWNER_MARKER="$STATE_DIR/owner"
 MANIFEST="$STATE_DIR/manifest.txt"
 POINTER="$STATE_DIR/last-backup"
 ORIGIN="$STATE_DIR/original-backup"
+[[ ! -L "$STATE_DIR" && ! -L "$OWNER_MARKER" && ! -L "$MANIFEST" && ! -L "$ORIGIN" ]] || { echo "ERROR: refusing symlink installer state" >&2; exit 1; }
 [[ -f "$OWNER_MARKER" && "$(cat "$OWNER_MARKER")" == "foundation-ai-managed-v1" && -f "$MANIFEST" && -f "$ORIGIN" ]] || { echo "ERROR: no Foundation AI install manifest found in $STATE_DIR" >&2; exit 1; }
 
 BACKUP_DIR="$(cat "$ORIGIN")"
@@ -33,16 +36,31 @@ case "$BACKUP_DIR" in
   "$STATE_DIR"/backups/*) ;;
   *) echo "ERROR: invalid backup pointer; refusing to remove files" >&2; exit 1 ;;
 esac
-[[ -d "$BACKUP_DIR" ]] || { echo "ERROR: recorded backup directory is missing: $BACKUP_DIR" >&2; exit 1; }
+[[ -d "$BACKUP_DIR" && ! -L "$BACKUP_DIR" ]] || { echo "ERROR: recorded backup directory is missing or unsafe: $BACKUP_DIR" >&2; exit 1; }
+[[ ! -L "$STATE_DIR/backups" ]] || { echo "ERROR: refusing symlink backup root" >&2; exit 1; }
 
 declare -a RELS=()
 while IFS= read -r rel; do RELS+=("$rel"); done < "$MANIFEST"
+assert_safe_parents() {
+  local rel="$1" current="$CONFIG_DIR" part
+  local -a parts=()
+  IFS='/' read -r -a parts <<< "$rel"
+  for ((i=0; i<${#parts[@]}-1; i++)); do
+    part="${parts[$i]}"
+    current="$current/$part"
+    [[ ! -L "$current" ]] || { echo "ERROR: refusing symlink parent directory: $current" >&2; return 1; }
+    [[ ! -e "$current" || -d "$current" ]] || { echo "ERROR: expected directory but found non-directory: $current" >&2; return 1; }
+  done
+}
+
 for rel in "${RELS[@]}"; do
   [[ -n "$rel" && "$rel" != /* && "$rel" != *".."* ]] || { echo "ERROR: unsafe manifest path: $rel" >&2; exit 1; }
   case "$rel" in
     agents/*.md|skills/*|foundation-ai/protocols/*.md|foundation-ai/opencode.jsonc.fragment) ;;
     *) echo "ERROR: unexpected managed path in manifest: $rel" >&2; exit 1 ;;
   esac
+  assert_safe_parents "$rel"
+  [[ ! -L "$BACKUP_DIR/$rel" ]] || { echo "ERROR: backup contains symlink path: $rel" >&2; exit 1; }
 done
 
 if [[ "$ASSUME_YES" -ne 1 ]]; then
@@ -56,17 +74,45 @@ fi
 
 mkdir -p "$STATE_DIR/uninstalled-current"
 UNINSTALL_DIR="$(mktemp -d "$STATE_DIR/uninstalled-current/$(date +%Y%m%d-%H%M%S).XXXXXX")"
+declare -a CURRENT_MOVED=() ORIGINAL_MOVED=()
 
-for ((i=${#RELS[@]}-1; i>=0; i--)); do
-  rel="${RELS[$i]}"
+rollback_uninstall() {
+  local status=$?
+  trap - ERR INT TERM
+  set +e
+  local rel
+  for ((i=\${#ORIGINAL_MOVED[@]}-1; i>=0; i--)); do
+    rel="\${ORIGINAL_MOVED[$i]}"
+    if [[ -e "$CONFIG_DIR/$rel" || -L "$CONFIG_DIR/$rel" ]]; then
+      mkdir -p "$(dirname "$BACKUP_DIR/$rel")"
+      mv "$CONFIG_DIR/$rel" "$BACKUP_DIR/$rel"
+    fi
+  done
+  for ((i=\${#CURRENT_MOVED[@]}-1; i>=0; i--)); do
+    rel="\${CURRENT_MOVED[$i]}"
+    if [[ -e "$UNINSTALL_DIR/$rel" || -L "$UNINSTALL_DIR/$rel" ]]; then
+      mkdir -p "$(dirname "$CONFIG_DIR/$rel")"
+      mv "$UNINSTALL_DIR/$rel" "$CONFIG_DIR/$rel"
+    fi
+  done
+  rm -rf "$UNINSTALL_DIR"
+  exit "$status"
+}
+trap rollback_uninstall ERR INT TERM
+
+for ((i=\${#RELS[@]}-1; i>=0; i--)); do
+  rel="\${RELS[$i]}"
+  assert_safe_parents "$rel"
   target="$CONFIG_DIR/$rel"
   if [[ -e "$target" || -L "$target" ]]; then
     mkdir -p "$(dirname "$UNINSTALL_DIR/$rel")"
     mv "$target" "$UNINSTALL_DIR/$rel"
+    CURRENT_MOVED+=("$rel")
   fi
   if [[ -e "$BACKUP_DIR/$rel" || -L "$BACKUP_DIR/$rel" ]]; then
     mkdir -p "$(dirname "$target")"
     mv "$BACKUP_DIR/$rel" "$target"
+    ORIGINAL_MOVED+=("$rel")
   fi
 done
 
@@ -74,7 +120,8 @@ done
 rmdir "$CONFIG_DIR/foundation-ai/protocols" 2>/dev/null || true
 rmdir "$CONFIG_DIR/foundation-ai" 2>/dev/null || true
 
-# Remove ownership state; the origin backup is the pre-Foundation-AI state.
+# File restoration is complete; commit before cleaning state pointers.
+trap - ERR INT TERM
 rm -f "$MANIFEST" "$POINTER" "$ORIGIN"
 
 echo "Foundation AI managed files removed/restored."
