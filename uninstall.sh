@@ -37,12 +37,18 @@ case "$BACKUP_DIR" in
   *) echo "ERROR: invalid backup pointer; refusing to remove files" >&2; exit 1 ;;
 esac
 [[ -d "$BACKUP_DIR" && ! -L "$BACKUP_DIR" ]] || { echo "ERROR: recorded backup directory is missing or unsafe: $BACKUP_DIR" >&2; exit 1; }
-[[ ! -L "$STATE_DIR/backups" ]] || { echo "ERROR: refusing symlink backup root" >&2; exit 1; }
+[[ -d "$STATE_DIR/backups" && ! -L "$STATE_DIR/backups" ]] || { echo "ERROR: refusing missing or symlink backup root" >&2; exit 1; }
+BACKUP_ROOT="$(cd "$STATE_DIR/backups" && pwd -P)"
+BACKUP_DIR="$(cd "$BACKUP_DIR" && pwd -P)"
+case "$BACKUP_DIR" in
+  "$BACKUP_ROOT"/*) ;;
+  *) echo "ERROR: backup directory resolves outside the managed backup root" >&2; exit 1 ;;
+esac
 
 declare -a RELS=()
 while IFS= read -r rel; do RELS+=("$rel"); done < "$MANIFEST"
-assert_safe_parents() {
-  local rel="$1" current="$CONFIG_DIR" part
+assert_safe_tree_parents() {
+  local root="$1" rel="$2" current="$root" part
   local -a parts=()
   IFS='/' read -r -a parts <<< "$rel"
   for ((i=0; i<${#parts[@]}-1; i++)); do
@@ -59,7 +65,8 @@ for rel in "${RELS[@]}"; do
     agents/*.md|skills/*|foundation-ai/protocols/*.md|foundation-ai/opencode.jsonc.fragment) ;;
     *) echo "ERROR: unexpected managed path in manifest: $rel" >&2; exit 1 ;;
   esac
-  assert_safe_parents "$rel"
+  assert_safe_tree_parents "$CONFIG_DIR" "$rel"
+  assert_safe_tree_parents "$BACKUP_DIR" "$rel"
   [[ ! -L "$BACKUP_DIR/$rel" ]] || { echo "ERROR: backup contains symlink path: $rel" >&2; exit 1; }
 done
 
@@ -103,7 +110,8 @@ trap rollback_uninstall ERR INT TERM
 
 for ((i=${#RELS[@]}-1; i>=0; i--)); do
   rel="${RELS[$i]}"
-  assert_safe_parents "$rel"
+  assert_safe_tree_parents "$CONFIG_DIR" "$rel"
+  assert_safe_tree_parents "$BACKUP_DIR" "$rel"
   target="$CONFIG_DIR/$rel"
   if [[ -e "$target" || -L "$target" ]]; then
     mkdir -p "$(dirname "$UNINSTALL_DIR/$rel")"
