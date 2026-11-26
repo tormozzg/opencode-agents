@@ -63,7 +63,7 @@ is_previous() {
 }
 
 assert_safe_parents() {
-  local rel="$1" current="$CONFIG_DIR" part
+  local rel="$1" current="$CONFIG_DIR" part i
   local -a parts=()
   IFS='/' read -r -a parts <<< "$rel"
   for ((i=0; i<${#parts[@]}-1; i++)); do
