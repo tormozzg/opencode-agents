@@ -8,7 +8,7 @@
 
 ## What is included
 
-- Ten coordinated agents across three tiers, with Hari Seldon as Grand Leader and default primary coordinator; Daniel Olivaw is Technical Lead / COO; Giskard Reventlov is Planner; Dors Venabili is Giskard's read-only Planning Advisor.
+- Eleven coordinated agents across three tiers, with Hari Seldon as Grand Leader and default primary coordinator; Daniel Olivaw is Technical Lead / COO; Giskard Reventlov is Planner; Dors Venabili is Giskard's read-only Planning Advisor; Vasiliya Aliena is Giskard's architecture consultant.
 - Fifteen skills: all thirteen upstream skills migrated, plus `security-review` and `security-advisory` for Dors's planning-advisory workflow.
 - Six operating protocols covering handoffs, task state, quality gates, escalation, Git safety, and security policy.
 - OpenCode 1.19 V1 configuration using `default_agent`, `subagent_depth: 2`, and explicit `permission.task` allowlists.
@@ -26,14 +26,14 @@ The previous CI run on candidate baseline `063ae15187a0a72fd0cbdc3c8d872fa0e77d0
 
 Run: https://github.com/tormozzg/opencode-agents/actions/runs/45455955322
 
-The runtime smoke test verifies exact CLI version, discovery of the previous nine-agent roster and their modes, permission parsing, resolved project configuration, and global installation/discovery.
+The runtime smoke test verifies exact CLI version, discovery of the previous nine-agent roster and their modes, permission parsing, resolved project configuration, and global installation/discovery; it does not yet verify the eleven-agent roster.
 
 ## Remaining release blockers
 
 The smoke test does not execute real model-driven task dispatch. Before production release, the following must be tested against OpenCode 1.19.0:
 
 1. Hari dispatches only to Daniel and Giskard.
-2. Giskard dispatches only to Elijah, Dors, and Kelden.
+2. Giskard dispatches only to Elijah, Dors, Kelden, and Vasiliya.
 3. Daniel dispatches only to Elijah and the five approved technical specialists.
 4. Tier 2 agents cannot dispatch further tasks.
 5. A real Tier 1 → Tier 2 nested task succeeds with `subagent_depth: 2`.
