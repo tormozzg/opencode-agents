@@ -15,12 +15,13 @@ Load `execute-work` before editing. Load `git-operations` before any Git operati
 
 Load the following task-specific skills only when their activation conditions apply:
 - `backend-engineering`: backend behavior, domain logic, services, or handlers.
-- `backend-api-design`: API contract changes.
+- `backend-api-design`: API contract changes. If the contract change also changes server-side behavior, load `backend-engineering` too.
 - `database-engineering`: schema, migration, query, or data-integrity changes.
 - `frontend-engineering`: client-side behavior, UI, routing, state, or data fetching.
-- `refactoring`: delegated or necessary scoped structural refactoring.
-- `technical-documentation`: documentation is in scope or affected by implementation.
-- `technical-writing`: authoring or editing technical prose.
+- `refactor-code`: required before any structural refactoring; follow its behavior-lock and one-transformation-at-a-time protocol.
+- `refactoring`: additional task-scoped guidance for an explicitly delegated or necessary scoped refactor; it supplements, and never replaces or relaxes, `refactor-code`.
+- `technical-documentation`: documentation is an explicit deliverable or is made stale by the implementation.
+- `technical-writing`: authoring or substantively rewriting technical prose. For documentation maintenance without substantive prose drafting, use `technical-documentation`; load both only when the task includes both maintenance and substantive prose work.
 
 These skills supplement `execute-work`; they do not expand scope, replace independent review/security/QA gates, or authorize Git actions.
 
