@@ -25,7 +25,7 @@ Hari is the default entry point. Daniel and Giskard are directly selectable. Dor
 ## Included
 
 - **11 agents** in `agents/`
-- **16 skills** in `skills/` (13 migrated from the upstream pack plus `security-review`, `security-advisory`, and `performance-optimization`)
+- **25 skills** in `skills/` (13 migrated from the upstream pack and 12 additional planning, engineering, security, and performance capabilities)
 - **6 protocols** in `protocols/`
 - OpenCode 1.19 project config: `opencode.jsonc`
 - Original upstream skills preserved verbatim under `source-snapshot/skills/`
@@ -79,19 +79,28 @@ Critical/High findings block. Medium requires remediation or explicit risk accep
 | Skill | Owner / use |
 |---|---|
 | `plan-work` | Giskard |
+| `project-management` | Daniel — approved-plan execution tracking |
+| `plan-validation` | Giskard — mechanical preflight before Kelden review |
 | `architect-work` | Vasiliya — architecture consultation for Giskard |
+| `backend-api-design` | Hugo — API contract changes |
+| `backend-engineering` | Hugo — backend implementation |
+| `database-engineering` | Hugo — schema, migration, query, and data integrity work |
 | `review-plan` | Kelden |
 | `research-topic` | Elijah |
 | `lead-work` | Daniel |
 | `execute-work` | Hugo |
+| `frontend-engineering` | Hugo — frontend implementation |
 | `discuss-work` | Shared discussion mode; no separate agent |
 | `code-idiom` | Hugo, companion |
 | `refactor-code` | Hugo, companion |
+| `refactoring` | Hugo — behavior-preserving structural changes |
 | `slop-cleanup` | Hugo, companion |
 | `review-code` | Han |
 | `qa-inspect` | Golan |
 | `git-operations` | Hugo |
 | `performance-optimization` | Hugo — only when performance work is explicitly requested |
+| `technical-documentation` | Hugo — project documentation |
+| `technical-writing` | Hugo — technical prose and standalone docs |
 | `security-review` | Jothan |
 | `security-advisory` | Dors — planning critique for Giskard |
 
