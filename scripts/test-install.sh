@@ -34,9 +34,34 @@ if [[ "$actual" != "protected-parent-file" ]]; then
   cat "$TMP/rollback.log" >&2
   exit 1
 fi
-[[ ! -e "$ROLLBACK/.foundation-ai-state" ]] || { echo "FAIL: rollback left installer state behind" >&2; exit 1; }
+[[ ! -e "$ROLLBACK/.foundation-ai-state" ]] || { echo "FAIL: preflight rejection left installer state behind" >&2; exit 1; }
 
-# 3. Reject symlinked managed parent directories before writing outside CONFIG_DIR.
+# 3. A one-shot mv failure during installation must roll back all installed paths.
+INSTALL_MV_WRAPPER="$TMP/install-mv-wrapper"
+mkdir -p "$INSTALL_MV_WRAPPER"
+cat > "$INSTALL_MV_WRAPPER/mv" <<'MV'
+#!/usr/bin/env bash
+count=0
+[[ ! -f "$MV_COUNT_FILE" ]] || count="$(cat "$MV_COUNT_FILE")"
+count=$((count + 1))
+printf '%s\n' "$count" > "$MV_COUNT_FILE"
+if [[ "$count" -eq 4 && ! -e "$MV_FAILED_FILE" ]]; then
+  : > "$MV_FAILED_FILE"
+  exit 77
+fi
+exec /bin/mv "$@"
+MV
+chmod +x "$INSTALL_MV_WRAPPER/mv"
+INSTALL_ROLLBACK="$TMP/install-rollback"
+mkdir -p "$INSTALL_ROLLBACK"
+if PATH="$INSTALL_MV_WRAPPER:$PATH" MV_COUNT_FILE="$TMP/install-mv-count" MV_FAILED_FILE="$TMP/install-mv-failed" bash "$INSTALL" --yes --config-dir "$INSTALL_ROLLBACK" > "$TMP/install-mv-rollback.log" 2>&1; then
+  echo "FAIL: installer ignored injected move failure" >&2; exit 1
+fi
+[[ ! -e "$INSTALL_ROLLBACK/agents/hari-seldon.md" ]] || { echo "FAIL: installer rollback left an agent behind" >&2; exit 1; }
+[[ ! -e "$INSTALL_ROLLBACK/skills/plan-work" ]] || { echo "FAIL: installer rollback left a skill behind" >&2; exit 1; }
+[[ ! -e "$INSTALL_ROLLBACK/.foundation-ai-state" ]] || { echo "FAIL: installer rollback left state behind" >&2; exit 1; }
+
+# 4. Reject symlinked managed parent directories before writing outside CONFIG_DIR.
 SYMLINK_CONFIG="$TMP/symlink-config"
 OUTSIDE="$TMP/outside"
 mkdir -p "$SYMLINK_CONFIG" "$OUTSIDE"
@@ -48,7 +73,7 @@ fi
 [[ "$(cat "$OUTSIDE/hari-seldon.md")" == "protected" ]] || { echo "FAIL: installer changed data outside CONFIG_DIR" >&2; exit 1; }
 [[ ! -e "$SYMLINK_CONFIG/.foundation-ai-state" ]] || { echo "FAIL: symlink rejection left installer state" >&2; exit 1; }
 
-# 4. Install into a disposable config containing unrelated user data and JSONC.
+# 5. Install into a disposable config containing unrelated user data and JSONC.
 CONFIG="$TMP/config"
 mkdir -p "$CONFIG/agents" "$CONFIG/skills"
 printf 'my-agent\n' > "$CONFIG/agents/my-agent.md"
@@ -66,7 +91,7 @@ bash "$INSTALL" --yes --config-dir "$CONFIG"
 [[ "$(cat "$CONFIG/agents/my-agent.md")" == "my-agent" ]] || { echo "FAIL: unrelated agent was changed" >&2; exit 1; }
 cmp -s "$CONFIG/opencode.jsonc" "$TMP/config.before" || { echo "FAIL: active JSONC config was modified" >&2; exit 1; }
 
-# 5. Reinstall must be safe and preserve the original pre-install state.
+# 6. Reinstall must be safe and preserve the original pre-install state.
 bash "$INSTALL" --yes --config-dir "$CONFIG"
 printf 'local-edit\n' > "$CONFIG/skills/security-review/USER.md"
 # Reject symlinked parents before moving any managed files.
@@ -112,7 +137,7 @@ cmp -s "$CONFIG/opencode.jsonc" "$TMP/config.before" || { echo "FAIL: active JSO
 [[ ! -f "$CONFIG/.foundation-ai-state/manifest.txt" ]] || { echo "FAIL: install manifest remained after uninstall" >&2; exit 1; }
 [[ -f "$CONFIG/.foundation-ai-state/owner" ]] || { echo "FAIL: backup state lost its ownership marker" >&2; exit 1; }
 
-# 6. A clean reinstall after uninstall must work and remain uninstallable.
+# 7. A clean reinstall after uninstall must work and remain uninstallable.
 bash "$INSTALL" --yes --config-dir "$CONFIG"
 [[ -f "$CONFIG/agents/hari-seldon.md" ]] || { echo "FAIL: reinstall after uninstall did not restore managed files" >&2; exit 1; }
 [[ -f "$CONFIG/agents/vasiliya-aliena.md" ]] || { echo "FAIL: reinstall omitted Vasiliya" >&2; exit 1; }
