@@ -38,10 +38,13 @@ ORIGIN="$STATE_DIR/original-backup"
   echo "ERROR: Foundation AI source files are incomplete." >&2; exit 1;
 }
 
+[[ ! -L "$STATE_DIR" ]] || { echo "ERROR: refusing symlink state directory: $STATE_DIR" >&2; exit 1; }
+[[ ! -L "$OWNER_MARKER" && ! -L "$MANIFEST" && ! -L "$POINTER" && ! -L "$ORIGIN" ]] || { echo "ERROR: refusing symlink installer state files" >&2; exit 1; }
 if [[ -e "$STATE_DIR" && ! -f "$OWNER_MARKER" ]]; then
   echo "ERROR: refusing to use existing unowned state directory: $STATE_DIR" >&2; exit 1
 fi
 mkdir -p "$CONFIG_DIR"
+CONFIG_DIR="$(cd "$CONFIG_DIR" && pwd -P)"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
 BACKUP_DIR=""
 STATE_DIR_EXISTED=0
@@ -59,8 +62,21 @@ is_previous() {
   [[ -f "$MANIFEST" ]] && grep -Fqx "$1" "$MANIFEST"
 }
 
+assert_safe_parents() {
+  local rel="$1" current="$CONFIG_DIR" part
+  local -a parts=()
+  IFS='/' read -r -a parts <<< "$rel"
+  for ((i=0; i<${#parts[@]}-1; i++)); do
+    part="${parts[$i]}"
+    current="$current/$part"
+    [[ ! -L "$current" ]] || { echo "ERROR: refusing symlink parent directory: $current" >&2; return 1; }
+    [[ ! -e "$current" || -d "$current" ]] || { echo "ERROR: expected directory but found non-directory: $current" >&2; return 1; }
+  done
+}
+
 # Preflight all collisions and stage every source before changing installed files.
 for rel in "${RELS[@]}"; do
+  assert_safe_parents "$rel"
   target="$CONFIG_DIR/$rel"
   if [[ ( -e "$target" || -L "$target" ) ]] && ! is_previous "$rel"; then
     echo "ERROR: refusing to overwrite unowned path: $target" >&2
@@ -78,7 +94,10 @@ for rel in "${RELS[@]}"; do
 done
 
 if [[ "$ASSUME_YES" -ne 1 ]]; then
-  echo "Install 10 agents, 15 skills, 6 protocols, and a config fragment into:"
+  agent_count="$(find "$AGENT_SRC" -maxdepth 1 -type f -name '*.md' | wc -l | tr -d ' ')"
+skill_count="$(find "$SKILL_SRC" -mindepth 2 -maxdepth 2 -type f -name 'SKILL.md' | wc -l | tr -d ' ')"
+protocol_count="$(find "$PROTOCOL_SRC" -maxdepth 1 -type f -name '*.md' | wc -l | tr -d ' ')"
+echo "Install $agent_count agents, $skill_count skills, $protocol_count protocols, and a config fragment into:"
   echo "  $CONFIG_DIR"
   echo "Existing Foundation AI-managed paths will be backed up to:"
   echo "  $STATE_DIR/backups/"
@@ -87,7 +106,18 @@ if [[ "$ASSUME_YES" -ne 1 ]]; then
   [[ "$reply" == "yes" || "$reply" == "YES" ]] || { rm -rf "$STAGE_DIR"; echo "Aborted."; exit 1; }
 fi
 
+preflight_cleanup() {
+  local status=$?
+  trap - ERR INT TERM
+  [[ -z "$STAGE_DIR" ]] || rm -rf "$STAGE_DIR"
+  if [[ -n "$BACKUP_DIR" ]]; then rm -rf "$BACKUP_DIR"; fi
+  if [[ "$STATE_DIR_EXISTED" -eq 0 ]]; then rm -rf "$STATE_DIR"; fi
+  exit "$status"
+}
+trap preflight_cleanup ERR INT TERM
+
 mkdir -p "$STATE_DIR/backups"
+[[ ! -L "$STATE_DIR/backups" ]] || { echo "ERROR: refusing symlink backup directory" >&2; exit 1; }
 BACKUP_DIR="$(mktemp -d "$STATE_DIR/backups/$TIMESTAMP.XXXXXX")"
 printf 'foundation-ai-managed-v1\n' > "$OWNER_MARKER"
 mkdir -p "$BACKUP_DIR/.state"
@@ -139,6 +169,7 @@ rollback() {
 trap 'rollback; exit 1' ERR INT TERM
 
 for rel in "${RELS[@]}"; do
+  assert_safe_parents "$rel"
   target="$CONFIG_DIR/$rel"
   mkdir -p "$(dirname "$target")"
   if [[ -e "$target" || -L "$target" ]]; then
