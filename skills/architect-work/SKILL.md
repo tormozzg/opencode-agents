@@ -33,6 +33,27 @@ You are normally dispatched by Giskard Reventlov for complex work: a new subsyst
 6. **Write the ONE file** at `.opencode/evidence/<plan-name-or-task-slug>/architecture-<date>-<slug>.md`, following the template below. Size: 1–3 pages for a feature (roughly 500–1500 words); proportionally larger ONLY for a whole project. Every sentence must help a reader make or trust a decision - cut anything else.
 7. **Hand back** a short summary (chosen design + the decisive trade-off) + the file path.
 
+## Architecture and data-design checks
+
+Use these checks when they materially affect the decision; do not turn them into a mandatory paperwork checklist for every task.
+
+### Architecture
+
+- Rank the quality attributes that actually constrain this design (for example, correctness, latency, availability, security, operability, delivery cost). State measurable targets when evidence or requirements support them. If a target is unknown, label it as an assumption or open question and say how it should be validated; do not invent precision.
+- Establish domain entities, invariants, lifecycle, and ownership before choosing service boundaries. Place boundaries around cohesive responsibilities and data that changes together; account for team ownership and independent deployment only when relevant.
+- Compare at least two plausible options, including the simplest viable design. Explain the decisive trade-offs and the costs or failure modes accepted by the chosen option. Avoid introducing services, queues, caches, or other components without a requirement and an operational reason.
+- Trace important failure paths: dependency outage, partial completion, retries, concurrency, overload, and recovery. Consider timeouts, bounded retries, idempotency, ordering, and backpressure where applicable.
+- State the operational contract proportionately: observability, ownership, backup/restore, rollout and rollback, and what evidence would show the design is working.
+
+### Data and persistence
+
+- Identify critical data invariants, write ownership, lifecycle, retention, and privacy constraints. Make clear which guarantees belong in database constraints/transactions and which require application behavior.
+- Use known access patterns and expected data shape to inform schema and index choices. Treat query frequency, selectivity, ordering, and realistic data volume as evidence; label missing measurements rather than assuming them.
+- For relational changes, consider keys, uniqueness, nullability, referential integrity, transaction boundaries, concurrent writes, and consistency across duplicated or derived data. If data is duplicated, name its source of truth and reconciliation strategy.
+- Evaluate query plans and index costs when performance is material. Avoid recommending an index, cache, denormalization, partitioning, or database technology without a workload-based reason.
+- For schema or data migrations, describe compatibility across deployment versions, backfill/validation strategy, locking or rewrite risks, observability, and a practical recovery path. Prefer staged, reversible transitions when needed; do not assume every migration can or should be rolled back after writes have moved.
+- Treat concrete database recipes as context-dependent. Verify the actual database engine/version, table size, traffic, deployment topology, and data-sensitivity requirements before turning a pattern into a recommendation.
+
 ## Architecture doc template (required sections, in order; a section that does not bind this design may be `n/a` with a one-line stated reason - same standard as NFR categories - but **Status**, **Context & scope**, **Design overview**, **Key decisions**, and **Open questions / handoff notes for the planner** are never `n/a`)
 
 - **Status** - `proposed` / `accepted` / `superseded` (by which doc). Fresh docs start `proposed`; when the planner references the file in the plan it counts as `accepted` - that is the planner's act, not an edit you make, and you never reopen a written doc to flip its status. A doc replaced by a later consult is recorded as superseded in the newer doc's `Status` line.
