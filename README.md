@@ -1,6 +1,6 @@
 # Foundation AI for OpenCode 1.19
 
-Foundation AI is a eleven-agent, three-tier orchestration system built on OpenCode V1 agent nesting.
+Foundation AI is an eleven-agent, three-tier orchestration system built on OpenCode V1 agent nesting.
 
 ## Architecture
 
@@ -16,7 +16,8 @@ TIER 0
     ├── TIER 1: R. GISKARD REVENTLOV — Planner
     │   ├── ELIJAH BALEY — Shared Investigator
     │   ├── DORS VENABILI — Planning Advisor (read-only)
-    │   └── KELDEN AMADIRO — Independent Plan Reviewer
+    │   ├── KELDEN AMADIRO — Independent Plan Reviewer
+    │   └── VASILIYA ALIENA — Architecture Consultant
 ```
 
 Hari is the default entry point. Daniel and Giskard are directly selectable. Dors is Giskard's read-only planning advisor; she is not a security assistant. Tier 2 agents are child-only and cannot dispatch further tasks.
