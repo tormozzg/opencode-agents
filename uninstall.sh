@@ -72,6 +72,7 @@ if [[ "$ASSUME_YES" -ne 1 ]]; then
   [[ "$reply" == "yes" || "$reply" == "YES" ]] || { echo "Aborted."; exit 1; }
 fi
 
+[[ ! -L "$STATE_DIR/uninstalled-current" ]] || { echo "ERROR: refusing symlink uninstall archive directory" >&2; exit 1; }
 mkdir -p "$STATE_DIR/uninstalled-current"
 UNINSTALL_DIR="$(mktemp -d "$STATE_DIR/uninstalled-current/$(date +%Y%m%d-%H%M%S).XXXXXX")"
 declare -a CURRENT_MOVED=() ORIGINAL_MOVED=()
