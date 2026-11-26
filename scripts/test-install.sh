@@ -36,7 +36,19 @@ if [[ "$actual" != "protected-parent-file" ]]; then
 fi
 [[ ! -e "$ROLLBACK/.foundation-ai-state" ]] || { echo "FAIL: rollback left installer state behind" >&2; exit 1; }
 
-# 3. Install into a disposable config containing unrelated user data and JSONC.
+# 3. Reject symlinked managed parent directories before writing outside CONFIG_DIR.
+SYMLINK_CONFIG="$TMP/symlink-config"
+OUTSIDE="$TMP/outside"
+mkdir -p "$SYMLINK_CONFIG" "$OUTSIDE"
+printf 'protected\n' > "$OUTSIDE/hari-seldon.md"
+ln -s "$OUTSIDE" "$SYMLINK_CONFIG/agents"
+if bash "$INSTALL" --yes --config-dir "$SYMLINK_CONFIG" > "$TMP/symlink-install.log" 2>&1; then
+  echo "FAIL: installer accepted a symlinked agents directory" >&2; exit 1
+fi
+[[ "$(cat "$OUTSIDE/hari-seldon.md")" == "protected" ]] || { echo "FAIL: installer changed data outside CONFIG_DIR" >&2; exit 1; }
+[[ ! -e "$SYMLINK_CONFIG/.foundation-ai-state" ]] || { echo "FAIL: symlink rejection left installer state" >&2; exit 1; }
+
+# 4. Install into a disposable config containing unrelated user data and JSONC.
 CONFIG="$TMP/config"
 mkdir -p "$CONFIG/agents" "$CONFIG/skills"
 printf 'my-agent\n' > "$CONFIG/agents/my-agent.md"
@@ -45,6 +57,8 @@ cp "$CONFIG/opencode.jsonc" "$TMP/config.before"
 
 bash "$INSTALL" --yes --config-dir "$CONFIG"
 [[ -f "$CONFIG/agents/hari-seldon.md" ]] || { echo "FAIL: agent not installed" >&2; exit 1; }
+[[ -f "$CONFIG/agents/vasiliya-aliena.md" ]] || { echo "FAIL: Vasiliya agent not installed" >&2; exit 1; }
+[[ -f "$CONFIG/skills/performance-optimization/SKILL.md" ]] || { echo "FAIL: performance optimization skill not installed" >&2; exit 1; }
 [[ -f "$CONFIG/skills/security-review/SKILL.md" ]] || { echo "FAIL: security skill not installed" >&2; exit 1; }
 [[ -f "$CONFIG/skills/security-advisory/SKILL.md" ]] || { echo "FAIL: planning advisory skill not installed" >&2; exit 1; }
 [[ -f "$CONFIG/foundation-ai/protocols/security-policy.md" ]] || { echo "FAIL: protocol not installed" >&2; exit 1; }
@@ -52,9 +66,19 @@ bash "$INSTALL" --yes --config-dir "$CONFIG"
 [[ "$(cat "$CONFIG/agents/my-agent.md")" == "my-agent" ]] || { echo "FAIL: unrelated agent was changed" >&2; exit 1; }
 cmp -s "$CONFIG/opencode.jsonc" "$TMP/config.before" || { echo "FAIL: active JSONC config was modified" >&2; exit 1; }
 
-# 4. Reinstall must be safe and preserve the original pre-install state.
+# 5. Reinstall must be safe and preserve the original pre-install state.
 bash "$INSTALL" --yes --config-dir "$CONFIG"
 printf 'local-edit\n' > "$CONFIG/skills/security-review/USER.md"
+# Reject symlinked parents before moving any managed files.
+mv "$CONFIG/agents" "$CONFIG/agents.saved"
+ln -s "$OUTSIDE" "$CONFIG/agents"
+if bash "$UNINSTALL" --yes --config-dir "$CONFIG" > "$TMP/symlink-uninstall.log" 2>&1; then
+  echo "FAIL: uninstaller accepted a symlinked agents directory" >&2; exit 1
+fi
+[[ -f "$CONFIG/.foundation-ai-state/manifest.txt" ]] || { echo "FAIL: symlink rejection damaged install state" >&2; exit 1; }
+rm "$CONFIG/agents"
+mv "$CONFIG/agents.saved" "$CONFIG/agents"
+
 bash "$UNINSTALL" --yes --config-dir "$CONFIG"
 [[ ! -e "$CONFIG/agents/hari-seldon.md" ]] || { echo "FAIL: managed agent remained after uninstall" >&2; exit 1; }
 [[ ! -e "$CONFIG/skills/security-review" ]] || { echo "FAIL: managed skill remained after uninstall" >&2; exit 1; }
@@ -64,9 +88,11 @@ cmp -s "$CONFIG/opencode.jsonc" "$TMP/config.before" || { echo "FAIL: active JSO
 [[ ! -f "$CONFIG/.foundation-ai-state/manifest.txt" ]] || { echo "FAIL: install manifest remained after uninstall" >&2; exit 1; }
 [[ -f "$CONFIG/.foundation-ai-state/owner" ]] || { echo "FAIL: backup state lost its ownership marker" >&2; exit 1; }
 
-# 5. A clean reinstall after uninstall must work and remain uninstallable.
+# 6. A clean reinstall after uninstall must work and remain uninstallable.
 bash "$INSTALL" --yes --config-dir "$CONFIG"
 [[ -f "$CONFIG/agents/hari-seldon.md" ]] || { echo "FAIL: reinstall after uninstall did not restore managed files" >&2; exit 1; }
+[[ -f "$CONFIG/agents/vasiliya-aliena.md" ]] || { echo "FAIL: reinstall omitted Vasiliya" >&2; exit 1; }
+[[ -f "$CONFIG/skills/performance-optimization/SKILL.md" ]] || { echo "FAIL: reinstall omitted performance skill" >&2; exit 1; }
 bash "$UNINSTALL" --yes --config-dir "$CONFIG"
 [[ ! -e "$CONFIG/agents/hari-seldon.md" ]] || { echo "FAIL: second uninstall left managed files behind" >&2; exit 1; }
 find "$CONFIG/.foundation-ai-state/uninstalled-current" -name USER.md -type f | grep -q . || { echo "FAIL: local edits inside managed content were not preserved" >&2; exit 1; }
