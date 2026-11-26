@@ -75,28 +75,28 @@ For every file you created or modified, measure pure LOC (non-blank, non-comment
 awk "!/^[[:space:]]*\$/ && !/^[[:space:]]*(\/\/|#|--|;|\/\*|\*|<!--|\"\"\"|''')/" <file> | wc -l
 ```
 
-| Pure LOC | Verdict | Required action |
+| Pure LOC | Signal | Suggested response |
 |---|---|---|
-| ≤ 200 | Healthy | continue |
-| 200–250 | Warning band | State it; propose a split if the next edit adds lines. |
-| > 250 | DEFECT | Refactor before adding lines (rare exceptions: pure data tables and generated code, where line count does not reflect complexity). |
+| ≤ 200 | No size signal | Continue the review; this does not establish good structure by itself. |
+| 200–250 | Review prompt | Inspect cohesion, change frequency, dependencies, and readability; split only if there is a demonstrated design benefit. |
+| > 250 | Strong review prompt | Inspect for multiple responsibilities or avoidable complexity. This is not, by itself, a defect or authorization to refactor. |
 
-The counter is a heuristic: line-based comment stripping cannot parse multiline syntax exactly, so when a file measures inside or near a band edge (200–250), re-measure with the language's comment-aware count before declaring a warning or DEFECT verdict.
+LOC is a rough diagnostic signal, not a quality threshold. Line-based comment stripping cannot parse multiline syntax exactly; near a band edge, use a language-aware count if the number matters. Do not expand scope or perform a structural refactor solely to meet a line-count target. Refactor only when the code shows a concrete maintainability or correctness problem, the change is within the delegated scope, and behavior can be verified.
 
 ### Step 2 — the 11-point architectural self-review
 
 Run this review internally, then report it compactly before you declare done: either "11-point review: all applicable points pass", or — for every failed point — the point number and the fix applied. Apply each check only when relevant to the language, code, and change under review; do not perform a mechanical rewrite merely to satisfy a checklist item. The discipline itself is unchanged; only the report format is compact:
 
-1. **Single responsibility?** Can I name what this file owns in one short noun phrase? If the answer needs "and", split.
+1. **Responsibility and cohesion?** Can I describe the file's primary responsibility, and do its contents change together for coherent reasons? Multiple concerns or an "and" in the description are prompts to inspect coupling and cohesion, not automatic reasons to split. Split only when a real boundary improves comprehension, change isolation, or reuse without creating needless indirection.
 2. **Boundary purity?** Did I parse untrusted input into a typed value at the boundary, or pass `dict[str, Any]` / `unknown` past it? Fix if so.
 3. **Variant discrimination?** Where the language and code use tagged variants, are branches exhaustive? Fix non-exhaustive handling; do not rewrite unrelated conditionals.
 4. **Escape hatches?** Any `Any`, `# type: ignore`, `unwrap`/`expect` outside tests, numeric `as`, `!`, `@ts-ignore`, `@ts-expect-error`, unjustified `#[allow]`? Fix the type or document why.
 5. **Defensive layer?** Any null check, try/except, or isinstance guarding a value the type system already proves? Delete it.
-6. **Helpers for one-off?** Any function/class introduced for a single caller that will never get a second? Inline it.
+6. **One-off helpers?** Does a helper used by one caller add indirection without clarifying a meaningful operation, boundary, or test seam? Consider inlining it when that makes the code simpler; retain it when the abstraction improves naming, cohesion, isolation, or readability. Do not inline mechanically based only on caller count.
 7. **Tests?** Does every test added or reshaped protect an observable behavior, have a credible regression that fails it, not duplicate existing coverage, and avoid production seams no caller needs? Can it fail, deterministically?
 8. **Parameter bloat?** Does a function's parameter list create real complexity or repeated coupling? Consider a typed value object when it improves the design; do not introduce one solely to meet a numeric threshold.
 9. **Redundant verification?** Did I delete/remove/clear and then re-query to "confirm", or setter-then-getter to "verify"? Delete the verification — the operation's contract IS the proof.
-10. **Negative naming?** Any name by absence (`isNotValid`, `noErrors`, `DisableX`) where a positive form (`isValid`, `isClean`, `EnableX`) works? Rename and invert the branch.
+10. **Negative naming?** Do names such as `isNotValid`, `noErrors`, or `DisableX` make the condition or control flow harder to understand than a positive alternative? Rename and invert the branch when the positive form is clearer and preserves the intended semantics; do not rename mechanically.
 11. **Logging?** If I touched log lines or error boundaries: does it follow the project's existing practice (including its absence), leveled by consumer, placed at decision points, stable messages with data in fields?
 
 **If any answer fails, fix it before declaring done.** This loop is the difference between "the code compiles" and "the code is correct."
@@ -159,5 +159,5 @@ If your report hands off follow-up work, describe it in plain prose with paths; 
 - Owner: Hugo Amaryl. This skill authorizes implementation work only within the exact task delegated by Daniel Olivaw and the approved plan.
 - Hugo may perform implementation and permitted Git operations, but cannot approve his own code, security posture, or QA result.
 - Independent review is performed by Han Fastolfe; risk-triggered security review is performed by Jothan Leebig; QA is performed by Golan Trevize. All three are read-only and return findings for Hugo to fix.
-- Commit the final cohesive scope autonomously only after all applicable independent quality gates pass and the exact-candidate check succeeds; Daniel coordinates but does not separately authorize the commit. Do not commit each subtask by default. Push to any remote requires the user's explicit authorization. Rewriting shared history remains separately authorized. Never bypass Hari Seldon's escalation for material scope, architecture, or risk changes.
+- After all applicable independent quality gates pass, Daniel must issue a separate, synchronous final Git task explicitly labeled `COMMIT`. Hugo may commit only within that separate task, after loading `git-operations` and verifying that the exact candidate matches the reviewed and tested candidate. The separate task is the required commit authorization; do not commit during an implementation assignment or commit each subtask by default. This task does not authorize a push: pushing to any remote requires the user's explicit authorization. Rewriting shared history remains separately authorized. Never bypass Hari Seldon's escalation for material scope, architecture, or risk changes.
 - If a security trigger is present, stop before commit and request Jothan Leebig's independent review. Critical/High findings block; Medium requires explicit risk acceptance by Hari/user or remediation; Low may be recorded as backlog.
