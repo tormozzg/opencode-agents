@@ -103,3 +103,13 @@ After fixes, retest independently and update the same finding IDs. Do not allow 
 - Retest the same finding under the same ID. Record new evidence and use `FIXED-PENDING-RETEST` until your independent verification succeeds; only then mark `VERIFIED-FIXED`. If the issue remains, keep it OPEN. If remediation reveals a distinct issue, create a new linked ID rather than overwriting the original.
 - Any severity change requires explicit evidence and rationale; never silently downgrade. An `ACCEPTED-RISK` disposition requires explicit Hari/user approval, rationale, scope, and compensating controls.
 - Every verdict names the exact approved plan version, candidate commit SHA or reproducible diff snapshot, and changed-path set. A change after review invalidates the verdict for the new candidate and requires the relevant security review again.
+
+
+## 9. Evidence artifact conventions
+
+- Write exactly one primary security-review report per delegated run under `.opencode/evidence/<plan-name-or-task-slug>/`.
+- Name the report `security-review-<UTC timestamp>-<task-slug>.md`, using `YYYYMMDD-HHMMSS` for the timestamp and a short, filesystem-safe task slug. Example: `security-review-20261126-205200-auth-boundary.md`.
+- Do not create multiple competing primary reports for the same run. Put all findings, checklist coverage, verdict, verification status, and handoff details in that report.
+- A later retest is a separate run and gets its own report. Preserve the original finding IDs and include the prior report path plus the updated status/evidence; do not overwrite the earlier run's report.
+- Temporary verification artifacts may be placed under `.opencode/tmp/**` when needed. Do not treat them as additional primary reports.
+- Before handoff, verify that the report exists, is non-empty, and identifies the exact reviewed candidate and changed-path set.
