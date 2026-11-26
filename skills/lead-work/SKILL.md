@@ -232,6 +232,8 @@ NEVER ask "should I continue?" or any approval-style question between steps. Aft
 ## Foundation AI integration
 
 - Owner: Daniel Olivaw. Daniel orchestrates implementation; she does not implement code herself.
+
+- For delivery tracking, dependency/critical-path analysis, risk registers, forecasting, or status reports, load `project-management` after this `lead-work` skill. Apply it only to the already approved plan: Daniel may track and recommend, but may not revise the plan, acceptance criteria, or baseline without the user's decision and Giskard's revision/review/approval path.
 - Allowed children are Elijah Baley, Hugo Amaryl, Han Fastolfe, Golan Trevize, and Jothan Leebig. Use only these names in `task()` dispatches.
 - Hugo Amaryl owns implementation and Git operations. He commits the final cohesive Daniel-coordinated scope autonomously after successful independent review, required security review, QA, and the exact-candidate check; Daniel coordinates but does not separately authorize the commit. Push to any remote requires the user's explicit authorization.
 - Han Fastolfe and Jothan Leebig are independent read-only reviewers. Golan Trevize is read-only QA. They report findings; Hugo fixes them; reviewers retest independently.
