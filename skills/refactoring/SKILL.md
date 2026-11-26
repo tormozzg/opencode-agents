@@ -8,10 +8,13 @@ description: "Hugo's task-scoped practices for behavior-preserving structural ch
 ## Activation
 Use for a delegated refactoring task or when a localized structural change is necessary to implement the approved behavior safely. Do not use as permission for incidental cleanup outside scope.
 
+## Required companion protocol
+Before any structural edit, load and follow `refactor-code`. It is the authoritative safety protocol for behavior locking, test coverage, one-transformation-at-a-time steps, immediate rollback on failure, and preparatory refactoring. This skill adds task-scoped guidance only; it must not weaken or substitute for that protocol.
+
 ## Workflow
 1. Identify observable behavior that must remain unchanged.
 2. Inspect existing tests; add characterization coverage when needed and in scope.
-3. Make small, reviewable structural changes and verify after meaningful steps.
+3. Make small, reviewable structural changes and verify after meaningful steps, following `refactor-code`'s stricter step loop.
 4. Keep behavior changes separate where practical. If behavior or scope must change, stop and report it.
 5. Remove temporary scaffolding and inspect the final diff.
 
