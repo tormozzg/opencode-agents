@@ -6,7 +6,7 @@ description: "Hugo's task-scoped standard for writing or editing technical prose
 # Technical Writing
 
 ## Activation
-Load when Hugo is asked to author or edit technical prose. For documentation maintenance without substantive prose drafting, use `technical-documentation` instead.
+Load when Hugo is asked to author or substantively rewrite technical prose. For documentation maintenance—such as correcting stale facts, commands, links, or examples—without substantive prose drafting, use `technical-documentation` instead. Load both only when the task includes both documentation maintenance and substantive prose work.
 
 ## Workflow
 1. Identify the reader and the task the text should help them complete.
