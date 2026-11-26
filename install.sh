@@ -28,6 +28,8 @@ AGENT_SRC="$ROOT/agents"
 SKILL_SRC="$ROOT/skills"
 PROTOCOL_SRC="$ROOT/protocols"
 FRAGMENT_SRC="$ROOT/opencode.jsonc.fragment"
+mkdir -p "$CONFIG_DIR"
+CONFIG_DIR="$(cd "$CONFIG_DIR" && pwd -P)"
 STATE_DIR="$CONFIG_DIR/.foundation-ai-state"
 OWNER_MARKER="$STATE_DIR/owner"
 MANIFEST="$STATE_DIR/manifest.txt"
@@ -43,8 +45,6 @@ ORIGIN="$STATE_DIR/original-backup"
 if [[ -e "$STATE_DIR" && ! -f "$OWNER_MARKER" ]]; then
   echo "ERROR: refusing to use existing unowned state directory: $STATE_DIR" >&2; exit 1
 fi
-mkdir -p "$CONFIG_DIR"
-CONFIG_DIR="$(cd "$CONFIG_DIR" && pwd -P)"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
 BACKUP_DIR=""
 STATE_DIR_EXISTED=0
@@ -73,6 +73,16 @@ assert_safe_parents() {
     [[ ! -e "$current" || -d "$current" ]] || { echo "ERROR: expected directory but found non-directory: $current" >&2; return 1; }
   done
 }
+
+preflight_cleanup() {
+  local status=$?
+  trap - ERR INT TERM
+  [[ -z "$STAGE_DIR" ]] || rm -rf "$STAGE_DIR"
+  if [[ -n "$BACKUP_DIR" ]]; then rm -rf "$BACKUP_DIR"; fi
+  if [[ "$STATE_DIR_EXISTED" -eq 0 ]]; then rm -rf "$STATE_DIR"; fi
+  exit "$status"
+}
+trap preflight_cleanup ERR INT TERM
 
 # Preflight all collisions and stage every source before changing installed files.
 for rel in "${RELS[@]}"; do
@@ -106,18 +116,8 @@ echo "Install $agent_count agents, $skill_count skills, $protocol_count protocol
   [[ "$reply" == "yes" || "$reply" == "YES" ]] || { rm -rf "$STAGE_DIR"; echo "Aborted."; exit 1; }
 fi
 
-preflight_cleanup() {
-  local status=$?
-  trap - ERR INT TERM
-  [[ -z "$STAGE_DIR" ]] || rm -rf "$STAGE_DIR"
-  if [[ -n "$BACKUP_DIR" ]]; then rm -rf "$BACKUP_DIR"; fi
-  if [[ "$STATE_DIR_EXISTED" -eq 0 ]]; then rm -rf "$STATE_DIR"; fi
-  exit "$status"
-}
-trap preflight_cleanup ERR INT TERM
-
-mkdir -p "$STATE_DIR/backups"
 [[ ! -L "$STATE_DIR/backups" ]] || { echo "ERROR: refusing symlink backup directory" >&2; exit 1; }
+mkdir -p "$STATE_DIR/backups"
 BACKUP_DIR="$(mktemp -d "$STATE_DIR/backups/$TIMESTAMP.XXXXXX")"
 printf 'foundation-ai-managed-v1\n' > "$OWNER_MARKER"
 mkdir -p "$BACKUP_DIR/.state"
