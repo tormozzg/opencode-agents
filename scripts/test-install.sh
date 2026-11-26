@@ -79,6 +79,30 @@ fi
 rm "$CONFIG/agents"
 mv "$CONFIG/agents.saved" "$CONFIG/agents"
 
+# Inject a one-shot mv failure after uninstall has moved several managed paths.
+MV_WRAPPER="$TMP/mv-wrapper"
+mkdir -p "$MV_WRAPPER"
+cat > "$MV_WRAPPER/mv" <<'MV'
+#!/usr/bin/env bash
+count=0
+[[ ! -f "$MV_COUNT_FILE" ]] || count="$(cat "$MV_COUNT_FILE")"
+count=$((count + 1))
+printf '%s\n' "$count" > "$MV_COUNT_FILE"
+if [[ "$count" -eq 4 && ! -e "$MV_FAILED_FILE" ]]; then
+  : > "$MV_FAILED_FILE"
+  exit 77
+fi
+exec /bin/mv "$@"
+MV
+chmod +x "$MV_WRAPPER/mv"
+if PATH="$MV_WRAPPER:$PATH" MV_COUNT_FILE="$TMP/mv-count" MV_FAILED_FILE="$TMP/mv-failed" bash "$UNINSTALL" --yes --config-dir "$CONFIG" > "$TMP/uninstall-rollback.log" 2>&1; then
+  echo "FAIL: uninstaller ignored injected filesystem failure" >&2; exit 1
+fi
+[[ -f "$CONFIG/foundation-ai/opencode.jsonc.fragment" ]] || { echo "FAIL: uninstall rollback lost config fragment" >&2; exit 1; }
+[[ -f "$CONFIG/foundation-ai/protocols/security-policy.md" ]] || { echo "FAIL: uninstall rollback lost protocol" >&2; exit 1; }
+[[ -f "$CONFIG/skills/security-review/USER.md" ]] || { echo "FAIL: uninstall rollback lost local edit" >&2; exit 1; }
+[[ -f "$CONFIG/.foundation-ai-state/manifest.txt" ]] || { echo "FAIL: uninstall rollback lost manifest" >&2; exit 1; }
+
 bash "$UNINSTALL" --yes --config-dir "$CONFIG"
 [[ ! -e "$CONFIG/agents/hari-seldon.md" ]] || { echo "FAIL: managed agent remained after uninstall" >&2; exit 1; }
 [[ ! -e "$CONFIG/skills/security-review" ]] || { echo "FAIL: managed skill remained after uninstall" >&2; exit 1; }
