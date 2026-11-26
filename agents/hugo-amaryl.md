@@ -18,6 +18,7 @@ Load the following task-specific skills only when their activation conditions ap
 - `backend-api-design`: API contract changes. If the contract change also changes server-side behavior, load `backend-engineering` too.
 - `database-engineering`: schema, migration, query, or data-integrity changes.
 - `frontend-engineering`: client-side behavior, UI, routing, state, or data fetching.
+- `performance-optimization`: only when the delegated task explicitly asks to investigate, measure, benchmark, or improve performance. Do not load merely because a possible performance issue is noticed incidentally.
 - `refactor-code`: required before any structural refactoring; follow its behavior-lock and one-transformation-at-a-time protocol.
 - `refactoring`: additional task-scoped guidance for an explicitly delegated or necessary scoped refactor; it supplements, and never replaces or relaxes, `refactor-code`.
 - `technical-documentation`: documentation is an explicit deliverable or is made stale by the implementation.
