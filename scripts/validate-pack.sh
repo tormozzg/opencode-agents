@@ -23,11 +23,11 @@ skill_count="$(find "$SKILLS" -mindepth 2 -maxdepth 2 -type f -name 'SKILL.md' |
 protocol_count="$(find "$PROTOCOLS" -maxdepth 1 -type f -name '*.md' | wc -l | tr -d ' ')"
 snapshot_count="$(find "$SNAPSHOT" -mindepth 2 -maxdepth 2 -type f -name 'SKILL.md' | wc -l | tr -d ' ')"
 
-[[ "$agent_count" == "10" ]] || fail "expected 10 agents, found $agent_count"
-[[ "$skill_count" == "15" ]] || fail "expected 15 skills, found $skill_count"
+[[ "$agent_count" == "11" ]] || fail "expected 11 agents, found $agent_count"
+[[ "$skill_count" == "16" ]] || fail "expected 16 skills, found $skill_count"
 [[ "$protocol_count" == "6" ]] || fail "expected 6 protocols, found $protocol_count"
 [[ "$snapshot_count" == "13" ]] || fail "expected 13 upstream skill snapshots, found $snapshot_count"
-pass "counts: 10 agents, 15 skills, 6 protocols, 13 source snapshots"
+pass "counts: 11 agents, 16 skills, 6 protocols, 13 source snapshots"
 
 python3 - "$ROOT" <<'PY'
 import json, pathlib, re, sys
@@ -42,7 +42,7 @@ expected = {
     "plan-work", "architect-work", "lead-work", "discuss-work",
     "research-topic", "review-plan", "execute-work", "code-idiom",
     "refactor-code", "slop-cleanup", "review-code", "qa-inspect",
-    "git-operations", "security-review", "security-advisory",
+    "git-operations", "security-review", "security-advisory", "performance-optimization",
 }
 actual = set()
 for path in skills.glob("*/SKILL.md"):
@@ -55,6 +55,14 @@ for path in skills.glob("*/SKILL.md"):
     actual.add(name)
 assert actual == expected, f"skill set mismatch: missing={expected-actual}, extra={actual-expected}"
 
+
+expected_agents = {
+    "hari-seldon", "daniel-olivaw", "giskard-reventlov",
+    "elijah-baley", "hugo-amaryl", "han-fastolfe", "golan-trevize",
+    "jothan-leebig", "dors-venabili", "kelden-amadiro", "vasiliya-aliena",
+}
+actual_agents = {p.stem for p in agents.glob("*.md")}
+assert actual_agents == expected_agents, f"agent set mismatch: missing={expected_agents-actual_agents}, extra={actual_agents-expected_agents}"
 
 dispatches = set()
 for skill_path in skills.glob("*/SKILL.md"):
@@ -79,7 +87,7 @@ for agent, allowed in rules.items():
     found = set(re.findall(r'(?m)^\s+"([a-z0-9-]+)": allow$', fm))
     assert found == allowed, f"{agent}: allowlist mismatch: expected {allowed}, got {found}"
 
-tier2 = {"elijah-baley", "dors-venabili", "kelden-amadiro", "hugo-amaryl", "han-fastolfe", "golan-trevize", "jothan-leebig"}
+tier2 = {"elijah-baley", "dors-venabili", "kelden-amadiro", "hugo-amaryl", "han-fastolfe", "golan-trevize", "jothan-leebig", "vasiliya-aliena"}
 for agent in tier2:
     fm = frontmatter(agent)
     assert '"*": deny' in fm, f"{agent}: Tier 2 must deny all task dispatch"
