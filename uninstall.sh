@@ -48,7 +48,8 @@ esac
 declare -a RELS=()
 while IFS= read -r rel; do RELS+=("$rel"); done < "$MANIFEST"
 assert_safe_tree_parents() {
-  local root="$1" rel="$2" current="$root" part
+  local root="$1" rel="$2" current part
+  current="$root"
   local -a parts=()
   IFS='/' read -r -a parts <<< "$rel"
   for ((i=0; i<${#parts[@]}-1; i++)); do
