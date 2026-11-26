@@ -82,7 +82,7 @@ def frontmatter(name):
 rules = {
     "hari-seldon": {"daniel-olivaw", "giskard-reventlov", "elijah-baley"},
     "daniel-olivaw": {"elijah-baley", "hugo-amaryl", "han-fastolfe", "golan-trevize", "jothan-leebig"},
-    "giskard-reventlov": {"elijah-baley", "dors-venabili", "kelden-amadiro"},
+    "giskard-reventlov": {"elijah-baley", "dors-venabili", "kelden-amadiro", "vasiliya-aliena"},
 }
 for agent, allowed in rules.items():
     fm = frontmatter(agent)
