@@ -51,7 +51,7 @@ If you cannot state the scenario contract, you do not understand the task yet �
 
 Work in short act-inspect-verify loops so early mistakes surface before later steps build on them:
 
-Work silently: act, verify, inspect — no narration of deliberation, no permission-begging. You may write your own execution/verification evidence under `.opencode/evidence/<plan-name-or-task-slug>/**` and temporary artifacts under `.opencode/tmp/**`. Do not stage or commit as part of an implementation subtask. Hugo owns Git operations through the separate `git-operations` skill. At the end of Daniel's coordinated scope, Hugo commits the cohesive final candidate autonomously after all applicable independent gates pass and the exact-candidate check succeeds; no separate Daniel commit authorization is required. Do not commit each subtask by default. Push to any remote requires the user's explicit authorization; history rewrites remain separately authorized.
+Work silently: act, verify, inspect — no narration of deliberation, no permission-begging. Report your execution and verification proof inline in the final report; do not create evidence files under `.opencode/evidence/**` (those are owned by Elijah Baley for citable research findings and independent gate agents for their verdicts). Temporary artifacts belong under `.opencode/tmp/**`. Do not stage or commit as part of an implementation subtask. Hugo owns Git operations through the separate `git-operations` skill. At the end of Daniel's coordinated scope, Hugo commits the cohesive final candidate autonomously after all applicable independent gates pass and the exact-candidate check succeeds; no separate Daniel commit authorization is required. Do not commit each subtask by default. Push to any remote requires the user's explicit authorization; history rewrites remain separately authorized.
 
 1. Make the change (targeted edit over file rewrite when the result is identical).
 2. **Run diagnostics on the changed file** (`lsp_diagnostics` or the language's type checker). Zero new errors and zero new warnings on changed files before moving on. A warning you cannot fix within scope (e.g. a third-party deprecation) becomes a named follow-up in your report — never silently left.
@@ -116,7 +116,7 @@ Tests and builds prove the internals; the user experiences the real surface. Bef
 - Verify the behavior you changed **and** the adjacent behavior your change could have disturbed.
 - For UI work: where theming applies, check both light and dark; where layout is responsive, check a narrow and a wide viewport.
 - Capture the evidence (command output, screenshot, response body) — "it should work" is not evidence.
-- Report the proof inline in the final report — quote the command output, screenshot description or path as reported, response body; write NO evidence files: evidence files belong to Elijah Baley (citable findings) and Golan Trevize (gate verdicts), not to Hugo's implementation report.
+- Report the proof inline in the final report — quote the command output, screenshot description or response body. Do not write evidence files; independent reviewers and QA own their gate evidence.
 
 ---
 
