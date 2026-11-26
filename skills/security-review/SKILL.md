@@ -49,16 +49,40 @@ If no trigger applies, Daniel may omit the dedicated review and record why. If u
 
 Apply only relevant checks, but explicitly record N/A where a category does not apply.
 
-- Authentication: credential verification, session lifecycle, expiry, rotation, logout, MFA assumptions, account enumeration.
-- Authorization: object-level checks, tenant isolation, privilege boundaries, default-deny behavior, confused deputy paths, IDOR.
-- Input and injection: SQL/NoSQL, shell/OS command, LDAP, template, expression, header, path traversal, CRLF, unsafe deserialization.
-- Browser/web: XSS (stored/reflected/DOM), CSRF, clickjacking, CORS, CSP, open redirect, cookie flags, content-type handling.
-- Network: SSRF, DNS rebinding where relevant, egress controls, TLS verification, webhook authenticity, request smuggling boundaries.
-- Data and secrets: plaintext secrets, logs, error messages, backups, encryption at rest/in transit, key storage, data minimization.
-- Files: upload validation, content sniffing, path canonicalization, archive bombs/traversal, permissions, symlink handling.
-- Dependencies/supply chain: known vulnerable packages, unpinned or mutable sources, typosquatting exposure, integrity verification, build provenance.
-- Configuration/operations: debug mode, default credentials, overly broad permissions, exposed admin surfaces, security headers, auditability.
-- Resilience/abuse: rate limiting, resource exhaustion, amplification, unbounded input, expensive parsing, denial-of-service conditions.
+- Authentication: credential verification, session lifecycle, expiry, revocation and rotation after privilege changes, logout invalidation, MFA assumptions, account enumeration, brute-force controls, and password-reset abuse. Where cookies are used, verify `HttpOnly`, `Secure`, and appropriate `SameSite` settings; assess token storage and refresh-token rotation according to the architecture.
+- Authorization: object-level checks at the data/service boundary, tenant isolation, privilege boundaries, default-deny behavior, confused deputy paths, IDOR, mass assignment, and self-service role/claim escalation.
+- Input and injection: SQL/NoSQL, shell/OS command, LDAP, template, expression, header, path traversal, CRLF, duplicate or ambiguous structured fields, and unsafe deserialization. Verify parameterization and context-appropriate output encoding.
+- Browser/web: XSS (stored/reflected/DOM), CSRF, clickjacking, CORS, CSP (including unsafe inline allowances), open redirect, cookie flags, content-type handling, and accidental exposure through frontend bundles or source maps.
+- Network: SSRF, DNS rebinding where relevant, egress controls, TLS verification, URL allowlists, redirect handling, webhook authenticity and replay protection, and request-smuggling boundaries.
+- Data and secrets: plaintext secrets in source/history/build artifacts, logs, error messages and analytics; backups; encryption at rest/in transit; key storage; data minimization; retention; and access/audit controls.
+- Files: upload validation using server-side content inspection, size limits, storage outside executable/web roots where appropriate, safe download headers, path canonicalization, archive bombs/traversal, permissions, and symlink handling.
+- Dependencies/supply chain: known vulnerable packages, unpinned or mutable sources, typosquatting exposure, integrity verification, lockfile/build provenance, dependency scanning, and generated SBOMs where the project supports them.
+- Configuration/operations: debug mode, default credentials, overly broad IAM or filesystem/process permissions, exposed admin surfaces, security headers, auditability, container privilege, secret leakage in image layers, and CI/CD credential scope.
+- Resilience/abuse: rate limiting on authentication, expensive and write endpoints; resource exhaustion, amplification, unbounded input, expensive parsing, unbounded outbound requests, and denial-of-service conditions.
+
+For every applicable item, verify the actual implementation and deployment context rather than treating a checklist item as a universal requirement. Record N/A with a short reason when a control is genuinely inapplicable.
+
+
+## 4.1 High-signal investigation ideas
+
+Use these as prompts for targeted analysis, not as a mandatory test script. Select only probes relevant to the changed attack surface.
+
+- **Access control:** In an authorized test environment, compare access to the same object as its owner, another tenant/user, and a lower-privilege role. Trace whether enforcement occurs beyond the route/controller layer.
+- **Webhook integrity:** Check signature verification, timestamp tolerance, replay/idempotency behavior, and handling of duplicate or out-of-order delivery.
+- **Input ambiguity:** Review handling of unexpected content types, duplicate JSON keys, malformed encodings, oversized fields, and parser disagreement across proxies and application layers.
+- **Password reset and account discovery:** Compare response content and observable behavior for known versus unknown accounts in a controlled test setup; assess throttling without generating load against live users.
+- **SSRF and URL fetching:** Trace URL parsing, DNS resolution, redirects, IP-range restrictions, and egress controls. Do not probe cloud metadata endpoints or internal hosts unless the authorization explicitly permits it and a safe test environment is provided.
+- **Frontend exposure:** Inspect built assets and source maps for embedded credentials, private endpoints, internal configuration, or sensitive source. Treat public client identifiers differently from actual secrets.
+- **File handling:** Follow an upload through validation, storage, retrieval, archive extraction, and cleanup; inspect type confusion, path traversal, symlink, and resource-limit behavior.
+- **Failure behavior:** Check whether errors, partial failures, retries, and logs disclose secrets or leave authorization/data-integrity checks bypassed.
+
+Do not send enumeration, replay, fuzzing, load, or exploit traffic to production by default. Any active probe must be explicitly within the delegated scope, use approved test identities/data, and avoid destructive or service-disrupting effects. If those conditions are not met, use static tracing, existing tests, configuration inspection, or request authorization before probing.
+
+## 4.2 Risk prioritization
+
+- Assess each credible threat using **impact × likelihood** to help order investigation and remediation. Consider attacker capability, exposure, exploit preconditions, affected assets, blast radius, and existing mitigations.
+- Use that assessment to support — not replace — the Critical/High/Medium/Low/Informational severity definitions in Section 5. Do not invent numeric precision when evidence is insufficient.
+- Prioritize practical exploit paths and sensitive-data/privilege compromise ahead of generic hardening. Record accepted risks only through the explicit approval process in Section 5 and 8.
 
 ## 5. Severity and disposition
 
