@@ -1,6 +1,6 @@
 # Foundation AI for OpenCode 1.19
 
-Foundation AI is a ten-agent, three-tier orchestration system built on OpenCode V1 agent nesting.
+Foundation AI is a eleven-agent, three-tier orchestration system built on OpenCode V1 agent nesting.
 
 ## Architecture
 
@@ -23,7 +23,7 @@ Hari is the default entry point. Daniel and Giskard are directly selectable. Dor
 
 ## Included
 
-- **10 agents** in `agents/`
+- **11 agents** in `agents/`
 - **15 skills** in `skills/` (13 migrated from the upstream pack plus `security-review` and `security-advisory` for planning critique)
 - **6 protocols** in `protocols/`
 - OpenCode 1.19 project config: `opencode.jsonc`
@@ -63,7 +63,7 @@ See [OpenCode 1.19 compatibility](OPENCODE_1_19_COMPATIBILITY.md). The V1 schema
 ## Workflow
 
 ### Planning
-Giskard researches through Elijah, consults Dors for substantive planning critique, applies `architect-work` for complex designs, prepares a decision-complete plan, and sends it to Kelden for independent formal review. Hari obtains explicit user approval of that exact reviewed plan before authorizing Daniel to begin implementation.
+Giskard researches through Elijah, consults Dors for substantive planning critique, and dispatches Vasiliya for architecture consultation on complex system/backend/data-design work. Giskard integrates her recommendation and retains ownership of the unified plan and final architecture decisions, then sends the decision-complete plan to Kelden for independent formal review. Hari obtains explicit user approval of that exact reviewed plan before authorizing Daniel to begin implementation.
 
 ### Implementation
 Daniel decomposes the approved plan and delegates to Hugo. Han performs independent code review. Jothan performs risk-triggered security review. Golan executes frozen QA scenarios. Hugo fixes findings and independently reviewed gates are repeated. Daniel authorizes Git commit only after all required gates pass.
@@ -78,7 +78,7 @@ Critical/High findings block. Medium requires remediation or explicit Hari/user 
 | Skill | Owner / use |
 |---|---|
 | `plan-work` | Giskard |
-| `architect-work` | Giskard's architecture capability |
+| `architect-work` | Vasiliya — architecture consultation for Giskard |
 | `review-plan` | Kelden |
 | `research-topic` | Elijah |
 | `lead-work` | Daniel |
