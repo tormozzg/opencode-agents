@@ -25,7 +25,7 @@ Hari is the default entry point. Daniel and Giskard are directly selectable. Dor
 ## Included
 
 - **11 agents** in `agents/`
-- **15 skills** in `skills/` (13 migrated from the upstream pack plus `security-review` and `security-advisory` for planning critique)
+- **16 skills** in `skills/` (13 migrated from the upstream pack plus `security-review`, `security-advisory`, and `performance-optimization`)
 - **6 protocols** in `protocols/`
 - OpenCode 1.19 project config: `opencode.jsonc`
 - Original upstream skills preserved verbatim under `source-snapshot/skills/`
@@ -72,7 +72,7 @@ Daniel decomposes the approved plan and delegates to Hugo. Han performs independ
 ### Security triggers
 Jothan must review changes involving authentication/authorization, secrets, sensitive data, public APIs, uploads, parsing/deserialization, injection sinks, user-controlled HTML, network boundaries, cryptography, dependencies/supply chain, permissions, or security configuration.
 
-Critical/High findings block. Medium requires remediation or explicit Hari/user risk acceptance. Jothan is read-only and does not fix findings.
+Critical/High findings block. Medium requires remediation or explicit risk acceptance by the user; Hari may coordinate and record the decision but cannot accept risk on the user's behalf. Jothan is read-only and does not fix findings.
 
 ## Skills
 
@@ -91,12 +91,13 @@ Critical/High findings block. Medium requires remediation or explicit Hari/user 
 | `review-code` | Han |
 | `qa-inspect` | Golan |
 | `git-operations` | Hugo |
+| `performance-optimization` | Hugo — only when performance work is explicitly requested |
 | `security-review` | Jothan |
 | `security-advisory` | Dors — planning critique for Giskard |
 
 ## Safety and release status
 
-The installer, uninstaller, structural validator, and disposable lifecycle tests are implemented. CI has passed structural validation and installer lifecycle tests on both Ubuntu and macOS. The revised ten-agent roster passed CI on Ubuntu and macOS, including the pinned OpenCode 1.19.0 agent-discovery, permission, resolved-config, and global-install smoke tests. Real model-driven nested dispatch remains untested. Do not treat this migration branch as a production release until:
+The installer, uninstaller, structural validator, and disposable lifecycle tests are implemented. CI has passed structural validation and installer lifecycle tests on both Ubuntu and macOS. The then-current ten-agent roster passed CI on Ubuntu and macOS, including the pinned OpenCode 1.19.0 agent-discovery, permission, resolved-config, and global-install smoke tests. The current eleven-agent roster has not yet completed the full runtime validation matrix. Real model-driven nested dispatch remains untested. Do not treat this migration branch as a production release until:
 - the Ubuntu and macOS lifecycle test matrix passes;
 - nested Tier 1 → Tier 2 task dispatch and disallowed-child rejection pass end-to-end against OpenCode 1.19.0 (config parsing and agent discovery already pass);
 - quality-gate, security-trigger, and end-to-end orchestration tests pass;
