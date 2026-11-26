@@ -24,10 +24,10 @@ protocol_count="$(find "$PROTOCOLS" -maxdepth 1 -type f -name '*.md' | wc -l | t
 snapshot_count="$(find "$SNAPSHOT" -mindepth 2 -maxdepth 2 -type f -name 'SKILL.md' | wc -l | tr -d ' ')"
 
 [[ "$agent_count" == "11" ]] || fail "expected 11 agents, found $agent_count"
-[[ "$skill_count" == "16" ]] || fail "expected 16 skills, found $skill_count"
+[[ "$skill_count" == "25" ]] || fail "expected 25 skills, found $skill_count"
 [[ "$protocol_count" == "6" ]] || fail "expected 6 protocols, found $protocol_count"
 [[ "$snapshot_count" == "13" ]] || fail "expected 13 upstream skill snapshots, found $snapshot_count"
-pass "counts: 11 agents, 16 skills, 6 protocols, 13 source snapshots"
+pass "counts: 11 agents, 25 skills, 6 protocols, 13 source snapshots"
 
 python3 - "$ROOT" <<'PY'
 import json, pathlib, re, sys
@@ -43,6 +43,9 @@ expected = {
     "research-topic", "review-plan", "execute-work", "code-idiom",
     "refactor-code", "slop-cleanup", "review-code", "qa-inspect",
     "git-operations", "security-review", "security-advisory", "performance-optimization",
+    "backend-api-design", "backend-engineering", "database-engineering",
+    "frontend-engineering", "plan-validation", "project-management",
+    "refactoring", "technical-documentation", "technical-writing",
 }
 actual = set()
 for path in skills.glob("*/SKILL.md"):
