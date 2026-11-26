@@ -51,7 +51,7 @@ If you cannot state the scenario contract, you do not understand the task yet �
 
 Work in short act-inspect-verify loops so early mistakes surface before later steps build on them:
 
-Work silently: act, verify, inspect — no narration of deliberation, no permission-begging. Report your execution and verification proof inline in the final report; do not create evidence files under `.opencode/evidence/**` (those are owned by Elijah Baley for citable research findings and independent gate agents for their verdicts). Temporary artifacts belong under `.opencode/tmp/**`. Do not stage or commit as part of an implementation subtask. Hugo owns Git operations through the separate `git-operations` skill. At the end of Daniel's coordinated scope, Hugo commits the cohesive final candidate autonomously after all applicable independent gates pass and the exact-candidate check succeeds; no separate Daniel commit authorization is required. Do not commit each subtask by default. Push to any remote requires the user's explicit authorization; history rewrites remain separately authorized.
+Work silently: act, verify, inspect — no narration of deliberation, no permission-begging. Report your execution and verification proof inline in the final report; do not create or edit evidence files under `.opencode/evidence/**` (those belong to Elijah Baley for citable research findings and independent gate agents for their verdicts). Temporary artifacts belong under `.opencode/tmp/**`. Do not stage or commit as part of an implementation assignment. Hugo owns Git operations through the separate `git-operations` skill. After all applicable independent gates pass, Daniel must issue a separate, synchronous final Git task explicitly labeled `COMMIT`; only that task authorizes the commit. Do not commit each subtask by default. Push to any remote requires the user's explicit authorization; history rewrites remain separately authorized.
 
 1. Make the change (targeted edit over file rewrite when the result is identical).
 2. **Run diagnostics on the changed file** (`lsp_diagnostics` or the language's type checker). Zero new errors and zero new warnings on changed files before moving on. A warning you cannot fix within scope (e.g. a third-party deprecation) becomes a named follow-up in your report — never silently left.
@@ -85,16 +85,16 @@ The counter is a heuristic: line-based comment stripping cannot parse multiline 
 
 ### Step 2 — the 11-point architectural self-review
 
-Run this review internally, then report it compactly before you declare done: either "11-point review: all pass", or — for every failed point — the point number and the fix applied. The discipline itself is unchanged; only the report format is compact:
+Run this review internally, then report it compactly before you declare done: either "11-point review: all applicable points pass", or — for every failed point — the point number and the fix applied. Apply each check only when relevant to the language, code, and change under review; do not perform a mechanical rewrite merely to satisfy a checklist item. The discipline itself is unchanged; only the report format is compact:
 
 1. **Single responsibility?** Can I name what this file owns in one short noun phrase? If the answer needs "and", split.
 2. **Boundary purity?** Did I parse untrusted input into a typed value at the boundary, or pass `dict[str, Any]` / `unknown` past it? Fix if so.
-3. **Variant discrimination?** Any `if`/`elif`/`else` (or non-exhaustive `switch`/`match`) discriminating on a tagged type? Rewrite as exhaustive match.
+3. **Variant discrimination?** Where the language and code use tagged variants, are branches exhaustive? Fix non-exhaustive handling; do not rewrite unrelated conditionals.
 4. **Escape hatches?** Any `Any`, `# type: ignore`, `unwrap`/`expect` outside tests, numeric `as`, `!`, `@ts-ignore`, `@ts-expect-error`, unjustified `#[allow]`? Fix the type or document why.
 5. **Defensive layer?** Any null check, try/except, or isinstance guarding a value the type system already proves? Delete it.
 6. **Helpers for one-off?** Any function/class introduced for a single caller that will never get a second? Inline it.
 7. **Tests?** Does every test added or reshaped protect an observable behavior, have a credible regression that fails it, not duplicate existing coverage, and avoid production seams no caller needs? Can it fail, deterministically?
-8. **Parameter bloat?** Any function with more than 3 parameters — or smuggling them through a dict/kwargs/`...args`/throwaway options object? Group into a typed value object.
+8. **Parameter bloat?** Does a function's parameter list create real complexity or repeated coupling? Consider a typed value object when it improves the design; do not introduce one solely to meet a numeric threshold.
 9. **Redundant verification?** Did I delete/remove/clear and then re-query to "confirm", or setter-then-getter to "verify"? Delete the verification — the operation's contract IS the proof.
 10. **Negative naming?** Any name by absence (`isNotValid`, `noErrors`, `DisableX`) where a positive form (`isValid`, `isClean`, `EnableX`) works? Rename and invert the branch.
 11. **Logging?** If I touched log lines or error boundaries: does it follow the project's existing practice (including its absence), leveled by consumer, placed at decision points, stable messages with data in fields?
@@ -126,7 +126,7 @@ Tests and builds prove the internals; the user experiences the real surface. Bef
 - The task's working directory may be a lead-created worktree, but all `.opencode/` paths (scratch, notepads, evidence) remain MAIN-checkout absolute paths.
 - Files placed in the repository are ONLY permanent tests with real regression value, in the repo's standard test location, landing together with the change through the pack's git flow.
 - Before declaring done: remove every temporary file created outside the MAIN checkout's `.opencode/` (absolute path); leave nothing scratch-like in the working tree.
-- Evidence files under the MAIN checkout's `.opencode/evidence/` are NOT temporary — they are the audit trail and are kept.
+- Do not create or edit `.opencode/evidence/**` files; those are owned by Elijah Baley and independent gate agents. Hugo's implementation and verification evidence is reported inline. Preserve evidence artifacts created by their owners.
 
 ---
 
